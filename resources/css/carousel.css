@@ -1,0 +1,22 @@
+.brand-carousel-track {
+    animation: brand-carousel-scroll linear infinite;
+}
+
+.brand-carousel:hover .brand-carousel-track {
+    animation-play-state: paused;
+}
+
+@keyframes brand-carousel-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .brand-carousel-track {
+        animation: none;
+    }
+}
