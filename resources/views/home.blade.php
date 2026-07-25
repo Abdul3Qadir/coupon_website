@@ -66,7 +66,7 @@
     </div>
 </main>
       
-    @include("pages-components.brand-carousel")
+    @include("pages-components.braand-carousel")
       
     @include("pages-components.trending-stores")
       
