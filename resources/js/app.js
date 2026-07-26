@@ -3,6 +3,7 @@ import './navbar';
 import './carousel';
 import './top-coupons';
 import './faq';
+import './categories-search';
 
 
 import Alpine from 'alpinejs';
