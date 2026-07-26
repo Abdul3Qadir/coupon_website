@@ -17,10 +17,22 @@
 
         <!-- Elegant Nav Links -->
         <nav class="hidden min-[790px]:flex items-center gap-6 text-sm font-medium text-gray-600 shrink-0">
-            <a href="/stores" class="hover:text-red-400 transition-all duration-200 relative group">Stores <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all group-hover:w-full"></span></a>
-            <a href="/categories" class="hover:text-red-400 transition-all duration-200 relative group">Categories <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all group-hover:w-full"></span></a>
-            <a href="/blog" class="hover:text-red-400 transition-all duration-200 relative group">Sale Calendar<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all group-hover:w-full"></span></a>
-            <a href="/blog" class="hover:text-red-400 transition-all duration-200 relative group">Blog <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all group-hover:w-full"></span></a>
+            <a href="/stores" class="relative group transition-all duration-200 {{ request()->is('stores') ? 'text-red-500' : 'text-gray-600 hover:text-red-400' }}">
+                Stores
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-300 transition-all {{ request()->is('stores') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+            </a>
+            <a href="/categories" class="relative group transition-all duration-200 {{ request()->is('categories') ? 'text-red-500' : 'text-gray-600 hover:text-red-400' }}">
+                Categories
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-300 transition-all {{ request()->is('categories') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+            </a>
+            <a href="/about" class="relative group transition-all duration-200 {{ request()->is('about') ? 'text-red-500' : 'text-gray-600 hover:text-red-400' }}">
+                About
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-300 transition-all {{ request()->is('about') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+            </a>
+            <a href="/blog" class="relative group transition-all duration-200 {{ request()->is('blog') ? 'text-red-500' : 'text-gray-600 hover:text-red-400' }}">
+                Blog
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-300 transition-all {{ request()->is('blog') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+            </a>
             <div class="relative group">
                 <button class="flex items-center gap-1 group-hover:text-red-400 transition-all duration-200 relative">
                     For Brands
@@ -79,7 +91,7 @@
         <nav class="flex flex-col p-5 gap-2 font-medium text-gray-700">
             <a href="/stores" class="hover:text-red-400 transition-colors py-2 border-b border-gray-50">Stores</a>
             <a href="/categories" class="hover:text-red-400 transition-colors py-2 border-b border-gray-50">Categories</a>
-            <a href="/blog" class="hover:text-red-400 transition-colors py-2 border-b border-gray-50">Sale Calendar</a>
+            <a href="/blog" class="hover:text-red-400 transition-colors py-2 border-b border-gray-50">About</a>
             <a href="/blog" class="hover:text-red-400 transition-colors py-2 border-b border-gray-50">Blog</a>
 
             <div class="mt-4 pt-4 border-t border-gray-100">

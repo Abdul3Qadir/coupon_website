@@ -3,7 +3,7 @@
         <div class="relative text-center">
             <h2 class="font-Manrope text-2xl sm:text-3xl font-extrabold text-gray-900">Popular Stores</h2>
             <p class="mt-2 font-Inter text-sm sm:text-base text-gray-600">Most searched stores by our users</p>
-            <a href="#" class="hidden sm:inline-flex absolute right-0 top-3/4 -translate-y-1/2 items-center gap-1 font-Inter text-sm font-semibold text-red-600 hover:text-red-700">
+            <a href="/stores" class="hidden sm:inline-flex absolute right-0 top-3/4 -translate-y-1/2 items-center gap-1 font-Inter text-sm font-semibold text-red-600 hover:text-red-700">
                 All Stores
                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </a>
@@ -121,7 +121,7 @@
             </a>
         </div>
 
-        <a href="#" class="mt-8 flex sm:hidden items-center justify-center gap-1 font-Inter text-sm font-semibold text-red-600">
+        <a href="/stores" class="mt-8 flex sm:hidden items-center justify-center gap-1 font-Inter text-sm font-semibold text-red-600">
             All Stores
             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
         </a>

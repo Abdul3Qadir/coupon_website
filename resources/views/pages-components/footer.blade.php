@@ -31,7 +31,7 @@
             <div class="space-y-4">
                 <h3 class="text-md font-semibold text-white tracking-wider uppercase">Explore</h3>
                 <ul class="space-y-2.5 text-sm">
-                    <li><a href="/blog" class="hover:text-gray-500 transition-colors">Sale Calendar</a></li>
+                    <li><a href="/blog" class="hover:text-gray-500 transition-colors">About</a></li>
                     <li><a href="/blog" class="hover:text-gray-500 transition-colors">Blog & Guides</a></li>
                     <li><a href="/deals" class="hover:text-gray-500 transition-colors">Latest Deals</a></li>
                 </ul>
