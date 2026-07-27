@@ -7,7 +7,7 @@
 
     <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       
-      <a href="#" class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+      <a href="/deals" class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
         <div class="relative flex items-center justify-between mb-5">
           <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
             <img src="/images/brand-logos/zara.png" alt="Zara" class="max-h-10 w-auto object-contain">
@@ -32,7 +32,7 @@
         </div>
       </a>
 
-      <a href="#" class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+      <a href="/deals" class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
         <div class="relative flex items-center justify-between mb-5">
           <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
             <img src="/images/brand-logos/ikea.png" alt="Ikea" class="max-h-10 w-auto object-contain">
@@ -57,7 +57,7 @@
         </div>
       </a>
 
-      <a href="#" class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+      <a href="/deals" class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
         <div class="relative flex items-center justify-between mb-5">
           <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
             <img src="/images/brand-logos/hostinger.png" alt="Hostinger" class="max-h-10 w-auto object-contain">

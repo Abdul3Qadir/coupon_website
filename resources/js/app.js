@@ -5,6 +5,7 @@ import './top-coupons';
 import './faq';
 import './categories-search';
 import './deals';
+import './stores-filter';
 
 
 import Alpine from 'alpinejs';

@@ -1,5 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.coupon-copy-btn').forEach(function (btn) {
+    document.querySelectorAll('.coupon-reveal-btn').forEach(function (revealBtn) {
+        revealBtn.addEventListener('click', function () {
+            var box = revealBtn.closest('.coupon-code-box');
+            if (!box) return;
+
+            var codeText = box.querySelector('.coupon-code-text');
+            var copyAgainBtn = box.querySelector('.coupon-copy-again-btn');
+            var code = revealBtn.dataset.code;
+            var storeUrl = revealBtn.dataset.storeUrl;
+
+            if (codeText) codeText.classList.remove('blur-sm');
+            if (copyAgainBtn) copyAgainBtn.classList.remove('hidden');
+            revealBtn.remove();
+
+            if (code && navigator.clipboard) {
+                navigator.clipboard.writeText(code);
+            }
+
+            if (storeUrl && storeUrl !== '#') {
+                window.open(storeUrl, '_blank');
+            }
+        });
+    });
+
+    document.querySelectorAll('.coupon-copy-again-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var code = btn.dataset.code;
             if (!code || !navigator.clipboard) return;
