@@ -80,7 +80,7 @@
         </div>
 
         <div id="categoryGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
-            <a href="#" data-name="fashion" class="category-card cursor-pointer group relative flex flex-col items-center gap-1 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-rose-200">
+            <a href="/coupons/category" data-name="fashion" class="category-card cursor-pointer group relative flex flex-col items-center gap-1 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-rose-200">
                 <span class="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 font-Inter text-[10px] font-bold text-red-600">
                     <svg class="h-2.5 w-2.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2c1 3 3 4.5 4.5 6.5 1.6 2.2 2 4.7 1.2 7A6.7 6.7 0 0112 20a6.7 6.7 0 01-7.2-4.5c-.7-2 0-4 1.4-5.6.2 1.4 1 2.3 2 2.6-.6-2.4.2-5 2.3-6.7.4 1.3 1.1 2 2 2.3-.3-2 .1-4 1-6.1z"/></svg>
                     Trending

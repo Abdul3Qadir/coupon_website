@@ -9,7 +9,7 @@
 <body class="font-Inter">
     @include("pages-components.navbar")
 
-    <section class="relative overflow-hidden bg-white py-14 sm:py-20">
+    <section class="relative overflow-hidden bg-white py-14 sm:py-16">
 
         <div class="relative max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10 text-center">
             <span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3.5 py-1.5 font-Inter text-xs sm:text-sm font-semibold text-red-600">
@@ -25,7 +25,7 @@
             </h1>
 
             <p class="mx-auto mt-3 max-w-xl font-Inter text-sm sm:text-base text-gray-600">
-                No codes, no copy-paste — just automatic savings at checkout
+                No codes, no copy-paste just automatic savings at checkout
             </p>
 
             <div class="mx-auto mt-7 flex max-w-xl items-center overflow-hidden rounded-full border border-gray-200 bg-white pl-6 pr-2 py-2 shadow-lg shadow-gray-100 focus-within:border-red-300 focus-within:ring-2 focus-within:ring-red-100 transition">
@@ -53,11 +53,11 @@
         </div>
     </section>
 
-    <section class="py-10 sm:py-14">
+    <section class="py-10">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
             <div class="flex items-center gap-2 mb-8">
-                <span class="flex h-7 w-7 items-center justify-center rounded-full bg-red-50">
-                    <svg class="h-4 w-4 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2c1 3 3 4.5 4.5 6.5 1.6 2.2 2 4.7 1.2 7A6.7 6.7 0 0112 20a6.7 6.7 0 01-7.2-4.5c-.7-2 0-4 1.4-5.6.2 1.4 1 2.3 2 2.6-.6-2.4.2-5 2.3-6.7.4 1.3 1.1 2 2 2.3-.3-2 .1-4 1-6.1z"/></svg>
+                <span class="flex h-7 w-7 items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linejoin="round"><path d="M12 22C16.1421 22 19.5 18.6421 19.5 14.5C19.5 13.5 19.5 11.5 17.5 9C17.5 9 17.4004 11.8536 15.4262 11.4408C12.2331 10.7732 16.3551 4.50296 10.5 2C10.5 7 4.5 8.5 4.5 14.5C4.5 18.6421 7.85786 22 12 22Z"/><path d="M12 19.0011C13.933 19.0011 15.5 16.9864 15.5 14.5011C12.3 15.7011 11.1667 12.9379 11 11C9.55426 11.5532 8.5 13.8256 8.5 15C8.5 17.4853 10.067 19.0011 12 19.0011Z"/></svg>
                 </span>
                 <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">Hot Right Now</h2>
             </div>
@@ -147,7 +147,7 @@
         </div>
     </section>
 
-     <section class="border-b border-gray-200 bg-white sticky top-0 z-20">
+     <section class="border-b border-gray-200 bg-white sticky top-0 z-20 pt-10">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
             <div class="flex items-center gap-2.5 overflow-x-auto py-3 no-scrollbar">
                 <button type="button" data-category="all" class="category-filter-btn cursor-pointer active shrink-0 rounded-full bg-gray-900 px-4 py-2 font-Manrope text-sm font-semibold text-white transition">All Deals</button>
@@ -160,11 +160,11 @@
         </div>
     </section>
 
-    <section class="py-4 sm:py-6">
+    <section class="py-6 sm:py-10">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
             <div class="flex items-center justify-between border-b border-gray-200">
-                <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900 pb-4">All Deals</h2>
-                <div class="flex items-center gap-1 mb-3">
+                <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900 pb-5">All Deals</h2>
+                <div class="flex items-center gap-1 mb-5">
                     <button type="button" data-status="active" class="status-tab-btn cursor-pointer active rounded-full bg-gray-900 px-4 py-1.5 font-Inter text-xs sm:text-sm font-semibold text-white transition">Active</button>
                     <button type="button" data-status="expired" class="status-tab-btn cursor-pointer rounded-full px-4 py-1.5 font-Inter text-xs sm:text-sm font-semibold text-gray-500 transition">Expired</button>
                 </div>

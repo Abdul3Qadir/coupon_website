@@ -21,3 +21,15 @@ Route::get('/deals', function () {
 Route::get('/stores/brand', function () {
     return view('brand-details');
 });
+
+Route::get('/coupons/category', function () {
+    return view('coupons-category');
+});
+
+Route::get('/blog', function () {
+    return view('blog');
+});
+
+Route::get('/blog/article', function () {
+    return view('blog-article');
+});
