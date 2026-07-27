@@ -4,6 +4,7 @@ import './carousel';
 import './top-coupons';
 import './faq';
 import './categories-search';
+import './deals';
 
 
 import Alpine from 'alpinejs';

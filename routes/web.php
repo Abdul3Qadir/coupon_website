@@ -17,3 +17,7 @@ Route::get('/categories', function () {
 Route::get('/deals', function () {
     return view('deals');
 });
+
+Route::get('/stores/brand', function () {
+    return view('brand-details');
+});
