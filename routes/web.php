@@ -7,7 +7,7 @@ use App\Http\Controllers\Brand\Auth\EmailVerificationController as BrandEmailVer
 use App\Http\Controllers\Admin\Auth\RegisteredSubAdminController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedAdminSessionController;
 use App\Http\Controllers\Admin\Auth\EmailVerificationController as AdminEmailVerificationController;
-
+use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', function () {
     return view('home');
@@ -77,7 +77,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AuthenticatedAdminSessionController::class, 'destroy'])->name('logout');
 
         Route::middleware('admin.verified')->group(function () {
-            Route::get('dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+            Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         });
     });
 });

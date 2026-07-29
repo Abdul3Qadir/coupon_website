@@ -15,6 +15,18 @@ return Application::configure(basePath: dirname(__DIR__))
             'brand.verified' => \App\Http\Middleware\EnsureBrandEmailIsVerified::class,
             'admin.verified' => \App\Http\Middleware\EnsureAdminEmailIsVerified::class,
         ]);
+
+        $middleware->redirectGuestsTo(function ($request) {
+            if ($request->is('admin/*')) {
+                return route('admin.login');
+            }
+
+            if ($request->is('brand/*')) {
+                return route('brand.login');
+            }
+
+            return '/';
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

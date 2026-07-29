@@ -7,6 +7,7 @@ import './categories-search';
 import './deals';
 import './stores-filter';
 import './confirm-modal';
+import './dashboard-sidebar';
 
 
 import Alpine from 'alpinejs';
