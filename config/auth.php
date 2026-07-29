@@ -42,6 +42,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+        'brand' => [
+            'driver' => 'session',
+            'provider' => 'brands',
+        ],
     ],
 
     /*
@@ -65,6 +74,16 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
+        'brands' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Brand::class,
         ],
 
         // 'users' => [
@@ -96,6 +115,20 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'admin_password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'brands' => [
+            'provider' => 'brands',
+            'table' => 'brand_password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],
