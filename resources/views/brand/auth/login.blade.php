@@ -29,7 +29,10 @@
             </div>
 
             <div>
-                <x-label value="Password" />
+                <div class="flex items-center justify-between">
+                    <x-label value="Password" />
+                    <a href="{{ route('brand.password.request') }}" class="mb-1.5 font-Inter text-xs font-semibold text-red-600 hover:text-red-700">Forgot password?</a>
+                </div>
                 <x-input type="password" name="password" required />
                 <x-input-error :messages="$errors->get('password')" />
             </div>

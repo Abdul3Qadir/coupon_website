@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\Auth\RegisteredSubAdminController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedAdminSessionController;
 use App\Http\Controllers\Admin\Auth\EmailVerificationController as AdminEmailVerificationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Brand\Auth\PasswordResetController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -48,6 +50,14 @@ Route::prefix('brand')->name('brand.')->group(function () {
         Route::post('register', [RegisteredBrandController::class, 'store']);
         Route::get('login', [AuthenticatedBrandSessionController::class, 'create'])->name('login');
         Route::post('login', [AuthenticatedBrandSessionController::class, 'store']);
+
+        Route::get('forgot-password', [PasswordResetController::class, 'forgotPasswordForm'])->name('password.request');
+        Route::post('forgot-password', [PasswordResetController::class, 'sendResetCode'])->name('password.email');
+        Route::get('forgot-password/verify', [PasswordResetController::class, 'verifyForm'])->name('password.verify.form');
+        Route::post('forgot-password/verify', [PasswordResetController::class, 'verifyCode'])->name('password.verify');
+        Route::post('forgot-password/resend', [PasswordResetController::class, 'resendResetCode'])->name('password.resend');
+        Route::get('forgot-password/reset', [PasswordResetController::class, 'resetForm'])->name('password.reset.form');
+        Route::post('forgot-password/reset', [PasswordResetController::class, 'resetPassword'])->name('password.update');
     });
 
     Route::middleware('auth:brand')->group(function () {

@@ -21,6 +21,20 @@ class DashboardController extends Controller
             'pendingOffersCount' => Offer::pending()->count(),
             'pendingBrands' => Brand::where('status', BrandStatus::Pending)->latest()->take(5)->get(),
             'recentOffers' => Offer::with('brand')->latest()->take(5)->get(),
+            'offersLast7Days' => $this->offersLast7Days(),
         ]);
+    }
+
+    private function offersLast7Days(): array
+    {
+        $counts = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+
+            $counts[$date->format('D')] = Offer::whereDate('created_at', $date->toDateString())->count();
+        }
+
+        return $counts;
     }
 }

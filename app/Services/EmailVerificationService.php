@@ -45,4 +45,17 @@ class EmailVerificationService
 
         return true;
     }
+
+    public function verifyCodeOnly(Model $verifiable, string $code): bool
+    {
+        $record = $verifiable->emailVerificationCodes()->latest()->first();
+
+        if (!$record || $record->expires_at->isPast() || !Hash::check($code, $record->code)) {
+            return false;
+        }
+
+        $record->delete();
+
+        return true;
+    }
 }

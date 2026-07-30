@@ -42,13 +42,13 @@
                     <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all group-hover:w-full"></span>
                 </button>
                 <div class="absolute top-full left-0 mt-3 w-50 rounded-xl bg-gray-50 border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <a href="" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700">
+                    <a href="/brand/register" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700">
                         <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Join as Brand
                     </a>
-                    <a href="" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700 rounded-b-2xl">
+                    <a href="/brand/login" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700 rounded-b-2xl">
                         <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" />
                         </svg>
@@ -96,13 +96,13 @@
 
             <div class="mt-4 pt-4 border-t border-gray-100">
                 <p class="px-2 mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">For Brands</p>
-                <a href="" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
+                <a href="/brand/register" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
                     <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     <span>Join as Brand</span>
                 </a>
-                <a href="" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
+                <a href="/brand/login" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
                     <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" />
                     </svg>
