@@ -8,6 +8,7 @@ import './deals';
 import './stores-filter';
 import './confirm-modal';
 import './dashboard-sidebar';
+import './reject-brand-modal';
 
 import Chart from 'chart.js/auto';
 window.Chart = Chart;

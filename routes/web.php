@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\Auth\AuthenticatedAdminSessionController;
 use App\Http\Controllers\Admin\Auth\EmailVerificationController as AdminEmailVerificationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Brand\Auth\PasswordResetController;
-
+use App\Http\Controllers\Admin\BrandManagementController;
 
 Route::get('/', function () {
     return view('home');
@@ -88,6 +88,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::middleware('admin.verified')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+            Route::middleware('admin.super-admin')->group(function () {
+                Route::prefix('brands')->name('brands.')->group(function () {
+                    Route::get('/', [BrandManagementController::class, 'index'])->name('index');
+                    Route::get('{brand}', [BrandManagementController::class, 'show'])->name('show');
+                    Route::post('{brand}/verify', [BrandManagementController::class, 'verify'])->name('verify');
+                    Route::post('{brand}/reject', [BrandManagementController::class, 'reject'])->name('reject');
+                    Route::post('{brand}/suspend', [BrandManagementController::class, 'suspend'])->name('suspend');
+                    Route::post('{brand}/reinstate', [BrandManagementController::class, 'reinstate'])->name('reinstate');
+                    Route::post('{brand}/toggle-auto-publish', [BrandManagementController::class, 'toggleAutoPublish'])->name('toggle-auto-publish');
+                });
+    });
+
         });
     });
 });
+

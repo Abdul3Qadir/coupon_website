@@ -33,7 +33,7 @@
 
             @if ($isSuperAdmin)
                 <x-admin.sidebar-group label="Management" />
-                <x-admin.sidebar-link href="#" :badge="$pendingBrandsCount ?? null">
+                <x-admin.sidebar-link :href="route('admin.brands.index')" :active="request()->routeIs('admin.brands.*')" :badge="$pendingBrandsCount ?? null">
                     <x-slot:icon><svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21V12h6v9"/></svg></x-slot:icon>
                     Brands
                 </x-admin.sidebar-link>

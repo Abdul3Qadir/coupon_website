@@ -83,7 +83,7 @@
                     <p class="font-Manrope text-base font-bold text-gray-900">Pending Approvals</p>
                     <p class="font-Inter text-xs text-gray-500">Brands waiting for review</p>
                 </div>
-                <a href="#" class="font-Inter text-xs font-semibold text-red-600 hover:text-red-700">View all</a>
+                <a href="/admin/brands" class="font-Inter text-xs font-semibold text-red-600 hover:text-red-700">View all</a>
             </div>
 
             <div class="mt-4 divide-y divide-gray-100">

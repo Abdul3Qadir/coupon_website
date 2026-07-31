@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'brand.verified' => \App\Http\Middleware\EnsureBrandEmailIsVerified::class,
             'admin.verified' => \App\Http\Middleware\EnsureAdminEmailIsVerified::class,
+            'admin.super-admin' => \App\Http\Middleware\EnsureAdminIsSuperAdmin::class,
         ]);
 
         $middleware->redirectGuestsTo(function ($request) {
