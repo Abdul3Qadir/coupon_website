@@ -1,4 +1,4 @@
-<section class="py-14 sm:py-16">
+<section class="py-10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center max-w-2xl mx-auto">
         <h2 class="mt-4 font-Manrope text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">Exclusive Hot Deals</h2>

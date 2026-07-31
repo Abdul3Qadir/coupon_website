@@ -70,13 +70,17 @@
 
     @include("pages-components.top-coupons")
 
-    @include("pages-components.deals")
-
-    @include("pages-components.categories")
-
+    @include("pages-components.featured-stores")
+      
     @include("pages-components.trending-stores")
       
     @include("pages-components.popular-stores")
+
+    @include("pages-components.new-stores")
+
+    @include("pages-components.deals")
+
+    @include("pages-components.categories")
       
     <section class="py-14 sm:py-20 bg-[#f8f9fb]">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
