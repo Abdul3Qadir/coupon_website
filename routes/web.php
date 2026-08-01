@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Auth\EmailVerificationController as AdminEmailVer
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Brand\Auth\PasswordResetController;
 use App\Http\Controllers\Admin\BrandManagementController;
+use App\Http\Controllers\Brand\DashboardController as BrandDashboardController;
 
 Route::get('/', function () {
     return view('home');
@@ -67,7 +68,7 @@ Route::prefix('brand')->name('brand.')->group(function () {
         Route::post('logout', [AuthenticatedBrandSessionController::class, 'destroy'])->name('logout');
 
         Route::middleware('brand.verified')->group(function () {
-            Route::get('dashboard', fn () => view('brand.dashboard'))->name('dashboard');
+           Route::get('dashboard', [BrandDashboardController::class, 'index'])->name('dashboard');
         });
     });
 });
