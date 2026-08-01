@@ -11,6 +11,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Brand\Auth\PasswordResetController;
 use App\Http\Controllers\Admin\BrandManagementController;
 use App\Http\Controllers\Brand\DashboardController as BrandDashboardController;
+use App\Http\Controllers\Admin\SubAdminManagementController;
+use App\Http\Controllers\Admin\CategoryManagementController;
+use App\Http\Controllers\CategoryPageController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -20,9 +24,7 @@ Route::get('/stores', function () {
     return view('stores');
 });
 
-Route::get('/categories', function () {
-    return view('categories');
-});
+Route::get('/categories', [CategoryPageController::class, 'index'])->name('categories.index');
 
 Route::get('/deals', function () {
     return view('deals');
@@ -100,7 +102,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
                     Route::post('{brand}/reinstate', [BrandManagementController::class, 'reinstate'])->name('reinstate');
                     Route::post('{brand}/toggle-auto-publish', [BrandManagementController::class, 'toggleAutoPublish'])->name('toggle-auto-publish');
                 });
-    });
+                Route::prefix('sub-admins')->name('sub-admins.')->group(function () {
+                    Route::get('/', [SubAdminManagementController::class, 'index'])->name('index');
+                    Route::get('{subAdmin}', [SubAdminManagementController::class, 'show'])->name('show');
+                    Route::post('{subAdmin}/approve', [SubAdminManagementController::class, 'approve'])->name('approve');
+                    Route::post('{subAdmin}/reject', [SubAdminManagementController::class, 'reject'])->name('reject');
+                    Route::post('{subAdmin}/toggle-auto-publish', [SubAdminManagementController::class, 'toggleAutoPublish'])->name('toggle-auto-publish');
+                    Route::delete('{subAdmin}', [SubAdminManagementController::class, 'destroy'])->name('destroy');
+                });
+                Route::prefix('categories')->name('categories.')->group(function () {
+                    Route::get('/', [CategoryManagementController::class, 'index'])->name('index');
+                    Route::get('create', [CategoryManagementController::class, 'create'])->name('create');
+                    Route::post('/', [CategoryManagementController::class, 'store'])->name('store');
+                    Route::get('{category}/edit', [CategoryManagementController::class, 'edit'])->name('edit');
+                    Route::put('{category}', [CategoryManagementController::class, 'update'])->name('update');
+                    Route::delete('{category}', [CategoryManagementController::class, 'destroy'])->name('destroy');
+                });
+            });
 
         });
     });

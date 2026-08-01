@@ -9,6 +9,8 @@ import './stores-filter';
 import './confirm-modal';
 import './dashboard-sidebar';
 import './reject-brand-modal';
+import './reject-subadmin-modal';
+import './svg-preview';
 
 import Chart from 'chart.js/auto';
 window.Chart = Chart;

@@ -36,17 +36,6 @@
             </button>
         </div>
 
-        <div class="mt-4 flex flex-wrap items-center justify-center gap-2 font-Inter text-xs sm:text-sm">
-            <span class="text-gray-400">Popular:</span>
-            <a href="#" class="cursor-pointer text-gray-600 hover:text-red-600 transition">Fashion</a>
-            <span class="text-gray-300">·</span>
-            <a href="#" class="cursor-pointer text-gray-600 hover:text-red-600 transition">Beauty</a>
-            <span class="text-gray-300">·</span>
-            <a href="#" class="cursor-pointer text-gray-600 hover:text-red-600 transition">Electronics</a>
-            <span class="text-gray-300">·</span>
-            <a href="#" class="cursor-pointer text-gray-600 hover:text-red-600 transition">Travel</a>
-        </div>
-
         <div class="mx-auto mt-9 flex max-w-md items-center justify-center divide-x divide-gray-200">
             <div class="flex-1 px-4">
                 <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">24</p>
