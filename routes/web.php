@@ -26,16 +26,14 @@ Route::get('/stores', function () {
 
 Route::get('/categories', [CategoryPageController::class, 'index'])->name('categories.index');
 
+Route::get('/coupons/{category:slug}', [CategoryPageController::class, 'byCategory'])->name('coupons.category');
+
 Route::get('/deals', function () {
     return view('deals');
 });
 
 Route::get('/stores/brand', function () {
     return view('brand-details');
-});
-
-Route::get('/coupons/category', function () {
-    return view('coupons-category');
 });
 
 Route::get('/blog', function () {

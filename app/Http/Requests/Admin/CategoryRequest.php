@@ -19,6 +19,7 @@ class CategoryRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'icon' => ['required', 'string'],
+            'is_trending' => ['sometimes', 'boolean'],
             'parent_id' => [
                 'nullable',
                 Rule::exists('categories', 'id'),

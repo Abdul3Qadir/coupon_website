@@ -12,8 +12,17 @@ class Category extends Model
         'name',
         'slug',
         'icon',
+        'color',
+        'is_trending',
         'parent_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_trending' => 'boolean',
+        ];
+    }
 
     public function parent(): BelongsTo
     {

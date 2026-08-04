@@ -11,6 +11,8 @@ use Illuminate\View\View;
 
 class CategoryManagementController extends Controller
 {
+    private const COLORS = ['rose', 'blue', 'emerald', 'amber', 'violet', 'pink', 'orange', 'teal', 'indigo', 'cyan'];
+
     public function index(): View
     {
         return view('admin.categories.index', [
@@ -29,6 +31,8 @@ class CategoryManagementController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = $this->uniqueSlug($data['name']);
+        $data['color'] = self::COLORS[array_rand(self::COLORS)];
+        $data['is_trending'] = $request->boolean('is_trending');
 
         Category::create($data);
 
@@ -46,6 +50,7 @@ class CategoryManagementController extends Controller
     public function update(CategoryRequest $request, Category $category): RedirectResponse
     {
         $data = $request->validated();
+        $data['is_trending'] = $request->boolean('is_trending');
 
         if ($data['name'] !== $category->name) {
             $data['slug'] = $this->uniqueSlug($data['name'], $category->id);

@@ -27,3 +27,8 @@
     </div>
     <x-input-error :messages="$errors->get('icon')" />
 </div>
+
+<div class="mt-4 flex items-center gap-2">
+    <input type="checkbox" id="isTrending" name="is_trending" value="1" @checked(old('is_trending', $category->is_trending ?? false)) class="rounded border-gray-300 text-red-600 focus:ring-red-200">
+    <label for="isTrending" class="font-Inter text-sm text-gray-700">Mark as Trending (shows a "Trending" badge on this category)</label>
+</div>

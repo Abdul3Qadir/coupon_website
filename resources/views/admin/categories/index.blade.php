@@ -24,13 +24,12 @@
 
     <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         @forelse ($categories as $category)
-            <div class="rounded-2xl border border-gray-200 bg-white p-5">
-                <div class="flex items-start justify-between">
-                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-600 [&>svg]:h-6 [&>svg]:w-6">
-                        {!! $category->icon !!}
-                    </span>
+            <div class="relative rounded-2xl border border-gray-200 bg-white p-5">
+                <x-trending-badge :category="$category" />
+                <div class="flex items-end justify-between">
+                    <x-category-icon-badge :category="$category" small />
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('admin.categories.edit', $category) }}" class="text-gray-400 hover:text-gray-700 transition">
+                        <a href="{{ route('admin.categories.edit', $category) }}" class="text-gray-400 hover:text-gray-700 -mt-1 transition">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg>
                         </a>
                         <form method="POST" action="{{ route('admin.categories.destroy', $category) }}">
