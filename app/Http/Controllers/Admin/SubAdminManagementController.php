@@ -55,32 +55,26 @@ class SubAdminManagementController extends Controller
 
     public function approve(Admin $subAdmin): RedirectResponse
     {
-        abort_if($subAdmin->role === AdminRole::SuperAdmin, 404);
-
         $subAdmin->forceFill([
             'status' => AdminStatus::Approved,
             'rejection_reason' => null,
         ])->save();
 
-        //(new SubAdminApprovedNotification());
+        $subAdmin->notify(new SubAdminApprovedNotification());
 
         return back()->with('status', 'Sub-Admin approved successfully.');
     }
 
     public function reject(Request $request, Admin $subAdmin): RedirectResponse
     {
-        abort_if($subAdmin->role === AdminRole::SuperAdmin, 404);
-
-        $validated = $request->validate([
-            'rejection_reason' => ['required', 'string', 'max:500'],
-        ]);
+        $validated = $request->validate(['rejection_reason' => ['required', 'string', 'max:500']]);
 
         $subAdmin->forceFill([
             'status' => AdminStatus::Rejected,
             'rejection_reason' => $validated['rejection_reason'],
         ])->save();
 
-        //(new SubAdminRejectedNotification($validated['rejection_reason']));
+        $subAdmin->notify(new SubAdminRejectedNotification($validated['rejection_reason']));
 
         return back()->with('status', 'Sub-Admin access rejected.');
     }

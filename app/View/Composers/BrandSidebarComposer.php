@@ -18,6 +18,7 @@ class BrandSidebarComposer
         $view->with([
             'pendingOffersCount' => $brand->offers()->where('status', OfferStatus::Pending)->count(),
             'unreadNotificationsCount' => $brand->unreadNotifications()->count(),
+            'recentNotifications' => $brand->notifications()->latest()->take(6)->get(),
         ]);
     }
 }

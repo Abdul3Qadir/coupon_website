@@ -8,7 +8,7 @@ use App\Http\Requests\OfferRequest;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Offer;
-use App\Notifications\OfferAddedByAdminNotification;
+use App\Notifications\BrandOfferAddedNotification;
 use App\Notifications\OfferApprovedNotification;
 use App\Notifications\OfferRejectedNotification;
 use App\Services\OfferStatusResolver;
@@ -83,6 +83,8 @@ class OfferManagementController extends Controller
 
         $offer = Offer::create($data);
 
+        $brand->notify(new BrandOfferAddedNotification($offer));
+
         $message = $offer->status->value === 'approved'
             ? 'Offer published automatically.'
             : 'Offer submitted for review.';
@@ -145,7 +147,7 @@ class OfferManagementController extends Controller
             'rejection_reason' => null,
         ])->save();
 
-        //(new OfferApprovedNotification($offer));
+        $offer->brand->notify(new OfferApprovedNotification($offer));
 
         return back()->with('status', 'Offer approved.');
     }
@@ -161,7 +163,7 @@ class OfferManagementController extends Controller
             'verified_at' => now(),
         ])->save();
 
-        //(new OfferRejectedNotification($offer, $validated['rejection_reason']));
+        $offer->brand->notify(new OfferRejectedNotification($offer, $validated['rejection_reason']));
 
         return back()->with('status', 'Offer rejected.');
     }

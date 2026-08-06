@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use App\Models\Offer;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class OfferApprovedNotification extends Notification
@@ -14,16 +13,7 @@ class OfferApprovedNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
-    }
-
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-            ->subject('Your offer is now live')
-            ->greeting('Great news!')
-            ->line('Your offer "' . $this->offer->title . '" has been approved and is now live on Coupono.')
-            ->action('View Dashboard', route('brand.offers.index'));
+        return ['database'];
     }
 
     public function toArray(object $notifiable): array
@@ -31,6 +21,7 @@ class OfferApprovedNotification extends Notification
         return [
             'title' => 'Offer Approved',
             'message' => '"' . $this->offer->title . '" is now live.',
+            'action_url' => route('brand.offers.index'),
         ];
     }
 }

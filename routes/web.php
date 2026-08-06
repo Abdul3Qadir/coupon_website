@@ -49,6 +49,12 @@ Route::prefix('brand')->name('brand.')->group(function () {
         Route::post('verify-email/resend', [BrandEmailVerificationController::class, 'resend'])->name('verify-email.resend');
         Route::post('logout', [AuthenticatedBrandSessionController::class, 'destroy'])->name('logout');
 
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Brand\NotificationController::class, 'index'])->name('index');
+            Route::post('{id}/read', [\App\Http\Controllers\Brand\NotificationController::class, 'markRead'])->name('read');
+            Route::post('mark-all-read', [\App\Http\Controllers\Brand\NotificationController::class, 'markAllRead'])->name('mark-all-read');
+        });
+
         Route::middleware('brand.verified')->group(function () {
             Route::get('dashboard', [BrandDashboardController::class, 'index'])->name('dashboard');
 
@@ -79,10 +85,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('verify-email/resend', [AdminEmailVerificationController::class, 'resend'])->name('verify-email.resend');
         Route::post('logout', [AuthenticatedAdminSessionController::class, 'destroy'])->name('logout');
 
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('index');
+            Route::post('{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markRead'])->name('read');
+            Route::post('mark-all-read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('mark-all-read');
+        });
+
         Route::middleware('admin.verified')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-            // Categories — Both Super Admin & Sub-Admin
             Route::prefix('categories')->name('categories.')->group(function () {
                 Route::get('/', [CategoryManagementController::class, 'index'])->name('index');
                 Route::get('create', [CategoryManagementController::class, 'create'])->name('create');
@@ -91,8 +102,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::put('{category}', [CategoryManagementController::class, 'update'])->name('update');
                 Route::delete('{category}', [CategoryManagementController::class, 'destroy'])->name('destroy');
             });
-
-            // Offers — Both Super Admin & Sub-Admin
             Route::prefix('offers')->name('offers.')->group(function () {
                 Route::get('/', [OfferManagementController::class, 'index'])->name('index');
                 Route::get('create', [OfferManagementController::class, 'create'])->name('create');

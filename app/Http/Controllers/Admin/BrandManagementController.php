@@ -61,7 +61,7 @@ class BrandManagementController extends Controller
             'rejection_reason' => null,
         ])->save();
 
-        //(new BrandVerifiedNotification());
+        $brand->notify(new BrandVerifiedNotification());
 
         return back()->with('status', 'Brand verified successfully.');
     }
@@ -79,7 +79,7 @@ class BrandManagementController extends Controller
             'verified_at' => now(),
         ])->save();
 
-        //(new BrandRejectedNotification($validated['rejection_reason']));
+        $brand->notify(new BrandRejectedNotification($validated['rejection_reason']));
 
         return back()->with('status', 'Brand registration rejected.');
     }
@@ -105,7 +105,7 @@ class BrandManagementController extends Controller
         $brand->forceFill(['auto_publish_offers' => $enabling])->save();
 
         if ($enabling) {
-            //(new BrandAutoPublishEnabledNotification());
+            $brand->notify(new BrandAutoPublishEnabledNotification());
         }
 
         return back()->with('status', $enabling ? 'Auto-publish enabled for this brand.' : 'Auto-publish disabled for this brand.');

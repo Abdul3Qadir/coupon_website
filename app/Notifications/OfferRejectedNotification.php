@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use App\Models\Offer;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class OfferRejectedNotification extends Notification
@@ -16,21 +15,7 @@ class OfferRejectedNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
-    }
-
-    public function toMail(object $notifiable): MailMessage
-    {
-        $mail = (new MailMessage)
-            ->subject('Your offer was not approved')
-            ->greeting('Hello,')
-            ->line('Your offer "' . $this->offer->title . '" was not approved.');
-
-        if ($this->reason) {
-            $mail->line('Reason: ' . $this->reason);
-        }
-
-        return $mail->action('Edit Offer', route('brand.offers.edit', $this->offer));
+        return ['database'];
     }
 
     public function toArray(object $notifiable): array
@@ -38,6 +23,7 @@ class OfferRejectedNotification extends Notification
         return [
             'title' => 'Offer Rejected',
             'message' => $this->reason ?? ('"' . $this->offer->title . '" was not approved.'),
+            'action_url' => route('brand.offers.edit', $this->offer),
         ];
     }
 }

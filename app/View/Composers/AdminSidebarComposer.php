@@ -32,6 +32,7 @@ class AdminSidebarComposer
             'pendingOffersCount' => $pendingOffersQuery->count(),
             'unreadMessagesCount' => $admin->receivedMessages()->whereNull('read_at')->count(),
             'unreadNotificationsCount' => $admin->unreadNotifications()->count(),
+            'recentNotifications' => $admin->notifications()->latest()->take(6)->get(),
         ]);
     }
 }
