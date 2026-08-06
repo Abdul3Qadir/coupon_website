@@ -48,9 +48,13 @@ class OfferController extends Controller
         $brand = $request->user('brand');
         $data = array_merge($request->validated(), $resolver->resolveForBrandSubmission($brand));
 
-        $brand->offers()->create($data);
+        $offer = $brand->offers()->create($data);
 
-        return redirect()->route('brand.offers.index')->with('status', 'Your coupon or deal has been submitted.');
+        $message = $offer->status->value === 'approved'
+            ? 'Your offer has been published.'
+            : 'Your coupon or deal has been submitted for review.';
+
+        return redirect()->route('brand.offers.index')->with('status', $message);
     }
 
     public function edit(Request $request, Offer $offer): View
@@ -71,7 +75,11 @@ class OfferController extends Controller
 
         $offer->update($data);
 
-        return redirect()->route('brand.offers.index')->with('status', 'Your changes have been saved.');
+        $message = $offer->fresh()->status->value === 'approved'
+            ? 'Your offer has been updated and published.'
+            : 'Your changes have been saved and submitted for review.';
+
+        return redirect()->route('brand.offers.index')->with('status', $message);
     }
 
     public function destroy(Request $request, Offer $offer): RedirectResponse

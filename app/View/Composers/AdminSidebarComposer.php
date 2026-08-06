@@ -19,10 +19,17 @@ class AdminSidebarComposer
             return;
         }
 
+        $isSuperAdmin = $admin->isSuperAdmin();
+
+        $pendingOffersQuery = Offer::pending();
+        if (!$isSuperAdmin) {
+            $pendingOffersQuery->where('created_by_admin_id', $admin->id);
+        }
+
         $view->with([
-            'pendingBrandsCount' => Brand::where('status', BrandStatus::Pending)->count(),
-            'pendingSubAdminsCount' => Admin::where('status', AdminStatus::Pending)->count(),
-            'pendingOffersCount' => Offer::pending()->count(),
+            'pendingBrandsCount' => $isSuperAdmin ? Brand::where('status', BrandStatus::Pending)->count() : null,
+            'pendingSubAdminsCount' => $isSuperAdmin ? Admin::where('status', AdminStatus::Pending)->count() : null,
+            'pendingOffersCount' => $pendingOffersQuery->count(),
             'unreadMessagesCount' => $admin->receivedMessages()->whereNull('read_at')->count(),
             'unreadNotificationsCount' => $admin->unreadNotifications()->count(),
         ]);

@@ -4,7 +4,7 @@
         <p class="mt-1 font-Inter text-sm text-gray-500">Here's how your coupons and deals are doing.</p>
     </div>
 
-    <a href="#" class="mt-6 flex items-center justify-between gap-4 rounded-2xl bg-linear-to-br from-red-500 to-rose-600 p-6 text-white transition hover:shadow-lg hover:shadow-red-200">
+    <a href="{{ route('brand.offers.create') }}" class="mt-6 flex items-center justify-between gap-4 rounded-2xl bg-linear-to-br from-red-500 to-rose-600 p-6 text-white transition hover:shadow-lg hover:shadow-red-200">
         <div>
             <p class="font-Manrope text-lg sm:text-xl font-extrabold">+ Add a New Coupon or Deal</p>
             <p class="mt-1 font-Inter text-sm text-white/80">It only takes a minute. Click here to get started.</p>
@@ -66,7 +66,7 @@
             @empty
                 <div class="py-10 text-center">
                     <p class="font-Inter text-sm text-gray-500">You haven't added any coupons or deals yet.</p>
-                    <a href="#" class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-red-600 hover:bg-red-700 px-5 py-2.5 font-Manrope text-sm font-bold text-white transition">
+                    <a href="{{ route('brand.offers.create') }}" class="mt-3 inline-flex items-center gap-1.5 rounded-full bg-red-600 hover:bg-red-700 px-5 py-2.5 font-Manrope text-sm font-bold text-white transition">
                         Add Your First Coupon
                     </a>
                 </div>

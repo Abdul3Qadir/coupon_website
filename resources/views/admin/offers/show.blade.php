@@ -88,10 +88,10 @@
                     <div class="flex justify-between">
                         <span class="font-Inter text-xs text-gray-500">By</span>
                         <span class="font-Inter text-xs font-semibold text-gray-900">
-                            @if($offer->created_by_type->value === 'brand')
+                            @if($offer->created_by_type && $offer->created_by_type->value === 'brand')
                                 {{ $offer->brand->name }} <span class="text-gray-400 font-normal">(Brand)</span>
                             @else
-                                {{ $offer->createdByAdmin->name ?? 'Admin' }} <span class="text-gray-400 font-normal">(Admin)</span>
+                                {{ $offer->createdByAdmin?->name ?? 'Admin' }} <span class="text-gray-400 font-normal">(Admin)</span>
                             @endif
                         </span>
                     </div>

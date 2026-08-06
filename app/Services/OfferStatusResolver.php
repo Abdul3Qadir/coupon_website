@@ -4,12 +4,13 @@ namespace App\Services;
 
 use App\Enums\OfferStatus;
 use App\Models\Admin;
+use App\Models\Brand;
 
 class OfferStatusResolver
 {
-    public function resolveForBrandSubmission(): array
+    public function resolveForBrandSubmission(?Brand $brand = null): array
     {
-        $brand = auth('brand')->user();
+        $brand = $brand ?? auth('brand')->user();
 
         return [
             'status' => $brand->auto_publish_offers ? OfferStatus::Approved : OfferStatus::Pending,

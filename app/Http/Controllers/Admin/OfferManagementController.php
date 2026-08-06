@@ -18,7 +18,7 @@ use Illuminate\View\View;
 
 class OfferManagementController extends Controller
 {
-    public function index(Request $request): View
+        public function index(Request $request): View
     {
         $admin = $request->user('admin');
         $isSuperAdmin = $admin->isSuperAdmin();
@@ -27,29 +27,39 @@ class OfferManagementController extends Controller
 
         $query = Offer::with(['brand', 'createdByAdmin'])->latest();
 
+        if (!$isSuperAdmin) {
+            $query->where('created_by_admin_id', $admin->id);
+        }
+
         $query->when($status !== 'all', fn ($q) => $q->where('status', $status))
             ->when($brandId, fn ($q) => $q->where('brand_id', $brandId));
+
+        $countQuery = Offer::query();
+        if (!$isSuperAdmin) {
+            $countQuery->where('created_by_admin_id', $admin->id);
+        }
 
         return view('admin.offers.index', [
             'offers' => $query->paginate(15)->withQueryString(),
             'activeStatus' => $status,
             'isSuperAdmin' => $isSuperAdmin,
-            'brands' => $isSuperAdmin ? Brand::orderBy('name')->get() : collect(),
+            'brands' => $isSuperAdmin ? Brand::orderBy('name')->get(['id', 'name']) : collect(),
             'selectedBrandId' => $brandId,
             'statusCounts' => [
-                'all' => Offer::count(),
-                'pending' => Offer::pending()->count(),
-                'approved' => Offer::approved()->count(),
-                'rejected' => Offer::where('status', OfferStatus::Rejected)->count(),
+                'all' => (clone $countQuery)->count(),
+                'pending' => (clone $countQuery)->where('status', OfferStatus::Pending)->count(),
+                'approved' => (clone $countQuery)->where('status', OfferStatus::Approved)->count(),
+                'rejected' => (clone $countQuery)->where('status', OfferStatus::Rejected)->count(),
             ],
         ]);
     }
 
     public function show(Offer $offer): View
-{
-    return view('admin.offers.show', compact('offer'));
-}
-
+    {
+        $offer->load(['brand', 'category', 'createdByAdmin', 'verifier']);
+        return view('admin.offers.show', compact('offer'));
+    }
+    
     public function create(): View
     {
         return view('admin.offers.create', [
@@ -73,9 +83,11 @@ class OfferManagementController extends Controller
 
         $offer = Offer::create($data);
 
-        // $brand->notify(new OfferAddedByAdminNotification($offer));
+        $message = $offer->status->value === 'approved'
+            ? 'Offer published automatically.'
+            : 'Offer submitted for review.';
 
-        return redirect()->route('admin.offers.index')->with('status', 'Offer submitted for review.');
+        return redirect()->route('admin.offers.index')->with('status', $message);
     }
 
     public function edit(Request $request, Offer $offer): View
@@ -104,7 +116,11 @@ class OfferManagementController extends Controller
 
         $offer->update($data);
 
-        return redirect()->route('admin.offers.index')->with('status', 'Offer updated.');
+        $message = $offer->fresh()->status->value === 'approved'
+            ? 'Offer updated and published.'
+            : 'Offer updated and submitted for review.';
+
+        return redirect()->route('admin.offers.index')->with('status', $message);
     }
 
     public function destroy(Request $request, Offer $offer): RedirectResponse

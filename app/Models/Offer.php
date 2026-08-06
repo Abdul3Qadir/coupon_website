@@ -15,7 +15,7 @@ class Offer extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = [
+     protected $fillable = [
         'brand_id',
         'category_id',
         'type',
@@ -28,6 +28,16 @@ class Offer extends Model
         'terms_conditions',
         'starts_at',
         'expires_at',
+        'status',
+        'created_by_type',
+        'created_by_admin_id',
+        'verified_by',
+        'verified_at',
+        'rejection_reason',
+        'is_featured',
+        'is_trending',
+        'views_count',
+        'clicks_count',
     ];
 
     protected function casts(): array

@@ -73,3 +73,13 @@ html::-webkit-scrollbar-thumb:hover {
     background-size: 1rem;
     padding-right: 2.5rem;
 }
+
+@layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}
