@@ -62,7 +62,7 @@ class SubAdminManagementController extends Controller
             'rejection_reason' => null,
         ])->save();
 
-        $subAdmin->notify(new SubAdminApprovedNotification());
+        //(new SubAdminApprovedNotification());
 
         return back()->with('status', 'Sub-Admin approved successfully.');
     }
@@ -80,7 +80,7 @@ class SubAdminManagementController extends Controller
             'rejection_reason' => $validated['rejection_reason'],
         ])->save();
 
-        $subAdmin->notify(new SubAdminRejectedNotification($validated['rejection_reason']));
+        //(new SubAdminRejectedNotification($validated['rejection_reason']));
 
         return back()->with('status', 'Sub-Admin access rejected.');
     }

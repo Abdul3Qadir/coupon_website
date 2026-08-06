@@ -11,6 +11,8 @@ import './dashboard-sidebar';
 import './reject-brand-modal';
 import './reject-subadmin-modal';
 import './svg-preview';
+import './offer-type-toggle';
+import './reject-offer-modal';
 
 import Chart from 'chart.js/auto';
 window.Chart = Chart;

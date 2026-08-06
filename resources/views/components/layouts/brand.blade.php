@@ -28,7 +28,7 @@
                 Dashboard
             </x-brand.sidebar-link>
 
-            <x-brand.sidebar-link href="#" :badge="$pendingOffersCount ?? null">
+            <x-brand.sidebar-link href="{{ route('brand.offers.index') }}" :active="request()->routeIs('brand.offers.*')" :badge="$pendingOffersCount ?? null">
                 <x-slot:icon><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24H4a1 1 0 00-1 1v5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l5.59-5.59a2 2 0 000-2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></x-slot:icon>
                 My Coupons &amp; Deals
             </x-brand.sidebar-link>
