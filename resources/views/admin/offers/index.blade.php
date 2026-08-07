@@ -71,11 +71,11 @@
                                     @if($isSuperAdmin && $offer->status->value === 'pending')
                                         <form method="POST" action="{{ route('admin.offers.approve', $offer) }}" class="inline">
                                             @csrf
-                                            <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 font-Inter text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition">
+                                            <button type="submit" class="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 font-Inter text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition">
                                                 Approve
                                             </button>
                                         </form>
-                                        <button type="button" class="reject-offer-btn inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 font-Inter text-xs font-semibold text-red-600 hover:bg-red-100 transition" data-offer-id="{{ $offer->id }}" data-offer-title="{{ $offer->title }}">
+                                        <button type="button" class="reject-offer-btn cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 font-Inter text-xs font-semibold text-red-600 hover:bg-red-100 transition" data-offer-id="{{ $offer->id }}" data-offer-title="{{ $offer->title }}">
                                             Reject
                                         </button>
                                     @endif

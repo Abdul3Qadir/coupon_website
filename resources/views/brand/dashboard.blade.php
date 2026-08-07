@@ -60,7 +60,7 @@
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
                         <x-status-badge :status="$offer->status" />
-                        <a href="#" class="font-Inter text-sm font-semibold text-red-600 hover:text-red-700">Edit</a>
+                        <a href="{{ route('brand.offers.edit', $offer) }}" class="font-Inter text-sm font-semibold text-red-600 hover:text-red-700">Edit</a>
                     </div>
                 </div>
             @empty

@@ -71,7 +71,7 @@
             <p class="hidden sm:block font-Manrope text-base font-bold text-gray-900">{{ $title ?? 'Dashboard' }}</p>
 
             <div class="flex items-center gap-3 ml-auto">
-                <x-notification-dropdown />
+                <x-notification-dropdown guard="brand"/>
             </div>
         </header>
 

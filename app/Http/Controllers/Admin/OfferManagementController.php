@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\OfferStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OfferRequest;
+use App\Models\Admin;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Offer;
 use App\Notifications\BrandOfferAddedNotification;
 use App\Notifications\OfferApprovedNotification;
 use App\Notifications\OfferRejectedNotification;
+use App\Notifications\OfferPendingReviewNotification;
 use App\Services\OfferStatusResolver;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -85,6 +87,13 @@ class OfferManagementController extends Controller
 
         $brand->notify(new BrandOfferAddedNotification($offer));
 
+        if (!$admin->isSuperAdmin()) {
+            $superAdmins = Admin::where('is_super_admin', true)->get();
+            foreach ($superAdmins as $superAdmin) {
+                $superAdmin->notify(new OfferPendingReviewNotification($offer, $admin));
+            }
+        }
+
         $message = $offer->status->value === 'approved'
             ? 'Offer published automatically.'
             : 'Offer submitted for review.';
@@ -149,6 +158,13 @@ class OfferManagementController extends Controller
 
         $offer->brand->notify(new OfferApprovedNotification($offer));
 
+        if ($offer->created_by_admin_id && $offer->created_by_admin_id !== $request->user('admin')->id) {
+            $creator = Admin::find($offer->created_by_admin_id);
+            if ($creator) {
+                $creator->notify(new OfferApprovedNotification($offer));
+            }
+        }
+
         return back()->with('status', 'Offer approved.');
     }
 
@@ -164,6 +180,13 @@ class OfferManagementController extends Controller
         ])->save();
 
         $offer->brand->notify(new OfferRejectedNotification($offer, $validated['rejection_reason']));
+
+        if ($offer->created_by_admin_id && $offer->created_by_admin_id !== $request->user('admin')->id) {
+            $creator = Admin::find($offer->created_by_admin_id);
+            if ($creator) {
+                $creator->notify(new OfferRejectedNotification($offer, $validated['rejection_reason']));
+            }
+        }
 
         return back()->with('status', 'Offer rejected.');
     }

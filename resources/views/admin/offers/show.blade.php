@@ -117,12 +117,12 @@
                     <h3 class="font-Manrope text-sm font-extrabold text-gray-900 uppercase tracking-wider">Actions</h3>
                     <form method="POST" action="{{ route('admin.offers.approve', $offer) }}">
                         @csrf
-                        <button type="submit" class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 font-Inter text-sm font-semibold text-white hover:bg-emerald-700 transition">
+                        <button type="submit" class="w-full inline-flex items-center cursor-pointer justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 font-Inter text-sm font-semibold text-white hover:bg-emerald-700 transition">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                             Approve Offer
                         </button>
                     </form>
-                    <button type="button" class="reject-offer-btn w-full inline-flex items-center justify-center gap-2 rounded-xl bg-red-50 px-4 py-2.5 font-Inter text-sm font-semibold text-red-600 hover:bg-red-100 transition" data-offer-id="{{ $offer->id }}" data-offer-title="{{ $offer->title }}">
+                    <button type="button" class="reject-offer-btn w-full cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl bg-red-50 px-4 py-2.5 font-Inter text-sm font-semibold text-red-600 hover:bg-red-100 transition" data-offer-id="{{ $offer->id }}" data-offer-title="{{ $offer->title }}">
                         <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                         Reject Offer
                     </button>

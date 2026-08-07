@@ -1,82 +1,74 @@
 @php
-    $guard = auth('admin')->check() ? 'admin' : (auth('brand')->check() ? 'brand' : null);
+    // Auto-detect guard if not passed as prop
+    if (!isset($guard)) {
+        if (auth('admin')->check()) {
+            $guard = 'admin';
+        } elseif (auth('brand')->check()) {
+            $guard = 'brand';
+        } else {
+            $guard = 'web';
+        }
+    }
+
     $user = auth($guard)->user();
-    $indexRoute = $guard === 'admin' ? route('admin.notifications.index') : route('brand.notifications.index');
-    $markAllRoute = $guard === 'admin' ? route('admin.notifications.mark-all-read') : route('brand.notifications.mark-all-read');
-    $readRoutePrefix = $guard === 'admin' ? 'admin.notifications.read' : 'brand.notifications.read';
+    $notifications = collect();
+    $unreadCount = 0;
+
+    if ($user) {
+        $notifications = $user->notifications()->latest()->take(6)->get();
+        $unreadCount = $user->unreadNotifications()->count();
+    }
 @endphp
 
-@if($guard)
-<div class="relative" id="notificationDropdownContainer">
-    <button type="button" id="notificationBellBtn" class="relative flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition">
-        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-        @if(($unreadNotificationsCount ?? 0) > 0)
-            <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-600 ring-2 ring-white"></span>
+<div class="relative" x-data="{ open: false }">
+    <button @click="open = !open" class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+
+        @if($unreadCount > 0)
+            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
+                {{ $unreadCount }}
+            </span>
         @endif
     </button>
 
-    <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 rounded-2xl bg-white border border-gray-200 shadow-lg z-50 overflow-hidden">
-        <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100">
-            <h3 class="font-Manrope text-sm font-extrabold text-gray-900">Notifications</h3>
-            @if(($unreadNotificationsCount ?? 0) > 0)
-                <form method="POST" action="{{ $markAllRoute }}" class="inline">
-                    @csrf
-                    <button type="submit" class="font-Inter text-xs font-semibold text-red-600 hover:text-red-700 transition">Mark all read</button>
-                </form>
+    <div x-show="open" @click.away="open = false"
+         class="absolute right-0 z-50 w-80 mt-2 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+         style="display: none;">
+        
+        <div class="px-4 py-2 border-b border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700">Notifications</h3>
+        </div>
+
+        <div class="max-h-64 overflow-y-auto">
+            @if($notifications->count() > 0)
+                @foreach($notifications as $notification)
+                    <a href="{{ $notification->data['url'] ?? ($guard === 'admin' ? route('admin.notifications.index') : route('brand.notifications.index')) }}"
+                       class="block px-4 py-3 hover:bg-gray-50 {{ $notification->read_at ? 'bg-white' : 'bg-blue-50' }}">
+                        <p class="text-sm text-gray-800">
+                            {{ $notification->data['message'] ?? 'New notification' }}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">
+                            {{ $notification->created_at->diffForHumans() }}
+                        </p>
+                    </a>
+                @endforeach
+            @else
+                <div class="px-4 py-6 text-center text-sm text-gray-500">
+                    No notifications yet
+                </div>
             @endif
         </div>
 
-        <div class="max-h-112 overflow-y-auto scrollbar-hide">
-            @forelse (($recentNotifications ?? collect()) as $notification)
-                @php
-                    $isUnread = is_null($notification->read_at);
-                    $data = $notification->data;
-                    $title = $data['title'] ?? 'Notification';
-                    $message = $data['message'] ?? '';
-                    $actionUrl = $data['action_url'] ?? null;
-
-                    if (str_contains($title, 'Approved') || str_contains($title, 'Verified') || str_contains($title, 'Enabled')) {
-                        $iconColor = 'text-emerald-600 bg-emerald-50';
-                        $iconSvg = '<svg class=\"h-4 w-4\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6 9 17l-5-5\"/></svg>';
-                    } elseif (str_contains($title, 'Rejected') || str_contains($title, 'Not Approved')) {
-                        $iconColor = 'text-red-600 bg-red-50';
-                        $iconSvg = '<svg class=\"h-4 w-4\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg>';
-                    } else {
-                        $iconColor = 'text-blue-600 bg-blue-50';
-                        $iconSvg = '<svg class=\"h-4 w-4\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9\"/><path d=\"M13.73 21a2 2 0 01-3.46 0\"/></svg>';
-                    }
-                @endphp
-
-                <form method="POST" action="{{ route($readRoutePrefix, $notification->id) }}" class="block">
-                    @csrf
-                    <button type="submit" class="w-full text-left flex items-start gap-3 px-5 py-3 transition {{ $isUnread ? 'bg-gray-50' : 'bg-white' }} hover:bg-gray-100 border-b border-gray-100 last:border-b-0">
-                        <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full {{ $iconColor }}">
-                            {!! $iconSvg !!}
-                        </span>
-                        <div class="min-w-0 flex-1">
-                            <p class="font-Inter text-sm font-semibold text-gray-900">{{ $title }}</p>
-                            <p class="font-Inter text-xs text-gray-500 line-clamp-2">{{ $message }}</p>
-                            <p class="mt-1 font-Inter text-[11px] text-gray-400">{{ $notification->created_at->diffForHumans() }}</p>
-                        </div>
-                        @if($isUnread)
-                            <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-red-500"></span>
-                        @endif
-                    </button>
-                </form>
-            @empty
-                <div class="px-5 py-8 text-center">
-                    <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
-                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-                    </div>
-                    <p class="mt-2 font-Inter text-sm font-semibold text-gray-900">No notifications yet</p>
-                    <p class="mt-0.5 font-Inter text-xs text-gray-500">We'll notify you when something happens.</p>
-                </div>
-            @endforelse
-        </div>
-
-        <div class="border-t border-gray-100 px-5 py-2.5 bg-gray-50/50">
-            <a href="{{ $indexRoute }}" class="block text-center font-Inter text-xs font-semibold text-gray-600 hover:text-gray-900 transition">View all notifications</a>
-        </div>
+        @if($notifications->count() > 0)
+            <div class="border-t border-gray-200 px-4 py-2 text-center">
+                <a href="{{ $guard === 'admin' ? route('admin.notifications.index') : route('brand.notifications.index') }}"
+                   class="text-xs font-medium text-indigo-600 hover:text-indigo-500">
+                    View all
+                </a>
+            </div>
+        @endif
     </div>
 </div>
-@endif
