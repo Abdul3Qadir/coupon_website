@@ -75,7 +75,7 @@
                                                 Approve
                                             </button>
                                         </form>
-                                        <button type="button" class="reject-offer-btn cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 font-Inter text-xs font-semibold text-red-600 hover:bg-red-100 transition" data-offer-id="{{ $offer->id }}" data-offer-title="{{ $offer->title }}">
+                                        <button type="button" class="open-reject-offer-modal cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 font-Inter text-xs font-semibold text-red-600 hover:bg-red-100 transition" data-reject-url="{{ route('admin.offers.reject', $offer) }}" data-brand-name="{{ $offer->brand->name }}" data-offer-title="{{ $offer->title }}">
                                             Reject
                                         </button>
                                     @endif
