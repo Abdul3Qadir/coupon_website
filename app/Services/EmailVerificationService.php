@@ -22,7 +22,7 @@ class EmailVerificationService
             'expires_at' => now()->addMinutes(15),
         ]);
 
-        //(new EmailVerificationCodeNotification($code));
+        $verifiable->notify(new EmailVerificationCodeNotification($code));
     }
 
     public function canResend(Model $verifiable): bool

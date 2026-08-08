@@ -28,7 +28,7 @@
                 Dashboard
             </x-brand.sidebar-link>
 
-            <x-brand.sidebar-link href="{{ route('brand.offers.index') }}" :active="request()->routeIs('brand.offers.*')" :badge="$pendingOffersCount ?? null">
+            <x-brand.sidebar-link href="#" :badge="$pendingOffersCount ?? null">
                 <x-slot:icon><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24H4a1 1 0 00-1 1v5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l5.59-5.59a2 2 0 000-2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></x-slot:icon>
                 My Coupons &amp; Deals
             </x-brand.sidebar-link>
@@ -71,7 +71,12 @@
             <p class="hidden sm:block font-Manrope text-base font-bold text-gray-900">{{ $title ?? 'Dashboard' }}</p>
 
             <div class="flex items-center gap-3 ml-auto">
-                <x-notification-dropdown guard="brand"/>
+                <a href="#" class="relative flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                    @if (($unreadNotificationsCount ?? 0) > 0)
+                        <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-600 ring-2 ring-white"></span>
+                    @endif
+                </a>
             </div>
         </header>
 
