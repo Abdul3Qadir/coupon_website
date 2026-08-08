@@ -31,7 +31,7 @@
 @endphp
 
 <div class="relative" id="notificationDropdownContainer">
-    <button type="button" id="notificationBellBtn" class="relative flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition">
+    <button type="button" id="notificationBellBtn" class="relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-gray-500 hover:text-gray-900 transition">
         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
             <path d="M13.73 21a2 2 0 01-3.46 0"/>

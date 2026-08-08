@@ -34,27 +34,39 @@
                 <span class="absolute -bottom-1 left-0 h-0.5 bg-red-300 transition-all {{ request()->is('blog') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
             </a>
             <div class="relative group">
-                <button class="flex items-center gap-1 group-hover:text-red-400 transition-all duration-200 relative">
-                    For Brands
-                    <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all group-hover:w-full"></span>
-                </button>
-                <div class="absolute top-full left-0 mt-3 w-50 rounded-xl bg-gray-50 border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <a href="/brand/register" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700">
-                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Join as Brand
+                @auth('admin')
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-1.5 transition-all duration-200 relative text-gray-600 hover:text-red-400">
+                        Admin Dashboard
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all hover:w-full"></span>
                     </a>
-                    <a href="/brand/login" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700 rounded-b-2xl">
-                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" />
-                        </svg>
-                        Brand Login
+                @elseif(auth('brand')->check())
+                    <a href="{{ route('brand.dashboard') }}" class="flex items-center gap-1.5 transition-all duration-200 relative text-gray-600 hover:text-red-400">
+                        Brand Dashboard
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all hover:w-full"></span>
                     </a>
-                </div>
+                @else
+                    <button class="flex items-center gap-1 group-hover:text-red-400 transition-all duration-200 relative">
+                        For Brands
+                        <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-300 transition-all group-hover:w-full"></span>
+                    </button>
+                    <div class="absolute top-full left-0 mt-3 w-50 rounded-xl bg-gray-50 border border-gray-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="/brand/register" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700">
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Join as Brand
+                        </a>
+                        <a href="/brand/login" class="flex items-center gap-3 px-3 py-3 hover:bg-gray-100 text-sm text-gray-700 rounded-b-2xl">
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" />
+                            </svg>
+                            Brand Login
+                        </a>
+                    </div>
+                @endauth
             </div>
         </nav>
 
@@ -95,21 +107,36 @@
             <a href="/blog" class="hover:text-red-400 transition-colors py-2 border-b border-gray-50">Blog</a>
 
             <div class="mt-4 pt-4 border-t border-gray-100">
-                <p class="px-2 mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">For Brands</p>
-                <a href="/brand/register" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
-                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span>Join as Brand</span>
-                </a>
-                <a href="/brand/login" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
-                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" />
-                    </svg>
-                    <span>Brand Login</span>
-                </a>
+                @auth('admin')
+                    <p class="px-2 mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Admin</p>
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
+                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>Admin Dashboard</span>
+                    </a>
+                @elseif(auth('brand')->check())
+                    <p class="px-2 mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">Your Brand</p>
+                    <a href="{{ route('brand.dashboard') }}" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
+                        <span>Brand Dashboard</span>
+                    </a>
+                @else
+                    <p class="px-2 mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">For Brands</p>
+                    <a href="/brand/register" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
+                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Join as Brand</span>
+                    </a>
+                    <a href="/brand/login" class="flex items-center gap-3 py-3 px-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-red-400 transition-all duration-200">
+                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" />
+                        </svg>
+                        <span>Brand Login</span>
+                    </a>
+                @endauth
             </div>
-
         </nav>
         
         <div class="p-5 mt-auto border-t border-gray-100">

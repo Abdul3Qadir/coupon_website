@@ -65,7 +65,10 @@ class OfferManagementController extends Controller
     public function create(): View
     {
         return view('admin.offers.create', [
-            'brands' => Brand::where('status', \App\Enums\BrandStatus::Verified)->orderBy('name')->get(['id', 'name']),
+            'brands' => Brand::where('status', \App\Enums\BrandStatus::Verified)
+                ->where('allow_admin_to_add_offers', true)
+                ->orderBy('name')
+                ->get(['id', 'name']),
             'categories' => Category::orderBy('name')->get(['id', 'name']),
         ]);
     }
@@ -76,6 +79,10 @@ class OfferManagementController extends Controller
 
         $brand = Brand::findOrFail($request->input('brand_id'));
         $admin = $request->user('admin');
+
+        if (!$brand->allow_admin_to_add_offers) {
+            return back()->with('error', $brand->name . ' does not allow admins to create offers on their behalf.');
+        }
 
         $data = array_merge(
             $request->validated(),

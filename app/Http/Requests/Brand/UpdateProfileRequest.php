@@ -24,6 +24,14 @@ class UpdateProfileRequest extends FormRequest
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'instagram_url' => ['nullable', 'url', 'max:255'],
             'twitter_url' => ['nullable', 'url', 'max:255'],
+            'allow_admin_to_add_offers' => ['nullable', 'boolean'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'allow_admin_to_add_offers' => $this->boolean('allow_admin_to_add_offers'),
+        ]);
     }
 }

@@ -66,6 +66,10 @@ Route::prefix('brand')->name('brand.')->group(function () {
                 Route::put('{offer}', [OfferController::class, 'update'])->name('update');
                 Route::delete('{offer}', [OfferController::class, 'destroy'])->name('destroy');
             });
+
+            Route::get('settings', [\App\Http\Controllers\Brand\ProfileController::class, 'edit'])->name('settings.edit');
+            Route::put('settings/profile', [\App\Http\Controllers\Brand\ProfileController::class, 'update'])->name('settings.profile.update');
+            Route::put('settings/password', [\App\Http\Controllers\Brand\ProfileController::class, 'updatePassword'])->name('settings.password.update');
         });
     });
 });

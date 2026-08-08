@@ -10,6 +10,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use App\Enums\AdminRole;
+use App\Models\Admin;
+use App\Notifications\BrandAllowAdminNotification;
 
 class ProfileController extends Controller
 {
@@ -46,7 +49,17 @@ class ProfileController extends Controller
             'twitter' => $request->input('twitter_url'),
         ]);
 
+        $wasAllowing = $brand->allow_admin_to_add_offers;
+        $willAllow = $request->boolean('allow_admin_to_add_offers');
+
         $brand->update($data);
+
+        if (!$wasAllowing && $willAllow) {
+            $admins = \App\Models\Admin::whereIn('role', [\App\Enums\AdminRole::SuperAdmin, \App\Enums\AdminRole::SubAdmin])->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new \App\Notifications\BrandAllowAdminNotification($brand));
+            }
+        }
 
         return back()->with('status', 'Your profile has been updated.');
     }

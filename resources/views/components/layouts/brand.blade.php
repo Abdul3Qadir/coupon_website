@@ -11,6 +11,7 @@
 
     <div id="mobileSidebarBackdrop" class="fixed inset-0 z-40 hidden bg-gray-900/50 lg:hidden"></div>
 
+    {{-- Sidebar --}}
     <aside id="dashboardSidebar" class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col -translate-x-full border-r border-gray-200 bg-white transition-transform duration-200 lg:translate-x-0">
         <div class="flex h-16 shrink-0 items-center justify-between px-5 border-b border-gray-100">
             <a href="{{ route('brand.dashboard') }}" class="flex items-center gap-2">
@@ -28,7 +29,7 @@
                 Dashboard
             </x-brand.sidebar-link>
 
-            <x-brand.sidebar-link href="#" :badge="$pendingOffersCount ?? null">
+            <x-brand.sidebar-link :href="route('brand.offers.index')" :active="request()->routeIs('brand.offers.*')" :badge="$pendingOffersCount ?? null">
                 <x-slot:icon><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24H4a1 1 0 00-1 1v5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l5.59-5.59a2 2 0 000-2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></x-slot:icon>
                 My Coupons &amp; Deals
             </x-brand.sidebar-link>
@@ -38,7 +39,7 @@
                 Analytics
             </x-brand.sidebar-link>
 
-            <x-brand.sidebar-link href="#">
+            <x-brand.sidebar-link :href="route('brand.settings.edit')" :active="request()->routeIs('brand.settings.*')">
                 <x-slot:icon><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></x-slot:icon>
                 Settings
             </x-brand.sidebar-link>
@@ -46,7 +47,11 @@
 
         <div class="shrink-0 border-t border-gray-100 p-4">
             <div class="flex items-center gap-3 rounded-xl bg-gray-50 p-3 mb-3">
-                <x-avatar :name="$brand->name" size="sm" />
+                @if ($brand->small_logo)
+                    <img src="{{ asset('storage/' . $brand->small_logo) }}" alt="{{ $brand->name }}" class="h-8 w-8 rounded-full object-cover">
+                @else
+                    <x-avatar :name="$brand->name" size="sm" />
+                @endif
                 <div class="min-w-0">
                     <p class="font-Manrope text-sm font-bold text-gray-900 truncate">{{ $brand->name }}</p>
                     <p class="font-Inter text-xs text-gray-500 truncate">{{ $brand->email }}</p>
@@ -62,6 +67,7 @@
         </div>
     </aside>
 
+    {{-- Main Content --}}
     <div class="lg:pl-72">
         <header class="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white/90 backdrop-blur px-4 sm:px-6">
             <button type="button" id="openSidebarBtn" class="cursor-pointer lg:hidden text-gray-500 hover:text-gray-900">
@@ -71,12 +77,7 @@
             <p class="hidden sm:block font-Manrope text-base font-bold text-gray-900">{{ $title ?? 'Dashboard' }}</p>
 
             <div class="flex items-center gap-3 ml-auto">
-                <a href="#" class="relative flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition">
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-                    @if (($unreadNotificationsCount ?? 0) > 0)
-                        <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-600 ring-2 ring-white"></span>
-                    @endif
-                </a>
+                <x-notification-dropdown />
             </div>
         </header>
 
