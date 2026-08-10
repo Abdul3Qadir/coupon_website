@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} — Coupono Admin</title>
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 </head>
 <body class="font-Inter bg-[#f8f9fb]">
     @php
@@ -131,8 +131,7 @@
             {{ $slot }}
         </main>
     </div>
-
-    <x-confirm-modal />
     @stack('scripts')
+    <x-confirm-modal />
 </body>
 </html>
