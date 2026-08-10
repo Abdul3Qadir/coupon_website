@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\CategoryManagementController;
 use App\Http\Controllers\CategoryPageController;
 use App\Http\Controllers\Admin\OfferManagementController;
 use App\Http\Controllers\Brand\OfferController;
+use App\Http\Controllers\Admin\BlogCategoryManagementController;
+use App\Http\Controllers\Admin\BlogManagementController;
 
 // Public Routes
 Route::get('/', function () { return view('home'); });
@@ -106,6 +108,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::put('{category}', [CategoryManagementController::class, 'update'])->name('update');
                 Route::delete('{category}', [CategoryManagementController::class, 'destroy'])->name('destroy');
             });
+
+            Route::prefix('blog-categories')->name('blog-categories.')->group(function () {
+                Route::get('/', [BlogCategoryManagementController::class, 'index'])->name('index');
+                Route::get('create', [BlogCategoryManagementController::class, 'create'])->name('create');
+                Route::post('/', [BlogCategoryManagementController::class, 'store'])->name('store');
+                Route::get('{blogCategory}/edit', [BlogCategoryManagementController::class, 'edit'])->name('edit');
+                Route::put('{blogCategory}', [BlogCategoryManagementController::class, 'update'])->name('update');
+                Route::delete('{blogCategory}', [BlogCategoryManagementController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('blogs')->name('blogs.')->group(function () {
+                Route::get('/', [BlogManagementController::class, 'index'])->name('index');
+                Route::get('create', [BlogManagementController::class, 'create'])->name('create');
+                Route::post('/', [BlogManagementController::class, 'store'])->name('store');
+                Route::get('{blog}/edit', [BlogManagementController::class, 'edit'])->name('edit');
+                Route::put('{blog}', [BlogManagementController::class, 'update'])->name('update');
+                Route::delete('{blog}', [BlogManagementController::class, 'destroy'])->name('destroy');
+            });
+
             Route::prefix('offers')->name('offers.')->group(function () {
                 Route::get('/', [OfferManagementController::class, 'index'])->name('index');
                 Route::get('create', [OfferManagementController::class, 'create'])->name('create');

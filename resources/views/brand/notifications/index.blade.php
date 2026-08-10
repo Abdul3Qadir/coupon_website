@@ -7,7 +7,7 @@
         @if($unreadCount > 0)
             <form method="POST" action="{{ route('brand.notifications.mark-all-read') }}">
                 @csrf
-                <button type="submit" class="inline-flex items-center gap-1.5 rounded-xl bg-gray-900 px-4 py-2.5 font-Inter text-sm font-semibold text-white hover:bg-gray-800 transition">
+                <button type="submit" class="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-gray-900 px-4 py-2.5 font-Inter text-sm font-semibold text-white hover:bg-gray-800 transition">
                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                     Mark all as read
                 </button>

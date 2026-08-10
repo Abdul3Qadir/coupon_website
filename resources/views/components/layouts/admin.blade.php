@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} — Coupono Admin</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-Inter bg-[#f8f9fb]">
@@ -46,7 +47,7 @@
                     <x-slot:icon><svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></x-slot:icon>
                     Categories
                 </x-admin.sidebar-link>
-                <x-admin.sidebar-link href="#">
+                <x-admin.sidebar-link :href="route('admin.blog-categories.index')" :active="request()->routeIs('admin.blog-categories.*')">
                     <x-slot:icon><svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></x-slot:icon>
                     Blog Categories
                 </x-admin.sidebar-link>
@@ -56,7 +57,7 @@
                 <x-slot:icon><svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 009.59 3.24H4a1 1 0 00-1 1v5.59a2 2 0 00.59 1.41l9.58 9.58a2 2 0 002.82 0l5.59-5.59a2 2 0 000-2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></x-slot:icon>
                 Offers
             </x-admin.sidebar-link>
-            <x-admin.sidebar-link href="#">
+            <x-admin.sidebar-link :href="route('admin.blogs.index')" :active="request()->routeIs('admin.blogs.*')">
                 <x-slot:icon><svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></x-slot:icon>
                 Blogs
             </x-admin.sidebar-link>
@@ -132,5 +133,6 @@
     </div>
 
     <x-confirm-modal />
+    @stack('scripts')
 </body>
 </html>

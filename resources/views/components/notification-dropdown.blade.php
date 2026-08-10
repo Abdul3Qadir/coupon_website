@@ -47,7 +47,7 @@
             @if($unreadNotificationsCount > 0)
                 <form method="POST" action="{{ $markAllRoute }}" class="inline">
                     @csrf
-                    <button type="submit" class="font-Inter text-xs font-semibold text-red-600 hover:text-red-700 transition">Mark all read</button>
+                    <button type="submit" class="font-Inter text-xs cursor-pointer font-semibold text-red-600 hover:text-red-700 transition">Mark all read</button>
                 </form>
             @endif
         </div>
