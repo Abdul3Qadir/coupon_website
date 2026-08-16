@@ -49,8 +49,11 @@
     @endif
 
     <div>
-        <input type="file" name="feature_image" id="featureImage" accept="image/jpeg,image/png,image/webp" class="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-Inter text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-red-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-red-700 cursor-pointer outline-none focus:border-red-300 focus:ring-2 focus:ring-red-100 transition" />
-        <p class="mt-1.5 font-Inter text-xs text-gray-400">JPG, PNG, WebP up to 2MB. Recommended size: 1200 x 630px</p>
+        <input type="file" name="feature_image" id="featureImage" accept="image/jpeg,image/png,image/webp,image/jpg" class="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-Inter text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-red-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-red-700 cursor-pointer outline-none focus:border-red-300 focus:ring-2 focus:ring-red-100 transition" />
+        <p class="mt-1.5 font-Inter text-xs text-gray-400">JPG, PNG, WebP up to 2MB. Recommended: 1200 x 630px</p>
+        @error('feature_image')
+            <p class="mt-1 font-Inter text-xs text-red-600">{{ $message }}</p>
+        @enderror
     </div>
 
     <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -135,13 +138,10 @@
                     '|',
                     'bold',
                     'italic',
-                    'underline',
                     '|',
                     'link',
                     'bulletedList',
                     'numberedList',
-                    '|',
-                    'alignment',
                     '|',
                     'blockQuote',
                     'insertTable',
@@ -160,10 +160,10 @@
                 placeholder: 'Write your article content here...'
             })
             .then(editor => {
-                console.log('CKEditor initialized');
+                console.log('CKEditor 5 initialized successfully');
             })
             .catch(error => {
-                console.error('CKEditor error:', error);
+                console.error('CKEditor 5 error:', error);
             });
     });
 </script>

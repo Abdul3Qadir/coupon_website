@@ -28,7 +28,10 @@
                         </div>
                     @endif
                     <div class="absolute top-3 left-3">
-                        <x-status-badge :status="$blog->status->value" />
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-Inter text-[11px] font-semibold
+                            {{ $blog->status->value === 'published' ? 'bg-emerald-100 text-emerald-700' : ($blog->status->value === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
+                            {{ $blog->status->label() }}
+                        </span>
                     </div>
                 </div>
 
@@ -52,6 +55,9 @@
                     <div class="mt-4 flex items-center justify-between pt-4 border-t border-gray-100">
                         <span class="font-Inter text-xs text-gray-400">By {{ $blog->admin?->name ?? 'Unknown' }}</span>
                         <div class="flex items-center gap-1">
+                            <a href="{{ route('blog.show', $blog->slug) }}" target="_blank" class="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-3 py-1.5 font-Inter text-xs font-semibold text-emerald-600 hover:bg-emerald-100 transition" title="View Live">
+                                <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
                             <a href="{{ route('admin.blogs.edit', $blog) }}" class="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-3 py-1.5 font-Inter text-xs font-semibold text-gray-700 hover:bg-gray-200 transition">
                                 <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg>
                                 Edit

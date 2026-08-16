@@ -35,13 +35,13 @@ class BlogManagementController extends Controller
         $data['admin_id'] = $request->user('admin')->id;
         $data['slug'] = $this->uniqueSlug($data['title']);
 
+        // Handle feature image
         if ($request->hasFile('feature_image')) {
             $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
         }
 
-        if ($data['status'] === BlogStatus::Published->value && empty($data['published_at'])) {
-            $data['published_at'] = now();
-        }
+        // Handle status + scheduling
+        $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
 
         $tags = $this->parseTags($data['tags'] ?? '');
         unset($data['tags']);
@@ -49,7 +49,13 @@ class BlogManagementController extends Controller
         $blog = Blog::create($data);
         $blog->tags()->sync($tags);
 
-        return redirect()->route('admin.blogs.index')->with('status', 'Blog post created successfully.');
+        $message = match ($blog->status) {
+            BlogStatus::Published => 'Blog post published successfully.',
+            BlogStatus::Scheduled => 'Blog post scheduled successfully.',
+            default => 'Blog post saved as draft.',
+        };
+
+        return redirect()->route('admin.blogs.index')->with('status', $message);
     }
 
     public function edit(Blog $blog): View
@@ -68,6 +74,7 @@ class BlogManagementController extends Controller
             $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
         }
 
+        // Handle feature image
         if ($request->hasFile('feature_image')) {
             if ($blog->feature_image) {
                 Storage::disk('public')->delete($blog->feature_image);
@@ -75,11 +82,11 @@ class BlogManagementController extends Controller
             $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
         }
 
-        if ($data['status'] === BlogStatus::Published->value && empty($data['published_at'])) {
-            $data['published_at'] = now();
-        }
+        // Handle status + scheduling
+        $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
 
-        if ($data['status'] === BlogStatus::Draft->value) {
+        // If draft, clear published_at
+        if ($data['status'] === BlogStatus::Draft) {
             $data['published_at'] = null;
         }
 
@@ -89,7 +96,13 @@ class BlogManagementController extends Controller
         $blog->update($data);
         $blog->tags()->sync($tags);
 
-        return redirect()->route('admin.blogs.index')->with('status', 'Blog post updated successfully.');
+        $message = match ($blog->status) {
+            BlogStatus::Published => 'Blog post updated and published.',
+            BlogStatus::Scheduled => 'Blog post updated and scheduled.',
+            default => 'Blog post updated and saved as draft.',
+        };
+
+        return redirect()->route('admin.blogs.index')->with('status', $message);
     }
 
     public function destroy(Blog $blog): RedirectResponse
@@ -101,6 +114,22 @@ class BlogManagementController extends Controller
         $blog->delete();
 
         return back()->with('status', 'Blog post deleted.');
+    }
+
+    private function resolveStatus(string $status, ?string $publishedAt): BlogStatus
+    {
+        if ($status === 'draft') {
+            return BlogStatus::Draft;
+        }
+
+        if (!empty($publishedAt)) {
+            $date = \Carbon\Carbon::parse($publishedAt);
+            if ($date->isFuture()) {
+                return BlogStatus::Scheduled;
+            }
+        }
+
+        return BlogStatus::Published;
     }
 
     private function uniqueSlug(string $title, ?int $ignoreId = null): string

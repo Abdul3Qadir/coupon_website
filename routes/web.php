@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\OfferManagementController;
 use App\Http\Controllers\Brand\OfferController;
 use App\Http\Controllers\Admin\BlogCategoryManagementController;
 use App\Http\Controllers\Admin\BlogManagementController;
+use App\Http\Controllers\BlogController;
 
 // Public Routes
 Route::get('/', function () { return view('home'); });
@@ -26,8 +27,8 @@ Route::get('/categories', [CategoryPageController::class, 'index'])->name('categ
 Route::get('/coupons/{category:slug}', [CategoryPageController::class, 'byCategory'])->name('coupons.category');
 Route::get('/deals', function () { return view('deals'); });
 Route::get('/stores/brand', function () { return view('brand-details'); });
-Route::get('/blog', function () { return view('blog'); });
-Route::get('/blog/article', function () { return view('blog-article'); });
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // Brand Routes
 Route::prefix('brand')->name('brand.')->group(function () {
