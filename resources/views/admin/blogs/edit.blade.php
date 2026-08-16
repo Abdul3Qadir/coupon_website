@@ -25,14 +25,16 @@
 
                     <div class="mb-3">
                         @php
-                            $displayStatus = $blog->status;
-                            if ($blog->status->value === 'scheduled' && $blog->published_at && $blog->published_at->isPast()) {
-                                $displayStatus = 'published';
+                            $statusValue = $blog->status->value;
+                            $statusLabel = $blog->status->label();
+                            if ($statusValue === 'scheduled' && $blog->published_at && $blog->published_at->isPast()) {
+                                $statusValue = 'published';
+                                $statusLabel = 'Published';
                             }
                         @endphp
                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-Inter text-xs font-semibold
-                            {{ $displayStatus === 'published' ? 'bg-emerald-100 text-emerald-700' : ($displayStatus === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">
-                            {{ ucfirst($displayStatus) }}
+                            {{ $statusValue === 'published' ? 'bg-emerald-100 text-emerald-700' : ($statusValue === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">
+                            {{ $statusLabel }}
                         </span>
                     </div>
 

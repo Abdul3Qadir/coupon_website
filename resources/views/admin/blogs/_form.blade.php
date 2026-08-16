@@ -31,13 +31,8 @@
     </div>
 </div>
 
-<div class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+<div class="rounded-2xl border  prose max-w-none border-gray-200 bg-white p-6 sm:p-8">
     <label class="block font-Inter text-sm font-semibold text-gray-900 mb-3">Content</label>
-    {{-- CKEditor 5 Classic build mein image upload plugin nahi hai by default.
-         Article ke beech mein image add karne ke liye:
-         1. External image ka URL paste karo, ya
-         2. Image pehle upload karo (Imgur, Cloudinary etc), phir URL se embed karo
-         Future mein: CKEditor custom build ya Superbuild use karo for native image upload --}}
     <textarea id="editor" name="content" rows="15" placeholder="Write your article content here..." class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-Inter text-sm text-gray-900 placeholder:text-gray-400 focus:border-red-300 focus:bg-white focus:ring-2 focus:ring-red-100 outline-none transition">{{ old('content', $blog->content ?? '') }}</textarea>
 </div>
 

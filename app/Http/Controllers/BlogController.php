@@ -37,6 +37,10 @@ class BlogController extends Controller
         $blog = Blog::with(['blogCategory', 'admin', 'tags'])
             ->where('slug', $slug)
             ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
+            ->where(function ($q) {
+                $q->whereNull('published_at')
+                  ->orWhere('published_at', '<=', now());
+            })
             ->firstOrFail();
 
         $relatedBlogs = Blog::with('blogCategory')

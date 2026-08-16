@@ -74,6 +74,10 @@ html::-webkit-scrollbar-thumb:hover {
     padding-right: 2.5rem;
 }
 
+.ck-editor__editable {
+    @apply prose max-w-none;
+}
+
 @layer utilities {
     .scrollbar-hide {
         -ms-overflow-style: none;

@@ -17,6 +17,8 @@ class BlogManagementController extends Controller
 {
     public function index(): View
     {
+        $this->autoPublishScheduled();
+        
         return view('admin.blogs.index', [
             'blogs' => Blog::with(['blogCategory', 'admin', 'tags'])->latest()->paginate(15),
         ]);
@@ -166,5 +168,13 @@ class BlogManagementController extends Controller
         }
 
         return $ids;
+    }
+
+    private function autoPublishScheduled(): void
+    {
+        Blog::where('status', BlogStatus::Scheduled)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->update(['status' => BlogStatus::Published]);
     }
 }

@@ -16,8 +16,7 @@
         </div>
     @endif
 
-    {{-- 4 CARDS ON LARGE SCREENS FIX (Issue #11): lg:grid-cols-4 --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
         @forelse ($blogs as $blog)
             <div class="group rounded-2xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg hover:shadow-gray-200/50 transition duration-300">
                 <div class="relative h-40 bg-gray-100 overflow-hidden">
@@ -29,16 +28,17 @@
                         </div>
                     @endif
                     <div class="absolute top-3 left-3">
-                        {{-- SCHEDULED STATUS FIX (Issue #4): Check if scheduled time passed --}}
                         @php
-                            $displayStatus = $blog->status;
-                            if ($blog->status->value === 'scheduled' && $blog->published_at && $blog->published_at->isPast()) {
-                                $displayStatus = 'published';
+                            $statusValue = $blog->status->value;
+                            $statusLabel = $blog->status->label();
+                            if ($statusValue === 'scheduled' && $blog->published_at && $blog->published_at->isPast()) {
+                                $statusValue = 'published';
+                                $statusLabel = 'Published';
                             }
                         @endphp
                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-Inter text-[11px] font-semibold
-                            {{ $displayStatus === 'published' ? 'bg-emerald-100 text-emerald-700' : ($displayStatus === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
-                            {{ ucfirst($displayStatus) }}
+                            {{ $statusValue === 'published' ? 'bg-emerald-100 text-emerald-700' : ($statusValue === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
+                            {{ $statusLabel }}
                         </span>
                     </div>
                 </div>
