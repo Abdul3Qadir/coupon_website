@@ -12,6 +12,8 @@ class BlogController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->autoPublishScheduled();
+
         $query = Blog::with(['blogCategory', 'admin', 'tags'])
             ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
             ->where(function ($q) {
@@ -34,6 +36,8 @@ class BlogController extends Controller
 
     public function show(string $slug): View
     {
+        $this->autoPublishScheduled();
+
         $blog = Blog::with(['blogCategory', 'admin', 'tags'])
             ->where('slug', $slug)
             ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
@@ -58,5 +62,13 @@ class BlogController extends Controller
             ->get();
 
         return view('blog-article', compact('blog', 'relatedBlogs'));
+    }
+
+    private function autoPublishScheduled(): void
+    {
+        Blog::where('status', BlogStatus::Scheduled)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->update(['status' => BlogStatus::Published]);
     }
 }

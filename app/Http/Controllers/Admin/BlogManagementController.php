@@ -18,7 +18,7 @@ class BlogManagementController extends Controller
     public function index(): View
     {
         $this->autoPublishScheduled();
-        
+
         return view('admin.blogs.index', [
             'blogs' => Blog::with(['blogCategory', 'admin', 'tags'])->latest()->paginate(15),
         ]);
@@ -35,14 +35,15 @@ class BlogManagementController extends Controller
     {
         $data = $request->validated();
         $data['admin_id'] = $request->user('admin')->id;
-        $data['slug'] = $this->uniqueSlug($data['title']);
 
-        // Handle feature image
+        if (empty($data['slug'])) {
+            $data['slug'] = $this->uniqueSlug($data['title']);
+        }
+
         if ($request->hasFile('feature_image')) {
             $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
         }
 
-        // Handle status + scheduling
         $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
 
         $tags = $this->parseTags($data['tags'] ?? '');
@@ -72,11 +73,12 @@ class BlogManagementController extends Controller
     {
         $data = $request->validated();
 
-        if ($data['title'] !== $blog->title) {
+        if (empty($data['slug'])) {
+            $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
+        } elseif ($data['slug'] !== $blog->slug && empty($data['slug'])) {
             $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
         }
 
-        // Handle feature image
         if ($request->hasFile('feature_image')) {
             if ($blog->feature_image) {
                 Storage::disk('public')->delete($blog->feature_image);
@@ -84,10 +86,8 @@ class BlogManagementController extends Controller
             $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
         }
 
-        // Handle status + scheduling
         $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
 
-        // If draft, clear published_at
         if ($data['status'] === BlogStatus::Draft) {
             $data['published_at'] = null;
         }
@@ -116,6 +116,14 @@ class BlogManagementController extends Controller
         $blog->delete();
 
         return back()->with('status', 'Blog post deleted.');
+    }
+
+    private function autoPublishScheduled(): void
+    {
+        Blog::where('status', BlogStatus::Scheduled)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->update(['status' => BlogStatus::Published]);
     }
 
     private function resolveStatus(string $status, ?string $publishedAt): BlogStatus
@@ -168,13 +176,5 @@ class BlogManagementController extends Controller
         }
 
         return $ids;
-    }
-
-    private function autoPublishScheduled(): void
-    {
-        Blog::where('status', BlogStatus::Scheduled)
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', now())
-            ->update(['status' => BlogStatus::Published]);
     }
 }

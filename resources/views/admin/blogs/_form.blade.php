@@ -148,8 +148,50 @@
         const editorElement = document.querySelector('#editor');
         if (!editorElement) return;
 
+        class UploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+
+            upload() {
+                return this.loader.file.then(file => {
+                    return new Promise((resolve, reject) => {
+                        const data = new FormData();
+                        data.append('upload', file);
+                        data.append('_token', '{{ csrf_token() }}');
+
+                        fetch('{{ route('admin.blogs.upload-image') }}', {
+                            method: 'POST',
+                            body: data,
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.error) {
+                                reject(result.error.message);
+                            } else {
+                                resolve({ default: result.url });
+                            }
+                        })
+                        .catch(error => {
+                            reject('Upload failed: ' + error);
+                        });
+                    });
+                });
+            }
+
+            abort() {
+            }
+        }
+
+        function CustomUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                return new UploadAdapter(loader);
+            };
+        }
+
         ClassicEditor
             .create(editorElement, {
+                extraPlugins: [CustomUploadAdapterPlugin],
                 toolbar: [
                     'heading',
                     '|',
@@ -160,6 +202,7 @@
                     'bulletedList',
                     'numberedList',
                     '|',
+                    'imageUpload',
                     'blockQuote',
                     'insertTable',
                     '|',
@@ -174,10 +217,13 @@
                         { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
                     ]
                 },
+                image: {
+                    toolbar: ['imageTextAlternative', '|', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side']
+                },
                 placeholder: 'Write your article content here...'
             })
             .then(editor => {
-                console.log('CKEditor 5 initialized');
+                console.log('CKEditor 5 initialized with image upload');
             })
             .catch(error => {
                 console.error('CKEditor 5 error:', error);

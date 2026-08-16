@@ -21,7 +21,7 @@ class BlogRequest extends FormRequest
             'blog_category_id' => ['nullable', 'exists:blog_categories,id'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255',
                 Rule::unique('blogs', 'slug')->ignore($blogId),

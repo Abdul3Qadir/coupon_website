@@ -127,6 +127,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::put('{blog}', [BlogManagementController::class, 'update'])->name('update');
                 Route::delete('{blog}', [BlogManagementController::class, 'destroy'])->name('destroy');
             });
+            
+            Route::post('blogs/upload-image', [App\Http\Controllers\Admin\ImageUploadController::class, 'upload'])->name('blogs.upload-image');
 
             Route::prefix('offers')->name('offers.')->group(function () {
                 Route::get('/', [OfferManagementController::class, 'index'])->name('index');

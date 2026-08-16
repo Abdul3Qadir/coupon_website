@@ -26,23 +26,21 @@ class BlogCategoryManagementController extends Controller
     public function store(BlogCategoryRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['slug'] = $this->uniqueSlug($data['name']);
+        
+        if (empty($data['slug'])) {
+            $data['slug'] = $this->uniqueSlug($data['name']);
+        }
 
         BlogCategory::create($data);
 
         return redirect()->route('admin.blog-categories.index')->with('status', 'Blog category created successfully.');
     }
 
-    public function edit(BlogCategory $blogCategory): View
-    {
-        return view('admin.blog-categories.edit', compact('blogCategory'));
-    }
-
     public function update(BlogCategoryRequest $request, BlogCategory $blogCategory): RedirectResponse
     {
         $data = $request->validated();
 
-        if ($data['name'] !== $blogCategory->name) {
+        if (empty($data['slug'])) {
             $data['slug'] = $this->uniqueSlug($data['name'], $blogCategory->id);
         }
 
