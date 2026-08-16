@@ -13,6 +13,7 @@
 
         <form method="POST" action="{{ route('admin.blogs.store') }}" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
             @csrf
+            {{-- YEH LINE ADD KARO --}}
             @php $blog = null; @endphp
 
             <div class="space-y-6">

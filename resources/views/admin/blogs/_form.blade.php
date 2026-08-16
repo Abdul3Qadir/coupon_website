@@ -33,6 +33,11 @@
 
 <div class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
     <label class="block font-Inter text-sm font-semibold text-gray-900 mb-3">Content</label>
+    {{-- CKEditor 5 Classic build mein image upload plugin nahi hai by default.
+         Article ke beech mein image add karne ke liye:
+         1. External image ka URL paste karo, ya
+         2. Image pehle upload karo (Imgur, Cloudinary etc), phir URL se embed karo
+         Future mein: CKEditor custom build ya Superbuild use karo for native image upload --}}
     <textarea id="editor" name="content" rows="15" placeholder="Write your article content here..." class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-Inter text-sm text-gray-900 placeholder:text-gray-400 focus:border-red-300 focus:bg-white focus:ring-2 focus:ring-red-100 outline-none transition">{{ old('content', $blog->content ?? '') }}</textarea>
 </div>
 
@@ -42,11 +47,10 @@
         Featured Image
     </h3>
 
-    @if (isset($blog) && $blog->feature_image)
-        <div class="mb-4 relative rounded-xl overflow-hidden">
-            <img src="{{ asset('storage/' . $blog->feature_image) }}" alt="" class="h-48 w-full object-cover">
-        </div>
-    @endif
+    {{-- IMAGE PREVIEW FIX (Issue #3) --}}
+    <div id="imagePreviewContainer" class="{{ (isset($blog) && $blog->feature_image) ? '' : 'hidden' }} mb-4 relative rounded-xl overflow-hidden">
+        <img id="imagePreview" src="{{ isset($blog) && $blog->feature_image ? asset('storage/' . $blog->feature_image) : '' }}" alt="" class="h-48 w-full object-cover">
+    </div>
 
     <div>
         <input type="file" name="feature_image" id="featureImage" accept="image/jpeg,image/png,image/webp,image/jpg" class="block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-Inter text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-red-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-red-700 cursor-pointer outline-none focus:border-red-300 focus:ring-2 focus:ring-red-100 transition" />
@@ -128,6 +132,24 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('featureImage');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const previewImg = document.getElementById('imagePreview');
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewContainer.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
         const editorElement = document.querySelector('#editor');
         if (!editorElement) return;
 
@@ -160,7 +182,7 @@
                 placeholder: 'Write your article content here...'
             })
             .then(editor => {
-                console.log('CKEditor 5 initialized successfully');
+                console.log('CKEditor 5 initialized');
             })
             .catch(error => {
                 console.error('CKEditor 5 error:', error);

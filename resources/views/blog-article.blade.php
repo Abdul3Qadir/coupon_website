@@ -12,10 +12,21 @@
 </head>
 <body class="font-Inter bg-white text-gray-900">
 
+    {{-- pages-components navbar (Issue #10: hardcoded nav removed) --}}
     @include("pages-components.navbar")
 
+    <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10 pt-6">
+        <div class="flex items-center gap-1.5 font-Inter text-xs sm:text-sm text-gray-500">
+            <a href="/" class="hover:text-red-600 transition">Home</a>
+            <span>/</span>
+            <a href="{{ route('blog.index') }}" class="hover:text-red-600 transition">Blog</a>
+            <span>/</span>
+            <span class="text-gray-900 font-semibold truncate max-w-50">{{ $blog->title }}</span>
+        </div>
+    </div>
+
     {{-- Article Header --}}
-    <header class="mx-auto max-w-3xl px-4 pt-12 pb-8 sm:px-6">
+    <header class="mx-auto max-w-3xl px-4 pt-8 pb-6 sm:px-6">
         @if ($blog->blogCategory)
             <a href="{{ route('blog.index', ['category' => $blog->blogCategory->slug]) }}" class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 font-Inter text-xs font-semibold text-red-600 hover:bg-red-100 transition">
                 {{ $blog->blogCategory->name }}
@@ -33,14 +44,6 @@
             </div>
             <span class="text-gray-300">|</span>
             <span class="font-Inter">{{ $blog->published_at?->format('F d, Y') ?? $blog->created_at->format('F d, Y') }}</span>
-            @if ($blog->tags->count())
-                <span class="text-gray-300">|</span>
-                <div class="flex flex-wrap gap-1.5">
-                    @foreach ($blog->tags as $tag)
-                        <span class="rounded-full bg-gray-100 px-2.5 py-0.5 font-Inter text-xs text-gray-600">{{ $tag->name }}</span>
-                    @endforeach
-                </div>
-            @endif
         </div>
     </header>
 
@@ -58,21 +61,31 @@
 
     {{-- Article Content --}}
     <article class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-        @if ($blog->excerpt)
-            <p class="mb-8 font-Inter text-lg leading-relaxed text-gray-600 italic border-l-4 border-red-200 pl-4">{{ $blog->excerpt }}</p>
-        @endif
 
         <div class="prose prose-lg prose-red max-w-none font-Inter text-gray-700 leading-relaxed">
             {!! $blog->content !!}
         </div>
     </article>
 
+    @if ($blog->tags->count())
+        <div class="mx-auto max-w-3xl px-4 pb-8 sm:px-6">
+            <div class="border-t border-gray-100 pt-6">
+                <p class="font-Inter text-xs font-semibold text-gray-500 mb-2">Tags:</p>
+                <div class="flex flex-wrap gap-2">
+                    @foreach ($blog->tags as $tag)
+                        <span class="rounded-full bg-gray-100 px-3 py-1 font-Inter text-xs text-gray-600">{{ $tag->name }}</span>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- Related Posts --}}
     @if ($relatedBlogs->count())
         <section class="border-t border-gray-100 bg-gray-50/50 py-12">
             <div class="mx-auto max-w-6xl px-4 sm:px-6">
                 <h2 class="font-Manrope text-xl font-bold text-gray-900 mb-6">Related Articles</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     @foreach ($relatedBlogs as $related)
                         <a href="{{ route('blog.show', $related->slug) }}" class="group rounded-2xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg transition">
                             <div class="h-40 bg-gray-100 overflow-hidden">
@@ -95,12 +108,7 @@
         </section>
     @endif
 
-    {{-- Footer --}}
-    <footer class="border-t border-gray-100 bg-white py-8">
-        <div class="mx-auto max-w-6xl px-4 text-center">
-            <p class="font-Inter text-sm text-gray-500">Coupono Blog — Saving you money, one coupon at a time.</p>
-        </div>
-    </footer>
+    @include("pages-components.footer")
 
 </body>
 </html>

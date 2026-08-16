@@ -9,6 +9,7 @@
         'rejected' => ['bg-red-50', 'text-red-700', 'Rejected'],
         'suspended' => ['bg-gray-200', 'text-gray-700', 'Suspended'],
         'draft' => ['bg-gray-100', 'text-gray-600', 'Draft'],
+        'scheduled' => ['bg-amber-100', 'text-amber-700', 'Scheduled'],
         'published' => ['bg-emerald-50', 'text-emerald-700', 'Published'],
     ];
 

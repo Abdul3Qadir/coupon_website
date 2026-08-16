@@ -24,9 +24,15 @@
                     <h3 class="font-Manrope text-sm font-bold text-gray-900 mb-4">Publish</h3>
 
                     <div class="mb-3">
+                        @php
+                            $displayStatus = $blog->status;
+                            if ($blog->status->value === 'scheduled' && $blog->published_at && $blog->published_at->isPast()) {
+                                $displayStatus = 'published';
+                            }
+                        @endphp
                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-Inter text-xs font-semibold
-                            {{ $blog->status->value === 'published' ? 'bg-emerald-100 text-emerald-700' : ($blog->status->value === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">
-                            {{ $blog->status->label() }}
+                            {{ $displayStatus === 'published' ? 'bg-emerald-100 text-emerald-700' : ($displayStatus === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">
+                            {{ ucfirst($displayStatus) }}
                         </span>
                     </div>
 
@@ -49,7 +55,8 @@
 
                 <div class="rounded-2xl border border-gray-200 bg-white p-5">
                     <h3 class="font-Manrope text-sm font-bold text-gray-900 mb-3">Last Modified</h3>
-                    <p class="font-Inter text-xs text-gray-500">{{ $blog->updated_at->format('M d, Y \a\t h:i A') }}</p>
+                    {{-- TIMEZONE FIX (Issue #6): Asia/Karachi timezone --}}
+                    <p class="font-Inter text-xs text-gray-500">{{ $blog->updated_at->timezone('Asia/Karachi')->format('M d, Y \a\t h:i A') }}</p>
                 </div>
 
                 <a href="{{ route('blog.show', $blog->slug) }}" target="_blank" class="flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 font-Inter text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition">

@@ -5,21 +5,29 @@ namespace App\Http\Controllers;
 use App\Enums\BlogStatus;
 use App\Models\Blog;
 use App\Models\BlogCategory;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class BlogController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = Blog::with(['blogCategory', 'admin', 'tags'])
+            ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
+            ->where(function ($q) {
+                $q->whereNull('published_at')
+                  ->orWhere('published_at', '<=', now());
+            });
+
+        if ($request->filled('category') && $request->category !== 'all') {
+            $category = BlogCategory::where('slug', $request->category)->first();
+            if ($category) {
+                $query->where('blog_category_id', $category->id);
+            }
+        }
+
         return view('blog', [
-            'blogs' => Blog::with(['blogCategory', 'admin', 'tags'])
-                ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
-                ->where(function ($q) {
-                    $q->whereNull('published_at')
-                      ->orWhere('published_at', '<=', now());
-                })
-                ->latest('published_at')
-                ->paginate(12),
+            'blogs' => $query->latest('published_at')->paginate(9)->withQueryString(),
             'categories' => BlogCategory::withCount('blogs')->orderBy('name')->get(),
         ]);
     }
@@ -37,6 +45,9 @@ class BlogController extends Controller
             ->where(function ($q) {
                 $q->whereNull('published_at')
                   ->orWhere('published_at', '<=', now());
+            })
+            ->when($blog->blog_category_id, function ($query) use ($blog) {
+                $query->orderByRaw('blog_category_id = ? DESC', [$blog->blog_category_id]);
             })
             ->latest('published_at')
             ->limit(3)
