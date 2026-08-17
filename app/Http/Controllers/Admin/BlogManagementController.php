@@ -29,19 +29,35 @@ class BlogManagementController extends Controller
         ]);
     }
 
-        public function store(BlogCategoryRequest $request): RedirectResponse
+    public function store(BlogRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        
+        $data['admin_id'] = $request->user('admin')->id;
+
         if (empty($data['slug'])) {
-            $data['slug'] = $this->uniqueSlug($data['name']);
+            $data['slug'] = $this->uniqueSlug($data['title']);
         } else {
-            $data['slug'] = Str::slug($data['slug']);
+            $data['slug'] = $this->uniqueSlug($data['slug']);
         }
 
-        BlogCategory::create($data);
+        if ($request->hasFile('feature_image')) {
+            $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
+        }
 
-        return redirect()->route('admin.blog-categories.index')->with('status', 'Blog category created successfully.');
+        $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
+
+        $tags = $this->parseTags($data['tags'] ?? '');
+        unset($data['tags']);
+
+        $blog = Blog::create($data);
+        $blog->tags()->sync($tags);
+
+        $message = match ($blog->status) {
+            BlogStatus::Published => 'Blog post published successfully.',
+            default => 'Blog post saved as draft.',
+        };
+
+        return redirect()->route('admin.blogs.index')->with('status', $message);
     }
 
     public function edit(Blog $blog): View
@@ -52,19 +68,41 @@ class BlogManagementController extends Controller
         ]);
     }
 
-    public function update(BlogCategoryRequest $request, BlogCategory $blogCategory): RedirectResponse
+    public function update(BlogRequest $request, Blog $blog): RedirectResponse
     {
         $data = $request->validated();
 
         if (empty($data['slug'])) {
-            $data['slug'] = $this->uniqueSlug($data['name'], $blogCategory->id);
+            $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
         } else {
-            $data['slug'] = Str::slug($data['slug']);
+            $data['slug'] = $this->uniqueSlug($data['slug'], $blog->id);
         }
 
-        $blogCategory->update($data);
+        if ($request->hasFile('feature_image')) {
+            if ($blog->feature_image) {
+                Storage::disk('public')->delete($blog->feature_image);
+            }
+            $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
+        }
 
-        return redirect()->route('admin.blog-categories.index')->with('status', 'Blog category updated successfully.');
+        $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
+
+        if ($data['status'] === BlogStatus::Draft) {
+            $data['published_at'] = null;
+        }
+
+        $tags = $this->parseTags($data['tags'] ?? '');
+        unset($data['tags']);
+
+        $blog->update($data);
+        $blog->tags()->sync($tags);
+
+        $message = match ($blog->status) {
+            BlogStatus::Published => 'Blog post updated and published.',
+            default => 'Blog post updated and saved as draft.',
+        };
+
+        return redirect()->route('admin.blogs.index')->with('status', $message);
     }
 
     public function destroy(Blog $blog): RedirectResponse
@@ -76,6 +114,22 @@ class BlogManagementController extends Controller
         $blog->delete();
 
         return back()->with('status', 'Blog post deleted.');
+    }
+
+    private function resolveStatus(string $status, ?string $publishedAt): BlogStatus
+    {
+        if ($status === 'draft') {
+            return BlogStatus::Draft;
+        }
+
+        if (!empty($publishedAt)) {
+            $date = \Carbon\Carbon::parse($publishedAt);
+            if ($date->isFuture()) {
+                return BlogStatus::Scheduled;
+            }
+        }
+
+        return BlogStatus::Published;
     }
 
     private function uniqueSlug(string $title, ?int $ignoreId = null): string

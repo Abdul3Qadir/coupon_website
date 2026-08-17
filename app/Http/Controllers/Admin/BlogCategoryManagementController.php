@@ -36,6 +36,13 @@ class BlogCategoryManagementController extends Controller
         return redirect()->route('admin.blog-categories.index')->with('status', 'Blog category created successfully.');
     }
 
+    public function edit(BlogCategory $blogCategory): View
+    {
+        return view('admin.blog-categories.edit', [
+            'blogCategory' => $blogCategory,
+        ]);
+    }
+
     public function update(BlogCategoryRequest $request, BlogCategory $blogCategory): RedirectResponse
     {
         $data = $request->validated();
