@@ -31,7 +31,7 @@
                         @php
                             $statusValue = $blog->status->value;
                             $statusLabel = $blog->status->label();
-                            if ($statusValue === 'scheduled' && $blog->published_at && $blog->published_at->isPast()) {
+                            if ($statusValue === 'scheduled' && $blog->published_at && $blog->published_at->timezone('Asia/Karachi')->isPast()) {
                                 $statusValue = 'published';
                                 $statusLabel = 'Published';
                             }

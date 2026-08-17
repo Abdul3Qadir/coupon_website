@@ -15,7 +15,6 @@ class BlogController extends Controller
         $this->autoPublishScheduled();
 
         $query = Blog::with(['blogCategory', 'admin', 'tags'])
-            ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
             ->where(function ($q) {
                 $q->whereNull('published_at')
                   ->orWhere('published_at', '<=', now());
@@ -40,7 +39,6 @@ class BlogController extends Controller
 
         $blog = Blog::with(['blogCategory', 'admin', 'tags'])
             ->where('slug', $slug)
-            ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
             ->where(function ($q) {
                 $q->whereNull('published_at')
                   ->orWhere('published_at', '<=', now());
@@ -49,7 +47,6 @@ class BlogController extends Controller
 
         $relatedBlogs = Blog::with('blogCategory')
             ->where('id', '!=', $blog->id)
-            ->whereIn('status', [BlogStatus::Published, BlogStatus::Scheduled])
             ->where(function ($q) {
                 $q->whereNull('published_at')
                   ->orWhere('published_at', '<=', now());

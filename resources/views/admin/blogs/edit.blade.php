@@ -40,7 +40,7 @@
 
                     <div class="mb-4">
                         <label class="block font-Inter text-xs font-semibold text-gray-700 mb-1.5">Schedule Date</label>
-                        <input type="datetime-local" name="published_at" value="{{ old('published_at', $blog->published_at ? $blog->published_at->format('Y-m-d\TH:i') : '') }}" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 font-Inter text-sm text-gray-900 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none transition" />
+                        <input type="datetime-local" name="published_at" value="{{ old('published_at', $blog->published_at ? $blog->published_at->timezone('Asia/Karachi')->format('Y-m-d\TH:i') : '') }}" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 font-Inter text-sm text-gray-900 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none transition" />
                         <p class="mt-1 font-Inter text-xs text-gray-400">Leave blank to publish now. Set future date to schedule.</p>
                     </div>
 

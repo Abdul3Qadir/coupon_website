@@ -19,7 +19,7 @@
         <label class="block font-Inter text-sm font-semibold text-gray-900 mb-2">Slug</label>
         <div class="relative">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 font-Inter text-sm text-gray-400 select-none">/blog/</span>
-            <input type="text" name="slug" value="{{ old('slug', $blog->slug ?? '') }}" placeholder="auto-generated-from-title" required class="w-full rounded-xl border border-gray-200 bg-gray-50 pl-14 pr-4 py-3 font-Inter text-sm text-gray-900 placeholder:text-gray-400 focus:border-red-300 focus:bg-white focus:ring-2 focus:ring-red-100 outline-none transition" />
+            <input type="text" name="slug" value="{{ old('slug', $blog->slug ?? '') }}" placeholder="auto-generated-from-title" class="w-full rounded-xl border border-gray-200 bg-gray-50 pl-14 pr-4 py-3 font-Inter text-sm text-gray-900 placeholder:text-gray-400 focus:border-red-300 focus:bg-white focus:ring-2 focus:ring-red-100 outline-none transition" />
         </div>
         <p class="mt-1.5 font-Inter text-xs text-gray-400">URL-friendly identifier. Leave empty to auto-generate from title.</p>
     </div>
@@ -42,7 +42,6 @@
         Featured Image
     </h3>
 
-    {{-- IMAGE PREVIEW FIX (Issue #3) --}}
     <div id="imagePreviewContainer" class="{{ (isset($blog) && $blog->feature_image) ? '' : 'hidden' }} mb-4 relative rounded-xl overflow-hidden">
         <img id="imagePreview" src="{{ isset($blog) && $blog->feature_image ? asset('storage/' . $blog->feature_image) : '' }}" alt="" class="h-48 w-full object-cover">
     </div>

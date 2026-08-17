@@ -75,8 +75,6 @@ class BlogManagementController extends Controller
 
         if (empty($data['slug'])) {
             $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
-        } elseif ($data['slug'] !== $blog->slug && empty($data['slug'])) {
-            $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
         }
 
         if ($request->hasFile('feature_image')) {
