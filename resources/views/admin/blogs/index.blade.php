@@ -28,17 +28,9 @@
                         </div>
                     @endif
                     <div class="absolute top-3 left-3">
-                        @php
-                            $statusValue = $blog->status->value;
-                            $statusLabel = $blog->status->label();
-                            if ($statusValue === 'scheduled' && $blog->published_at && $blog->published_at->timezone('Asia/Karachi')->isPast()) {
-                                $statusValue = 'published';
-                                $statusLabel = 'Published';
-                            }
-                        @endphp
                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-Inter text-[11px] font-semibold
-                            {{ $statusValue === 'published' ? 'bg-emerald-100 text-emerald-700' : ($statusValue === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600') }}">
-                            {{ $statusLabel }}
+                            {{ $blog->status->value === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
+                            {{ $blog->status->label() }}
                         </span>
                     </div>
                 </div>

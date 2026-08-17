@@ -24,24 +24,10 @@
                     <h3 class="font-Manrope text-sm font-bold text-gray-900 mb-4">Publish</h3>
 
                     <div class="mb-3">
-                        @php
-                            $statusValue = $blog->status->value;
-                            $statusLabel = $blog->status->label();
-                            if ($statusValue === 'scheduled' && $blog->published_at && $blog->published_at->isPast()) {
-                                $statusValue = 'published';
-                                $statusLabel = 'Published';
-                            }
-                        @endphp
                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-Inter text-xs font-semibold
-                            {{ $statusValue === 'published' ? 'bg-emerald-100 text-emerald-700' : ($statusValue === 'scheduled' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700') }}">
-                            {{ $statusLabel }}
+                            {{ $blog->status->value === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700' }}">
+                            {{ $blog->status->label() }}
                         </span>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-Inter text-xs font-semibold text-gray-700 mb-1.5">Schedule Date</label>
-                        <input type="datetime-local" name="published_at" value="{{ old('published_at', $blog->published_at ? $blog->published_at->timezone('Asia/Karachi')->format('Y-m-d\TH:i') : '') }}" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 font-Inter text-sm text-gray-900 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none transition" />
-                        <p class="mt-1 font-Inter text-xs text-gray-400">Leave blank to publish now. Set future date to schedule.</p>
                     </div>
 
                     <div class="flex flex-col gap-2">

@@ -29,14 +29,12 @@ class Blog extends Model
         'seo_title',
         'seo_description',
         'status',
-        'published_at',
     ];
 
     protected function casts(): array
     {
         return [
             'status' => BlogStatus::class,
-            'published_at' => 'datetime',
         ];
     }
 

@@ -37,7 +37,6 @@ class BlogRequest extends FormRequest
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string', 'max:500'],
             'status' => ['required', Rule::enum(BlogStatus::class)],
-            'published_at' => ['nullable', 'date'],
             'tags' => ['nullable', 'string', 'max:1000'],
         ];
     }

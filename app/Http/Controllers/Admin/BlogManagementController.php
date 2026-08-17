@@ -17,8 +17,6 @@ class BlogManagementController extends Controller
 {
     public function index(): View
     {
-        $this->autoPublishScheduled();
-
         return view('admin.blogs.index', [
             'blogs' => Blog::with(['blogCategory', 'admin', 'tags'])->latest()->paginate(15),
         ]);
@@ -31,34 +29,19 @@ class BlogManagementController extends Controller
         ]);
     }
 
-    public function store(BlogRequest $request): RedirectResponse
+        public function store(BlogCategoryRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['admin_id'] = $request->user('admin')->id;
-
+        
         if (empty($data['slug'])) {
-            $data['slug'] = $this->uniqueSlug($data['title']);
+            $data['slug'] = $this->uniqueSlug($data['name']);
+        } else {
+            $data['slug'] = Str::slug($data['slug']);
         }
 
-        if ($request->hasFile('feature_image')) {
-            $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
-        }
+        BlogCategory::create($data);
 
-        $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
-
-        $tags = $this->parseTags($data['tags'] ?? '');
-        unset($data['tags']);
-
-        $blog = Blog::create($data);
-        $blog->tags()->sync($tags);
-
-        $message = match ($blog->status) {
-            BlogStatus::Published => 'Blog post published successfully.',
-            BlogStatus::Scheduled => 'Blog post scheduled successfully.',
-            default => 'Blog post saved as draft.',
-        };
-
-        return redirect()->route('admin.blogs.index')->with('status', $message);
+        return redirect()->route('admin.blog-categories.index')->with('status', 'Blog category created successfully.');
     }
 
     public function edit(Blog $blog): View
@@ -69,40 +52,19 @@ class BlogManagementController extends Controller
         ]);
     }
 
-    public function update(BlogRequest $request, Blog $blog): RedirectResponse
+    public function update(BlogCategoryRequest $request, BlogCategory $blogCategory): RedirectResponse
     {
         $data = $request->validated();
 
         if (empty($data['slug'])) {
-            $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
+            $data['slug'] = $this->uniqueSlug($data['name'], $blogCategory->id);
+        } else {
+            $data['slug'] = Str::slug($data['slug']);
         }
 
-        if ($request->hasFile('feature_image')) {
-            if ($blog->feature_image) {
-                Storage::disk('public')->delete($blog->feature_image);
-            }
-            $data['feature_image'] = $request->file('feature_image')->store('blog-images', 'public');
-        }
+        $blogCategory->update($data);
 
-        $data['status'] = $this->resolveStatus($data['status'], $data['published_at'] ?? null);
-
-        if ($data['status'] === BlogStatus::Draft) {
-            $data['published_at'] = null;
-        }
-
-        $tags = $this->parseTags($data['tags'] ?? '');
-        unset($data['tags']);
-
-        $blog->update($data);
-        $blog->tags()->sync($tags);
-
-        $message = match ($blog->status) {
-            BlogStatus::Published => 'Blog post updated and published.',
-            BlogStatus::Scheduled => 'Blog post updated and scheduled.',
-            default => 'Blog post updated and saved as draft.',
-        };
-
-        return redirect()->route('admin.blogs.index')->with('status', $message);
+        return redirect()->route('admin.blog-categories.index')->with('status', 'Blog category updated successfully.');
     }
 
     public function destroy(Blog $blog): RedirectResponse
@@ -114,30 +76,6 @@ class BlogManagementController extends Controller
         $blog->delete();
 
         return back()->with('status', 'Blog post deleted.');
-    }
-
-    private function autoPublishScheduled(): void
-    {
-        Blog::where('status', BlogStatus::Scheduled)
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', now())
-            ->update(['status' => BlogStatus::Published]);
-    }
-
-    private function resolveStatus(string $status, ?string $publishedAt): BlogStatus
-    {
-        if ($status === 'draft') {
-            return BlogStatus::Draft;
-        }
-
-        if (!empty($publishedAt)) {
-            $date = \Carbon\Carbon::parse($publishedAt);
-            if ($date->isFuture()) {
-                return BlogStatus::Scheduled;
-            }
-        }
-
-        return BlogStatus::Published;
     }
 
     private function uniqueSlug(string $title, ?int $ignoreId = null): string

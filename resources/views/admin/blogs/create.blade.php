@@ -24,12 +24,6 @@
                 <div class="rounded-2xl border border-gray-200 bg-white p-5">
                     <h3 class="font-Manrope text-sm font-bold text-gray-900 mb-4">Publish</h3>
 
-                    <div class="mb-4">
-                        <label class="block font-Inter text-xs font-semibold text-gray-700 mb-1.5">Schedule Date</label>
-                        <input type="datetime-local" name="published_at" value="{{ old('published_at') }}" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 font-Inter text-sm text-gray-900 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none transition" />
-                        <p class="mt-1 font-Inter text-xs text-gray-400">Leave blank to publish now. Set future date to schedule.</p>
-                    </div>
-
                     <div class="flex flex-col gap-2">
                         <button type="submit" name="status" value="published" class="w-full cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 font-Inter text-sm font-bold text-white hover:bg-red-700 transition">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
