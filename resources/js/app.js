@@ -14,6 +14,7 @@ import './svg-preview';
 import './offer-type-toggle';
 import './reject-offer-modal';
 import './notification-dropdown';
+import './stores-load-more';
 
 import Chart from 'chart.js/auto';
 window.Chart = Chart;

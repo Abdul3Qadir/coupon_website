@@ -44,6 +44,7 @@ class Brand extends Authenticatable
             'verified_at' => 'datetime',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_featured' => 'boolean',
         ];
     }
 

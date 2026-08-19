@@ -19,14 +19,16 @@ use App\Http\Controllers\Brand\OfferController;
 use App\Http\Controllers\Admin\BlogCategoryManagementController;
 use App\Http\Controllers\Admin\BlogManagementController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\StorePageController;
+use App\Http\Controllers\StoreListingController;
 
 // Public Routes
 Route::get('/', function () { return view('home'); });
-Route::get('/stores', function () { return view('stores'); });
+Route::get('/stores', [StoreListingController::class, 'index'])->name('stores.index');
 Route::get('/categories', [CategoryPageController::class, 'index'])->name('categories.index');
 Route::get('/coupons/{category:slug}', [CategoryPageController::class, 'byCategory'])->name('coupons.category');
 Route::get('/deals', function () { return view('deals'); });
-Route::get('/stores/brand', function () { return view('brand-details'); });
+Route::get('/stores/{brand:slug}', [StorePageController::class, 'show'])->name('stores.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
