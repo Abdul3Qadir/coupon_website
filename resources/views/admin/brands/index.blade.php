@@ -47,7 +47,13 @@
                         <tr class="hover:bg-gray-50/50 transition">
                             <td class="px-5 py-3.5">
                                 <div class="flex items-center gap-3">
-                                    <x-avatar :name="$brand->name" size="sm" />
+                                    <div class="w-10 h-10 rounded-full bg-gray-200">
+                                        @if ($brand->small_logo)
+                                            <img src="{{ asset('storage/' . $brand->small_logo) }}" alt="{{ $brand->name }}" class="max-h-full max-w-full object-contain">
+                                        @else
+                                            <x-avatar :name="$brand->name" size="lg" />
+                                        @endif
+                                    </div>
                                     <div class="min-w-0">
                                         <p class="font-Manrope text-sm font-bold text-gray-900 truncate">{{ $brand->name }}</p>
                                         <p class="font-Inter text-xs text-gray-500 truncate">{{ $brand->email }}</p>

@@ -27,7 +27,7 @@
                 Search, filter, and save across every store on Coupono
             </p>
 
-            <form method="GET" class="mx-auto mt-7 flex max-w-xl items-center overflow-hidden rounded-full border border-gray-200 bg-white pl-6 pr-2 py-2 shadow-lg shadow-gray-100 focus-within:border-red-300 focus-within:ring-2 focus-within:ring-red-100 transition">
+            <form method="GET" action="#stores-section" class="mx-auto mt-7 flex max-w-xl items-center overflow-hidden rounded-full border border-gray-200 bg-white pl-6 pr-2 py-2 shadow-lg shadow-gray-100 focus-within:border-red-300 focus-within:ring-2 focus-within:ring-red-100 transition">
                 <input type="hidden" name="letter" value="{{ $activeLetter }}">
                 <input type="hidden" name="category" value="{{ $activeCategorySlug }}">
                 <input type="hidden" name="tab" value="{{ $activeTab }}">
@@ -82,7 +82,7 @@
 
                     @if ($isEnabled)
 
-                        <a href="{{ request()->fullUrlWithQuery(array_merge($currentParams, ['letter' => $letter])) }}"
+                        <a href="{{ request()->fullUrlWithQuery(array_merge($currentParams, ['letter' => $letter])) }}#stores-section"
                         @class([
                             'shrink-0 rounded-full px-3.5 py-1.5 font-Inter text-xs sm:text-sm font-bold transition',
                             'bg-red-600 text-white' => $isActive,
@@ -120,7 +120,7 @@
                     'letter' => $activeLetter,
                     'tab' => $activeTab,
                     'q' => $search
-                ]) }}"
+                ]) }}#stores-section"
                 class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold
                         {{ $activeCategorySlug === 'all'
                                 ? 'bg-gray-900 text-white'
@@ -137,7 +137,7 @@
                         'letter' => $activeLetter,
                         'tab' => $activeTab,
                         'q' => $search
-                    ]) }}"
+                    ]) }}#stores-section"
                     class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold
                             {{ $activeCategorySlug === $category->slug
                                     ? 'bg-gray-900 text-white'
@@ -163,7 +163,7 @@
                                 'letter' => $activeLetter,
                                 'tab' => $activeTab,
                                 'q' => $search
-                            ]) }}"
+                            ]) }}#stores-section"
                             class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold
                                     {{ $activeCategorySlug === $category->slug
                                             ? 'bg-gray-900 text-white'
@@ -185,46 +185,43 @@
             </div>
 
 
-            <div class="flex items-center justify-between gap-4 mt-10 flex-col min-[500px]:flex-row border-t border-gray-100 pt-5">
+            <div class="relative mt-10 border-t border-gray-100 pt-5">
+                <div class="flex items-center justify-between gap-4">
+                    <h2 id="storesHeading" class="shrink-0 whitespace-nowrap font-Inter text-lg font-bold text-gray-900 sm:text-2xl">
+                        All Stores
+                    </h2>
 
-                <h2 id="storesHeading"
-                    class="font-Inter text-lg sm:text-2xl font-bold text-gray-900 shrink-0 min-[500px]:self-auto">
-                    All Stores
-                </h2>
+                    <div class="relative shrink-0">
+                        <button type="button" id="storeTabDropdownBtn" class="group flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 font-Inter text-xs font-semibold text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:shadow-md sm:text-sm">
+                            <span id="storeTabDropdownLabel">
+                                {{ ['all' => 'All', 'trending' => 'Trending', 'popular' => 'Popular', 'new' => 'New'][$activeTab] ?? 'All' }}
+                            </span>
+                            <svg id="storeTabDropdownIcon" class="h-4 w-4 text-gray-400 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
+                            </svg>
+                        </button>
 
-                <div class="flex items-center gap-1 min-[500px]:w-auto border-gray-100 overflow-x-auto scrollbar-hide">
-
-                    @foreach ([
-                        'all' => 'All',
-                        'trending' => 'Trending',
-                        'popular' => 'Popular',
-                        'new' => 'New'
-                    ] as $key => $label)
-
-                        <a href="{{ request()->fullUrlWithQuery([
-                            'tab' => $key,
-                            'letter' => $activeLetter,
-                            'category' => $activeCategorySlug,
-                            'q' => $search
-                        ]) }}"
-                        @class([
-                            'cursor-pointer rounded-full px-4 py-1.5 font-Inter text-xs sm:text-sm font-semibold transition',
-                            'bg-gray-900 text-white' => $activeTab === $key,
-                            'text-gray-500 hover:text-gray-900' => $activeTab !== $key,
-                        ])>
-                            {{ $label }}
-                        </a>
-
-                    @endforeach
-
+                        <div id="storeTabDropdown" class="invisible absolute right-0 top-full z-50 mt-2 w-44 origin-top-right translate-y-1 scale-95 rounded-2xl border border-gray-100 bg-white p-1.5 opacity-0 shadow-xl shadow-gray-200/60 transition-all duration-200">
+                            @foreach (['all' => 'All', 'trending' => 'Trending', 'popular' => 'Popular', 'new' => 'New'] as $key => $label)
+                                <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'letter' => $activeLetter, 'category' => $activeCategorySlug, 'q' => $search]) }}#stores-section"
+                                class="flex items-center justify-between rounded-xl px-2 py-1 font-Inter text-sm font-medium transition-all duration-200 {{ $activeTab === $key ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                    <span>{{ $label }}</span>
+                                    @if ($activeTab === $key)
+                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4L19 6" />
+                                        </svg>
+                                    @endif
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
-
             </div>
 
         </div>
     </section>
 
-    <section class="py-10 sm:py-14">
+    <section id="stores-section" class="py-10 sm:py-14">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
             <div id="storesGrid" class="grid min-[380px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                 @include("stores._cards")

@@ -24,7 +24,7 @@ class RegisteredBrandController extends Controller
     public function store(RegisterBrandRequest $request, EmailVerificationService $verificationService): RedirectResponse
     {
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['name']) . '-' . Str::random(5);
+        $data['slug'] = $this->generateUniqueSlug($data['name']);
 
         $brand = Brand::create($data);
 
@@ -33,5 +33,19 @@ class RegisteredBrandController extends Controller
         $verificationService->generateAndSend($brand);
 
         return redirect()->route('brand.verify-email.notice');
+    }
+
+    private function generateUniqueSlug(string $name): string
+    {
+        $slug = Str::slug($name);
+        $original = $slug;
+        $counter = 1;
+
+        while (Brand::where('slug', $slug)->exists()) {
+            $slug = $original . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

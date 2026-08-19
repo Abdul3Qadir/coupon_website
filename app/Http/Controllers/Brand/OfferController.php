@@ -50,7 +50,7 @@ class OfferController extends Controller
 
         $offer = $brand->offers()->create($data);
 
-        $message = $offer->status->value === 'approved'
+        $message = $offer->status?->value === 'approved'
             ? 'Your offer has been published.'
             : 'Your coupon or deal has been submitted for review.';
 
@@ -75,7 +75,7 @@ class OfferController extends Controller
 
         $offer->update($data);
 
-        $message = $offer->fresh()->status->value === 'approved'
+        $message = $offer->fresh()->status?->value === 'approved'
             ? 'Your offer has been updated and published.'
             : 'Your changes have been saved and submitted for review.';
 
@@ -89,5 +89,12 @@ class OfferController extends Controller
         $offer->delete();
 
         return back()->with('status', 'Removed successfully.');
+    }
+
+    public function redirect(Offer $offer)
+    {
+        $offer->increment('clicks_count');
+        
+        return redirect()->away($offer->redirect_url ?? $offer->brand->website_url ?? '/');
     }
 }

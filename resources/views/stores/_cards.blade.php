@@ -1,6 +1,6 @@
 @forelse ($stores as $store)
     <a href="{{ route('stores.show', $store) }}" class="store-card group flex flex-col items-center rounded-2xl bg-white p-5 border border-gray-200 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-red-200">
-        <div class="flex h-16 w-full items-center justify-center rounded-xl border border-gray-200 bg-white">
+        <div class="bg-white">
             @if ($store->small_logo)
                 <img src="{{ asset('storage/' . $store->small_logo) }}" alt="{{ $store->name }}" class="max-h-16 object-contain">
             @else

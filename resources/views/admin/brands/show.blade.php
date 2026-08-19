@@ -108,6 +108,14 @@
 
             <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
                 <div>
+                    <p class="font-Inter text-sm font-semibold text-gray-900">Featured/Trending</p>
+                    <p class="font-Inter text-xs text-gray-500">Show in trending tab on stores page</p>
+                </div>
+                <x-toggle-switch :checked="$brand->is_featured" :action="route('admin.brands.toggle-featured', $brand)" />
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div>
                     <p class="font-Inter text-sm font-semibold text-gray-900">Allow Admin to Add Offers</p>
                     <p class="font-Inter text-xs text-gray-500">Controlled by the brand, view only</p>
                 </div>

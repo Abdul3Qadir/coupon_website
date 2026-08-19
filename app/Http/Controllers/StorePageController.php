@@ -22,6 +22,24 @@ class StorePageController extends Controller
             \App\Models\Offer::whereIn('id', $shownOfferIds)->increment('views_count');
         }
 
+        $expiredCoupons = $brand->offers()
+            ->where('type', 'coupon')
+            ->approved()
+            ->where('expires_at', '<', now())
+            ->get();
+
+        $expiredDeals = $brand->offers()
+            ->where('type', 'deal')
+            ->approved()
+            ->where('expires_at', '<', now())
+            ->get();
+
+        $relatedStores = \App\Models\Brand::where('category_id', $brand->category_id)
+            ->where('id', '!=', $brand->id)
+            ->withCount('offers')
+            ->limit(8)
+            ->get();
+
         $similarStores = Brand::where('category_id', $brand->category_id)
             ->where('id', '!=', $brand->id)
             ->where('status', BrandStatus::Verified)
@@ -35,6 +53,9 @@ class StorePageController extends Controller
             'deals' => $deals,
             'similarStores' => $similarStores,
             'bestDiscount' => $coupons->merge($deals)->max('discount_value'),
+            'expiredCoupons' => $expiredCoupons,
+            'expiredDeals' => $expiredDeals,
+            'relatedStores' => $relatedStores
         ]);
     }
 }

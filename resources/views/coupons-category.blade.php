@@ -33,7 +33,7 @@
                 <div class="grid min-[380px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                     @foreach ($stores as $store)
                         <a href="{{ route('stores.show', $store) }}" class="group flex flex-col items-center rounded-2xl bg-white p-5 border border-gray-200 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-red-200">
-                            <div class="flex h-16 w-full items-center justify-center rounded-xl border border-gray-200 bg-white">
+                            <div class="flex h-16 w-full items-center justify-center">
                                 @if ($store->small_logo)
                                     <img src="{{ asset('storage/' . $store->small_logo) }}" alt="{{ $store->name }}" class="max-h-16 object-contain">
                                 @else

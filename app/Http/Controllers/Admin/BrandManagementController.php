@@ -11,6 +11,7 @@ use App\Notifications\BrandVerifiedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Notifications\BrandFeaturedNotification;
 
 class BrandManagementController extends Controller
 {
@@ -104,15 +105,21 @@ class BrandManagementController extends Controller
 
         $brand->forceFill(['auto_publish_offers' => $enabling])->save();
 
-        if ($enabling) {
-                        try {
-                $brand->notify(new BrandAutoPublishEnabledNotification());
-            } catch (\Exception $e) {
-                \Log::error('Notification failed: ' . $e->getMessage());
-                \Log::error($e->getTraceAsString());
-            }
-        }
-
         return back()->with('status', $enabling ? 'Auto-publish enabled for this brand.' : 'Auto-publish disabled for this brand.');
+    }
+
+    public function toggleFeatured(Brand $brand): RedirectResponse
+    {
+        $enabling = !$brand->is_featured;
+        
+        $brand->forceFill(['is_featured' => $enabling])->save();
+        
+        $brand->notify(new \App\Notifications\BrandFeaturedNotification($brand, $enabling));
+        
+        $message = $enabling 
+            ? 'Brand marked as featured.' 
+            : 'Brand removed from featured.';
+        
+        return back()->with('status', $message);
     }
 }

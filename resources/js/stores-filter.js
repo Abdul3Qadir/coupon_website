@@ -37,6 +37,38 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+    
+    const dropdownBtn = document.getElementById('storeTabDropdownBtn');
+    const dropdown = document.getElementById('storeTabDropdown');
+    const dropdownIcon = document.getElementById('storeTabDropdownIcon');
+
+    if (dropdownBtn && dropdown) {
+        const toggleDropdown = (show) => {
+            dropdown.classList.toggle('opacity-0', !show);
+            dropdown.classList.toggle('invisible', !show);
+            dropdown.classList.toggle('scale-95', !show);
+            dropdown.classList.toggle('translate-y-1', !show);
+
+            dropdown.classList.toggle('opacity-100', show);
+            dropdown.classList.toggle('visible', show);
+            dropdown.classList.toggle('scale-100', show);
+            dropdown.classList.toggle('translate-y-0', show);
+
+            if (dropdownIcon) dropdownIcon.classList.toggle('rotate-180', show);
+        };
+
+        dropdownBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const isOpen = !dropdown.classList.contains('invisible');
+            toggleDropdown(!isOpen);
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!dropdown.contains(e.target) && !dropdownBtn.contains(e.target)) {
+                toggleDropdown(false);
+            }
+        });
+    }
 
     if (!grid) return;
 
@@ -75,28 +107,4 @@ document.addEventListener('DOMContentLoaded', function () {
             applyFilters();
         });
     });
-
-    tabButtons.initHeading = function(btn) {
-        if (storesHeading) {
-            var tabName = btn.textContent.trim();
-            storesHeading.textContent = tabName.toLowerCase().includes('store') ? tabName : tabName + ' Stores';
-        }
-    };
-
-    tabButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            tabButtons.forEach(function (b) {
-                b.classList.remove('active', 'bg-gray-900', 'text-white');
-                b.classList.add('text-gray-500');
-            });
-            btn.classList.add('active', 'bg-gray-900', 'text-white');
-            btn.classList.remove('text-gray-500');
-
-            activeTab = btn.dataset.tab;
-            tabButtons.initHeading(btn);
-            applyFilters();
-        });
-    });
-
-    applyFilters();
 });

@@ -30,6 +30,7 @@ Route::get('/coupons/{category:slug}', [CategoryPageController::class, 'byCatego
 Route::get('/deals', function () { return view('deals'); });
 Route::get('/stores/{brand:slug}', [StorePageController::class, 'show'])->name('stores.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/offers/{offer}', [OfferController::class, 'redirect'])->name('offers.redirect');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // Brand Routes
@@ -157,6 +158,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                     Route::post('{brand}/suspend', [BrandManagementController::class, 'suspend'])->name('suspend');
                     Route::post('{brand}/reinstate', [BrandManagementController::class, 'reinstate'])->name('reinstate');
                     Route::post('{brand}/toggle-auto-publish', [BrandManagementController::class, 'toggleAutoPublish'])->name('toggle-auto-publish');
+                    Route::post('{brand}/toggle-featured', [BrandManagementController::class, 'toggleFeatured'])->name('toggle-featured');
                 });
 
                 // Sub-Admins

@@ -19,8 +19,8 @@
 
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 <div class="flex h-24 w-24 sm:h-28 sm:w-28 shrink-0 items-center justify-center rounded-2xl bg-white border border-gray-200 shadow-sm p-4">
-                    @if ($brand->large_logo)
-                        <img src="{{ asset('storage/' . $brand->large_logo) }}" alt="{{ $brand->name }}" class="max-h-full max-w-full object-contain">
+                    @if ($brand->small_logo)
+                        <img src="{{ asset('storage/' . $brand->small_logo) }}" alt="{{ $brand->name }}" class="max-h-full max-w-full object-contain">
                     @else
                         <x-avatar :name="$brand->name" size="lg" />
                     @endif
@@ -67,53 +67,50 @@
     </section>
 
     @if ($coupons->isNotEmpty())
-    <section class="py-12 sm:py-16">
+    <section class="py-12">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
             <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">{{ $brand->name }} Coupons</h2>
 
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                 @foreach ($coupons as $offer)
-                    <div class="relative flex flex-col sm:flex-row bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden transition hover:shadow-lg hover:border-red-200">
-                        <span class="absolute top-1/2 -left-3 -translate-y-1/2 h-6 w-6 rounded-full bg-white ring-1 ring-gray-100 hidden sm:block"></span>
-                        <span class="absolute top-1/2 -right-3 -translate-y-1/2 h-6 w-6 rounded-full bg-white ring-1 ring-gray-100 hidden sm:block"></span>
-
-                        <div class="flex sm:w-2/5 shrink-0 flex-col items-center justify-center gap-2 p-5 border-b sm:border-b-0 sm:border-r border-dashed border-gray-300">
-                            <div class="flex h-12 w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-3">
-                                @if ($brand->small_logo)
-                                    <img src="{{ asset('storage/' . $brand->small_logo) }}" alt="{{ $brand->name }}" class="max-h-10 object-contain">
+                    <div class="flex flex-col rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden transition hover:shadow-lg hover:border-red-200">
+                        <div class="flex items-center justify-between p-5 pb-4">
+                            <div class="flex h-12 w-28 items-center justify-center rounded-xl border border-gray-200 bg-white px-3">
+                                @if ($brand->large_logo)
+                                    <img src="{{ asset('storage/' . $brand->large_logo) }}" alt="{{ $brand->name }}" class="max-h-10 object-contain">
                                 @else
                                     <x-avatar :name="$brand->name" size="sm" />
                                 @endif
                             </div>
                             <span class="inline-flex items-center gap-1 font-Inter text-[11px] font-semibold text-emerald-600">
-                                <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 Verified
                             </span>
                         </div>
 
-                        <div class="flex flex-1 flex-col justify-center gap-3 p-5">
-                            <div>
-                                <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-red-600">
-                                    @if ($offer->discount_type->value === 'percentage'){{ $offer->discount_value }}% OFF
-                                    @elseif ($offer->discount_type->value === 'fixed')Rs. {{ number_format($offer->discount_value) }} OFF
-                                    @else Free Shipping @endif
-                                </p>
-                                <p class="mt-0.5 font-Inter text-sm text-gray-600">{{ $offer->description }}</p>
-                            </div>
+                        <div class="px-5 flex-1">
+                            <p class="font-Manrope text-xl font-extrabold text-red-600">
+                                @if ($offer->discount_type->value === 'percentage'){{ $offer->discount_value }}% OFF
+                                @elseif ($offer->discount_type->value === 'fixed') {{ number_format($offer->discount_value) }} OFF
+                                @else Free Shipping @endif
+                            </p>
+                            <p class="mt-0.5 font-Inter text-sm line-clamp-3 text-gray-600">{{ $offer->description }}</p>
+                        </div>
+                        <div class="p-5 pt-4">
                             <div class="coupon-code-box relative overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                                 <div class="flex items-center justify-between gap-3 px-3 py-2.5">
-                                    <span class="coupon-code-text blur-sm select-none transition font-Manrope text-sm sm:text-base font-bold tracking-widest text-gray-900">{{ $offer->code }}</span>
+                                    <span class="coupon-code-text blur-sm select-none transition font-Manrope text-sm sm:text-base font-bold tracking-widest uppercase text-gray-900">{{ $offer->code }}</span>
                                     <button type="button" class="coupon-copy-again-btn cursor-pointer shrink-0 inline-flex items-center gap-1.5 rounded-md bg-red-600 px-3 py-1.5 font-Inter text-xs font-semibold text-white transition hover:bg-red-700 active:bg-red-800" data-code="{{ $offer->code }}" data-default-label="Copy">
                                         <svg class="copy-icon h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                                         <span class="copy-label">Copy</span>
                                     </button>
                                 </div>
-                                <button type="button" class="coupon-reveal-btn cursor-pointer absolute inset-0 flex items-center justify-center gap-1.5 bg-gray-50/95 hover:bg-gray-100/95 font-Inter text-xs sm:text-sm font-bold text-red-600 transition" data-code="{{ $offer->code }}" data-store-url="{{ route('offers.redirect', $offer) }}">
+                                <button type="button" class="coupon-reveal-btn cursor-pointer absolute inset-0 flex items-center justify-center gap-1.5 bg-gray-50 font-Inter text-xs sm:text-sm font-bold text-red-600 transition" data-code="{{ $offer->code }}" data-store-url="{{ route('offers.redirect', $offer) }}">
                                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                     Show Code
                                 </button>
                             </div>
-                            <p class="font-Inter text-[11px] text-gray-400">
+                            <p class="mt-2 font-Inter text-[11px] text-gray-400">
                                 @if ($offer->expires_at) Expires {{ $offer->expires_at->diffForHumans() }} @else No expiry @endif
                             </p>
                         </div>
@@ -125,15 +122,15 @@
     @endif
 
     @if ($deals->isNotEmpty())
-    <section class="py-4 sm:py-6 bg-[#f8f9fb]">
+    <section class="py-4 sm:py-6">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10 pt-8">
             <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">{{ $brand->name }} Deals</h2>
         </div>
     </section>
 
-    <section class="pb-12 sm:pb-16 bg-[#f8f9fb]">
-        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <section class="pb-12 sm:pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($deals as $offer)
                     <a href="{{ route('offers.redirect', $offer) }}" class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
                         <div class="relative flex items-center justify-between mb-5">
@@ -150,10 +147,12 @@
                                 @else Free Shipping @endif
                             </span>
                         </div>
+
                         <div class="grow">
                             <h3 class="font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">{{ $offer->title }}</h3>
-                            <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">{{ $offer->description }}</p>
+                            <p class="mt-2 text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed">{{ $offer->description }}</p>
                         </div>
+
                         <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
                             <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -161,7 +160,9 @@
                             </span>
                             <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
                                 Get Deal
-                                <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                                <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
                             </span>
                         </div>
                     </a>
@@ -179,41 +180,57 @@
     </section>
     @endif
 
-    @if ($brand->about_description)
-    <section class="py-12 sm:py-16">
-        <div class="max-w-4xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">About {{ $brand->name }}</h2>
-            <div class="mt-4 font-Inter text-sm sm:text-base text-gray-600 leading-relaxed">
-                <p>{{ $brand->about_description }}</p>
-            </div>
-        </div>
-    </section>
-    @endif
-
-    @if ($similarStores->isNotEmpty())
-    <section class="py-12 sm:py-16 bg-[#f8f9fb] border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">Similar Stores</h2>
-
-            <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
-                @foreach ($similarStores as $store)
-                    <a href="{{ route('stores.show', $store) }}" class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 transition hover:border-red-200 hover:shadow-sm">
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-gray-100 bg-white">
-                            @if ($store->small_logo)
-                                <img src="{{ asset('storage/' . $store->small_logo) }}" alt="{{ $store->name }}" class="max-h-7 max-w-[80%] object-contain">
-                            @else
-                                <x-avatar :name="$store->name" size="sm" />
-                            @endif
+    @if ($brand->about_description || $similarStores->isNotEmpty())
+        <section class="py-12 sm:py-16 bg-[#f8f9fb] border-t border-gray-200">
+            <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    {{-- About --}}
+                    @if ($brand->about_description)
+                        <div>
+                            <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">
+                                About {{ $brand->name }}
+                            </h2>
+                            <div class="mt-4 font-Inter text-sm sm:text-base text-gray-600 leading-relaxed">
+                                <p>{{ $brand->about_description }}</p>
+                            </div>
                         </div>
-                        <div class="min-w-0">
-                            <p class="font-Manrope text-sm font-bold text-gray-900 truncate">{{ $store->name }}</p>
-                            <p class="font-Inter text-xs text-gray-500">{{ $store->offers_count }} coupons</p>
+                    @endif
+
+                    {{-- Similar Stores --}}
+                    @if ($similarStores->isNotEmpty())
+                        <div>
+                            <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">
+                                Similar Stores
+                            </h2>
+                            <div class="mt-5 grid min-[350px]:grid-cols-2 gap-3">
+                                @foreach ($similarStores as $store)
+                                    <a href="{{ route('stores.show', $store) }}" class="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-white p-2.5 transition-all duration-200 hover:border-red-200 hover:shadow-sm">
+                                        {{-- Logo --}}
+                                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-100 bg-white p-1.5">
+                                            @if ($store->small_logo)
+                                                <img src="{{ asset('storage/' . $store->small_logo) }}" alt="{{ $store->name }}" class="max-h-7 max-w-full object-contain">
+                                            @else
+                                                <x-avatar :name="$store->name" size="sm" />
+                                            @endif
+                                        </div>
+
+                                        {{-- Store Info --}}
+                                        <div class="min-w-0">
+                                            <p class="font-Manrope text-xs sm:text-sm font-bold text-gray-900 truncate">
+                                                {{ $store->name }}
+                                            </p>
+                                            <p class="mt-0.5 font-Inter text-[11px] sm:text-xs text-gray-500">
+                                                {{ $store->offers_count }} Deals & Coupons
+                                            </p>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
                         </div>
-                    </a>
-                @endforeach
+                    @endif
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     @endif
 
     <section class="py-12 sm:py-16 border-t border-gray-200">
@@ -246,6 +263,107 @@
             </div>
         </div>
     </section>
+
+    @if ($expiredCoupons->isNotEmpty())
+    <section class="py-12 bg-[#f8f9fb] select-none border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
+            <div class="flex items-center gap-3 mb-2">
+                <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">Expired Coupons</h2>
+                <span class="rounded-full bg-gray-200 px-2.5 py-1 font-Inter text-xs font-semibold text-gray-600">{{ $expiredCoupons->count() }}</span>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 opacity-70">
+                @foreach ($expiredCoupons as $offer)
+                    <div class="flex flex-col rounded-2xl bg-white border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="flex items-center justify-between p-5 pb-4">
+                            <div class="flex h-12 w-28 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 grayscale">
+                                @if ($brand->large_logo)
+                                    <img src="{{ asset('storage/' . $brand->large_logo) }}" alt="{{ $brand->name }}" class="max-h-10 object-contain">
+                                @else
+                                    <x-avatar :name="$brand->name" size="sm" />
+                                @endif
+                            </div>
+                            <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 font-Inter text-[11px] font-semibold text-gray-500">
+                                <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+                                Expired
+                            </span>
+                        </div>
+
+                        <div class="px-5 flex-1">
+                            <p class="font-Manrope text-xl font-extrabold text-gray-400 line-through decoration-gray-400">
+                                @if ($offer->discount_type->value === 'percentage'){{ $offer->discount_value }}% OFF
+                                @elseif ($offer->discount_type->value === 'fixed') {{ number_format($offer->discount_value) }} OFF
+                                @else Free Shipping @endif
+                            </p>
+                            <p class="mt-0.5 font-Inter text-sm line-clamp-3 text-gray-500">{{ $offer->description }}</p>
+                        </div>
+                        <div class="p-5 pt-4">
+                            <div class="relative overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-100">
+                                <div class="flex items-center justify-between gap-3 px-3 py-2.5">
+                                    <span class="font-Manrope text-sm sm:text-base font-bold tracking-widest uppercase text-gray-400 line-through decoration-gray-400">{{ $offer->code }}</span>
+                                    <span class="shrink-0 inline-flex items-center gap-1.5 rounded-md bg-gray-400 px-3 py-1.5 font-Inter text-xs font-semibold text-white cursor-not-allowed">
+                                        Expired
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="mt-2 font-Inter text-[11px] text-gray-400">
+                                Expired {{ $offer->expires_at?->diffForHumans() ?? 'recently' }}
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    @if ($expiredDeals->isNotEmpty())
+    <section class="py-12 bg-[#f8f9fb] select-none border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10 pt-8">
+            <div class="flex items-center gap-3 mb-2">
+                <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">Expired Deals</h2>
+                <span class="rounded-full bg-gray-200 px-2.5 py-1 font-Inter text-xs font-semibold text-gray-600">{{ $expiredDeals->count() }}</span>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-70">
+                @foreach ($expiredDeals as $offer)
+                    <div class="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
+                        <div class="relative flex items-center justify-between mb-5">
+                            <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200 grayscale">
+                                @if ($brand->small_logo)
+                                    <img src="{{ asset('storage/' . $brand->small_logo) }}" alt="{{ $brand->name }}" class="max-h-10 w-auto object-contain">
+                                @else
+                                    <x-avatar :name="$brand->name" size="sm" />
+                                @endif
+                            </div>
+                            <span class="rounded-full bg-gray-400 px-3 py-1 font-Manrope text-xs font-bold text-white line-through decoration-white">
+                                @if ($offer->discount_type->value === 'percentage'){{ $offer->discount_value }}% OFF
+                                @elseif ($offer->discount_type->value === 'fixed')Rs. {{ number_format($offer->discount_value) }} OFF
+                                @else Free Shipping @endif
+                            </span>
+                        </div>
+
+                        <div class="grow">
+                            <h3 class="font-Manrope text-lg font-bold text-gray-500 line-through decoration-gray-400">{{ $offer->title }}</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-gray-500 line-clamp-3 leading-relaxed">{{ $offer->description }}</p>
+                        </div>
+
+                        <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
+                            <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-gray-400">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Expired {{ $offer->expires_at?->diffForHumans() ?? 'recently' }}
+                            </span>
+                            <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-400 cursor-not-allowed">
+                                Expired
+                            </span>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 
     @include("pages-components.footer")
 </body>
