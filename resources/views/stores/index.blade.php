@@ -38,7 +38,7 @@
                 </button>
             </form>
 
-            <div class="mx-auto mt-9 flex max-w-md items-center justify-center divide-x divide-gray-200">
+            <div class="mx-auto mt-9 flex-wrap flex max-w-md items-center justify-center divide-x divide-gray-200">
                 <div class="flex-1 px-4">
                     <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">{{ $totalStores }}</p>
                     <p class="mt-0.5 font-Inter text-xs sm:text-sm text-gray-500">Stores</p>
@@ -57,49 +57,170 @@
 
     @php
         $letters = array_merge(['all'], range('A', 'Z'), ['#']);
-        $currentParams = ['q' => $search, 'category' => $activeCategorySlug, 'tab' => $activeTab];
+
+        $currentParams = [
+            'q' => $search,
+            'category' => $activeCategorySlug,
+            'tab' => $activeTab,
+        ];
+
+        $visibleCategories = $categories->take(4);
+        $remainingCategories = $categories->skip(4);
     @endphp
 
+    {{-- Letters --}}
     <section class="border-b border-gray-200 bg-white sticky top-0 z-20">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <div class="flex items-center gap-1.5 overflow-x-auto py-3 no-scrollbar">
+            <div class="flex items-center gap-1.5 overflow-x-auto py-3 scrollbar-hide">
+
                 @foreach ($letters as $letter)
-                    <a href="{{ request()->fullUrlWithQuery(array_merge($currentParams, ['letter' => $letter])) }}" @class([
-                        'shrink-0 rounded-full px-3.5 py-1.5 font-Inter text-xs sm:text-sm font-bold transition',
-                        'bg-red-600 text-white' => $activeLetter === $letter,
-                        'px-3 font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-900' => $activeLetter !== $letter,
-                    ])>{{ $letter === 'all' ? 'All' : $letter }}</a>
+
+                    @php
+                        $isActive = $activeLetter === $letter;
+                        $isEnabled = $letter === 'all' || in_array($letter, $activeLetters);
+                    @endphp
+
+                    @if ($isEnabled)
+
+                        <a href="{{ request()->fullUrlWithQuery(array_merge($currentParams, ['letter' => $letter])) }}"
+                        @class([
+                            'shrink-0 rounded-full px-3.5 py-1.5 font-Inter text-xs sm:text-sm font-bold transition',
+                            'bg-red-600 text-white' => $isActive,
+                            'text-gray-500 hover:bg-gray-100 hover:text-gray-900' => !$isActive,
+                        ])>
+                            {{ $letter === 'all' ? 'All' : $letter }}
+                        </a>
+
+                    @else
+
+                        <span class="shrink-0 rounded-full px-3.5 py-1.5 font-Inter text-xs sm:text-sm font-bold text-gray-300 opacity-50 cursor-not-allowed">
+                            {{ $letter === 'all' ? 'All' : $letter }}
+                        </span>
+
+                    @endif
+
                 @endforeach
+
             </div>
         </div>
     </section>
 
     <section class="py-8 sm:py-10 border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar">
-                <a href="{{ request()->fullUrlWithQuery(['category' => 'all', 'letter' => $activeLetter, 'tab' => $activeTab, 'q' => $search]) }}" @class([
-                    'shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold transition',
-                    'bg-gray-900 text-white' => $activeCategorySlug === 'all',
-                    'bg-gray-50 hover:bg-gray-900 hover:text-white text-gray-800' => $activeCategorySlug !== 'all',
-                ])>All Categories</a>
-                @foreach ($categories as $category)
-                    <a href="{{ request()->fullUrlWithQuery(['category' => $category->slug, 'letter' => $activeLetter, 'tab' => $activeTab, 'q' => $search]) }}" @class([
-                        'shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold transition',
-                        'bg-gray-900 text-white' => $activeCategorySlug === $category->slug,
-                        'bg-gray-50 hover:bg-gray-900 hover:text-white text-gray-800' => $activeCategorySlug !== $category->slug,
-                    ])>{{ $category->name }}</a>
+
+            @php
+                $visibleCategories = $categories->take(4);
+                $remainingCategories = $categories->skip(4);
+            @endphp
+
+            <div class="flex items-center gap-2.5 overflow-x-auto scrollbar-hide">
+                {{-- All Categories --}}
+                <a href="{{ request()->fullUrlWithQuery([
+                    'category' => 'all',
+                    'letter' => $activeLetter,
+                    'tab' => $activeTab,
+                    'q' => $search
+                ]) }}"
+                class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold
+                        {{ $activeCategorySlug === 'all'
+                                ? 'bg-gray-900 text-white'
+                                : 'bg-gray-50 text-gray-800 hover:bg-gray-900 hover:text-white' }}">
+                    All Categories
+                </a>
+
+
+                {{-- First 4 Categories --}}
+                @foreach ($visibleCategories as $category)
+
+                    <a href="{{ request()->fullUrlWithQuery([
+                        'category' => $category->slug,
+                        'letter' => $activeLetter,
+                        'tab' => $activeTab,
+                        'q' => $search
+                    ]) }}"
+                    class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold
+                            {{ $activeCategorySlug === $category->slug
+                                    ? 'bg-gray-900 text-white'
+                                    : 'bg-gray-50 text-gray-800 hover:bg-gray-900 hover:text-white' }}">
+                        {{ $category->name }}
+                    </a>
+
                 @endforeach
+
+
+                {{-- Remaining Categories --}}
+                @if ($remainingCategories->count() > 0)
+
+                    <div id="remainingCategories"
+                        class="flex items-center gap-2.5 shrink-0
+                                overflow-hidden transition-all duration-500 ease-in-out"
+                        style="max-width: 0; opacity: 0;">
+
+                        @foreach ($remainingCategories as $category)
+
+                            <a href="{{ request()->fullUrlWithQuery([
+                                'category' => $category->slug,
+                                'letter' => $activeLetter,
+                                'tab' => $activeTab,
+                                'q' => $search
+                            ]) }}"
+                            class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold
+                                    {{ $activeCategorySlug === $category->slug
+                                            ? 'bg-gray-900 text-white'
+                                            : 'bg-gray-50 text-gray-800 hover:bg-gray-900 hover:text-white' }}">
+                                {{ $category->name }}
+                            </a>
+
+                        @endforeach
+
+                    </div>
+
+                    <button type="button" id="showCategoriesBtn" data-count="{{ $remainingCategories->count() }}"
+                        class="shrink-0 rounded-full px-4 py-2 bg-gray-50 cursor-pointer border border-gray-800 text-gray-800 hover:bg-gray-900 hover:text-white font-Manrope text-sm font-semibold transition-all duration-300">
+                        Show All ({{ $remainingCategories->count() }})+
+                    </button>
+
+                @endif
+
             </div>
 
-            <div class="flex items-center gap-1 mt-5 border-t border-gray-100 pt-5">
-                @foreach (['all' => 'All Stores', 'trending' => 'Trending', 'popular' => 'Popular', 'new' => 'New'] as $key => $label)
-                    <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'letter' => $activeLetter, 'category' => $activeCategorySlug, 'q' => $search]) }}" @class([
-                        'cursor-pointer rounded-full px-4 py-1.5 font-Inter text-xs sm:text-sm font-semibold transition',
-                        'bg-gray-900 text-white' => $activeTab === $key,
-                        'text-gray-500 hover:text-gray-900' => $activeTab !== $key,
-                    ])>{{ $label }}</a>
-                @endforeach
+
+            <div class="flex items-center justify-between gap-4 mt-10 flex-col min-[500px]:flex-row border-t border-gray-100 pt-5">
+
+                <h2 id="storesHeading"
+                    class="font-Inter text-lg sm:text-2xl font-bold text-gray-900 shrink-0 min-[500px]:self-auto">
+                    All Stores
+                </h2>
+
+                <div class="flex items-center gap-1 min-[500px]:w-auto border-gray-100 overflow-x-auto scrollbar-hide">
+
+                    @foreach ([
+                        'all' => 'All',
+                        'trending' => 'Trending',
+                        'popular' => 'Popular',
+                        'new' => 'New'
+                    ] as $key => $label)
+
+                        <a href="{{ request()->fullUrlWithQuery([
+                            'tab' => $key,
+                            'letter' => $activeLetter,
+                            'category' => $activeCategorySlug,
+                            'q' => $search
+                        ]) }}"
+                        @class([
+                            'cursor-pointer rounded-full px-4 py-1.5 font-Inter text-xs sm:text-sm font-semibold transition',
+                            'bg-gray-900 text-white' => $activeTab === $key,
+                            'text-gray-500 hover:text-gray-900' => $activeTab !== $key,
+                        ])>
+                            {{ $label }}
+                        </a>
+
+                    @endforeach
+
+                </div>
+
             </div>
+
         </div>
     </section>
 

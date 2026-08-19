@@ -12,9 +12,7 @@
     <section class="bg-[#f8f9fb] border-b border-gray-200 py-10 sm:py-14">
         <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
             <div class="flex items-center gap-1.5 font-Inter text-xs sm:text-sm text-gray-500 mb-6">
-                <a href="{{ route('/) }}" class="hover:text-red-600 transition">Home</a>
-                <span>/</span>
-                <a href="{{ route('/') }}" class="hover:text-red-600 transition">Stores</a>
+                <a href="{{ route('stores.index') }}" class="hover:text-red-600 transition">Stores</a>
                 <span>/</span>
                 <span class="text-gray-900 font-semibold">{{ $brand->name }}</span>
             </div>

@@ -4,6 +4,39 @@ document.addEventListener('DOMContentLoaded', function () {
     var categoryButtons = document.querySelectorAll('.category-filter-btn');
     var tabButtons = document.querySelectorAll('.store-tab-btn');
     var storesHeading = document.getElementById('storesHeading');
+    var showCategoriesBtn = document.getElementById('showCategoriesBtn');
+    var remainingCategories = document.getElementById('remainingCategories');
+
+    if (showCategoriesBtn && remainingCategories) {
+
+        showCategoriesBtn.addEventListener('click', function () {
+
+            var expanded = this.dataset.expanded === 'true';
+
+            if (!expanded) {
+
+                remainingCategories.style.maxWidth =
+                    remainingCategories.scrollWidth + 'px';
+
+                remainingCategories.style.opacity = '1';
+
+                remainingCategories.parentNode.appendChild(this);
+
+                this.textContent = 'Show Less −';
+                this.dataset.expanded = 'true';
+
+            } else {
+
+                remainingCategories.style.maxWidth = '0px';
+                remainingCategories.style.opacity = '0';
+
+                this.textContent =
+                    'Show All (' + this.dataset.count + ')+';
+
+                this.dataset.expanded = 'false';
+            }
+        });
+    }
 
     if (!grid) return;
 
