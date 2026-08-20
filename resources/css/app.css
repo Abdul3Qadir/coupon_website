@@ -2,6 +2,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @import "./carousel.css";
+@import "./deal.css";
 
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

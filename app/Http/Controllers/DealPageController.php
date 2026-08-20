@@ -10,75 +10,96 @@ class DealPageController extends Controller
 {
     public function index(): View
     {
+        $tab = request('tab', 'active'); // active | expired
+        $sort = request('sort', 'trending'); 
         $searchQuery = request('search');
         $selectedCategory = request('category');
 
-        $trendingDeals = Offer::deals()
+        $query = Offer::deals()
             ->approved()
-            ->active()
-            ->with('brand', 'category')
-            ->orderByDesc('clicks_count')
-            ->limit(3)
-            ->get();
+            ->with(['brand', 'category']);
 
-        $activeDeals = Offer::deals()
-            ->approved()
-            ->active()
-            ->with('brand', 'category')
-            ->when($searchQuery, function ($query) use ($searchQuery) {
-                $query->where('title', 'like', "%{$searchQuery}%")
-                    ->orWhere('description', 'like', "%{$searchQuery}%")
-                    ->orWhereHas('brand', function ($q) use ($searchQuery) {
-                        $q->where('name', 'like', "%{$searchQuery}%");
-                    });
-            })
-            ->when($selectedCategory, function ($query) use ($selectedCategory) {
-                $query->whereHas('category', function ($q) use ($selectedCategory) {
-                    $q->where('slug', $selectedCategory);
-                });
-            })
-            ->orderByDesc('clicks_count')
-            ->paginate(6);
+        // Tab filter
+        if ($tab === 'expired') {
+            $query->expired();
+        } else {
+            $query->active();
+        }
 
-        $expiredDeals = Offer::deals()
-            ->approved()
-            ->where(function ($query) {
+        // Search filter
+        if ($searchQuery) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'like', "%{$searchQuery}%")
+                  ->orWhere('description', 'like', "%{$searchQuery}%")
+                  ->orWhereHas('brand', function ($bq) use ($searchQuery) {
+                      $bq->where('name', 'like', "%{$searchQuery}%");
+                  });
+            });
+        }
+
+        // Category filter
+        if ($selectedCategory) {
+            $query->whereHas('category', function ($cq) use ($selectedCategory) {
+                $cq->where('slug', $selectedCategory);
+            });
+        }
+
+        // Sorting
+        switch ($sort) {
+            case 'newest':
+                $query->orderByDesc('created_at');
+                break;
+            case 'ending':
                 $query->whereNotNull('expires_at')
-                    ->where('expires_at', '<=', now());
-            })
-            ->with('brand', 'category')
-            ->orderBy('expires_at', 'desc')
-            ->limit(6)
-            ->get();
+                      ->orderBy('expires_at', 'asc');
+                break;
+            case 'discount':
+                $query->orderByDesc('discount_value');
+                break;
+            default: // trending
+                $query->orderByDesc('clicks_count');
+                break;
+        }
 
-        $totalActiveDeals = Offer::deals()
-            ->approved()
-            ->active()
-            ->count();
+        $deals = $query->paginate(9)->withQueryString();
 
+        $trendingDeals = collect();
+        if ($tab === 'active' && !$searchQuery && !$selectedCategory && $deals->currentPage() === 1) {
+            $trendingDeals = Offer::deals()
+                ->approved()
+                ->active()
+                ->with(['brand', 'category'])
+                ->orderByDesc('clicks_count')
+                ->limit(3)
+                ->get();
+        }
+
+        $totalActiveDeals = Offer::deals()->approved()->active()->count();
+        $totalExpiredDeals = Offer::deals()->approved()->expired()->count();
         $endingToday = Offer::deals()
             ->approved()
             ->active()
-            ->whereDate('expires_at', now())
+            ->whereDate('expires_at', now()->toDateString())
             ->count();
 
-        $categories = Category::where('is_active', true)
-            ->withCount(['offers' => function ($query) {
-                $query->active()->approved();
+        $categories = Category::whereNull('parent_id')
+            ->withCount(['offers' => function ($q) {
+                $q->deals()->approved()->active();
             }])
-            ->orderBy('name', 'asc')
+            ->orderBy('name')
             ->get();
 
-        return view('deals', [
-            'trendingDeals' => $trendingDeals,
-            'activeDeals' => $activeDeals,
-            'expiredDeals' => $expiredDeals,
-            'categories' => $categories,
-            'totalActiveDeals' => $totalActiveDeals,
-            'endingToday' => $endingToday,
-            'totalCategories' => $categories->count(),
-            'searchQuery' => $searchQuery,
-            'selectedCategory' => $selectedCategory,
-        ]);
+        return view('deals', compact(
+            'deals',
+            'trendingDeals',
+            'categories',
+            'totalActiveDeals',
+            'totalExpiredDeals',
+            'endingToday',
+            'tab',
+            'sort',
+            'searchQuery',
+            'selectedCategory'
+        ));
     }
 }

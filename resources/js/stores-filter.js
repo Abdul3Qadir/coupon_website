@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var grid = document.getElementById('storesGrid');
     var noResults = document.getElementById('noStoresFound');
     var categoryButtons = document.querySelectorAll('.category-filter-btn');
-    var tabButtons = document.querySelectorAll('.store-tab-btn');
-    var storesHeading = document.getElementById('storesHeading');
     var showCategoriesBtn = document.getElementById('showCategoriesBtn');
     var remainingCategories = document.getElementById('remainingCategories');
 

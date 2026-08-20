@@ -97,7 +97,11 @@ class StoreListingController extends Controller
             'activeCategorySlug' => $categorySlug,
             'activeTab' => $tab,
             'totalStores' => Brand::where('status', BrandStatus::Verified)->count(),
-            'totalCoupons' => Offer::approved()->count(),
+            'totalCoupons' => Offer::approved()->where(function ($query) {
+                    $query->whereNull('expires_at')
+                ->orWhere('expires_at', '>=', now());
+                    })
+                ->count(),
         ]);
     }
 }

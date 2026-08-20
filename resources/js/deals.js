@@ -1,59 +1,67 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var grid = document.getElementById('dealsGrid');
-    var noResults = document.getElementById('noDealsFound');
-    var categoryButtons = document.querySelectorAll('.category-filter-btn');
-    var statusButtons = document.querySelectorAll('.status-tab-btn');
+    // ── Category Modal ──
+    const modal = document.getElementById('dealsCategoriesModal');
+    const overlay = document.getElementById('dealsModalOverlay');
+    const showBtn = document.getElementById('dealsShowAllCategories');
+    const closeBtn = document.getElementById('dealsCloseCategoriesModal');
 
-    if (!grid) return;
-
-    var cards = grid.querySelectorAll('.deal-card');
-    var activeCategory = 'all';
-    var activeStatus = 'active';
-
-    function applyFilters() {
-        var visibleCount = 0;
-
-        cards.forEach(function (card) {
-            var matchesCategory = activeCategory === 'all' || card.dataset.category === activeCategory;
-            var matchesStatus = card.dataset.status === activeStatus;
-            var matches = matchesCategory && matchesStatus;
-
-            card.classList.toggle('hidden', !matches);
-            if (matches) visibleCount++;
-        });
-
-        if (noResults) {
-            noResults.classList.toggle('hidden', visibleCount !== 0);
-        }
+    function openModal() {
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        // Focus trap for accessibility
+        closeBtn?.focus();
     }
 
-    categoryButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            categoryButtons.forEach(function (b) {
-                b.classList.remove('active', 'bg-gray-900', 'text-white');
-                b.classList.add('bg-gray-50', 'text-gray-800');
-            });
-            btn.classList.add('active', 'bg-gray-900', 'text-white');
-            btn.classList.remove('bg-gray-50', 'text-gray-800');
+    function closeModal() {
+        if (!modal) return;
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        showBtn?.focus();
+    }
 
-            activeCategory = btn.dataset.category;
-            applyFilters();
-        });
+    showBtn?.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', closeModal);
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
     });
 
-    statusButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            statusButtons.forEach(function (b) {
-                b.classList.remove('active', 'bg-gray-900', 'text-white');
-                b.classList.add('text-gray-500');
-            });
-            btn.classList.add('active', 'bg-gray-900', 'text-white');
-            btn.classList.remove('text-gray-500');
+    // ── Search Input: Clear button auto-focus ──
+    const searchInput = document.querySelector('input[name="search"]');
+    const clearBtn = document.getElementById('dealsSearchClear');
 
-            activeStatus = btn.dataset.status;
-            applyFilters();
+    if (searchInput && clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            searchInput.value = '';
+            searchInput.focus();
         });
-    });
+    }
 
-    applyFilters();
+    // ── Sticky shadow on scroll ──
+    const filterBar = document.querySelector('.deals-filter-bar');
+    if (filterBar) {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry.isIntersecting) {
+                    filterBar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.06)';
+                } else {
+                    filterBar.style.boxShadow = '';
+                }
+            },
+            { threshold: 1.0, rootMargin: '-1px 0px 0px 0px' }
+        );
+        // Create a sentinel element right before the filter bar
+        const sentinel = document.createElement('div');
+        sentinel.style.position = 'absolute';
+        sentinel.style.top = '0';
+        sentinel.style.height = '1px';
+        filterBar.parentElement.style.position = 'relative';
+        filterBar.parentElement.insertBefore(sentinel, filterBar);
+        observer.observe(sentinel);
+    }
 });
