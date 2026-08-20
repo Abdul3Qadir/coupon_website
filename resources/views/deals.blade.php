@@ -10,11 +10,10 @@
     @include("pages-components.navbar")
 
     <section class="relative overflow-hidden bg-white py-14 sm:py-16">
-
         <div class="relative max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10 text-center">
             <span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3.5 py-1.5 font-Inter text-xs sm:text-sm font-semibold text-red-600">
                 <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2c1 3 3 4.5 4.5 6.5 1.6 2.2 2 4.7 1.2 7A6.7 6.7 0 0112 20a6.7 6.7 0 01-7.2-4.5c-.7-2 0-4 1.4-5.6.2 1.4 1 2.3 2 2.6-.6-2.4.2-5 2.3-6.7.4 1.3 1.1 2 2 2.3-.3-2 .1-4 1-6.1z"/></svg>
-                180 Live Deals
+                {{ $totalActiveDeals }} Live Deals
             </span>
 
             <h1 class="mt-4 font-Manrope text-3xl sm:text-5xl font-extrabold text-gray-900 leading-tight">
@@ -38,15 +37,15 @@
 
             <div class="mx-auto mt-9 flex max-w-md items-center justify-center divide-x divide-gray-200">
                 <div class="flex-1 px-4">
-                    <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">180</p>
+                    <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">{{ $totalActiveDeals }}</p>
                     <p class="mt-0.5 font-Inter text-xs sm:text-sm text-gray-500">Live Deals</p>
                 </div>
                 <div class="flex-1 px-4">
-                    <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">32</p>
+                    <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">{{ $endingToday }}</p>
                     <p class="mt-0.5 font-Inter text-xs sm:text-sm text-gray-500">Ending Today</p>
                 </div>
                 <div class="flex-1 px-4">
-                    <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">24</p>
+                    <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">{{ $totalCategories }}</p>
                     <p class="mt-0.5 font-Inter text-xs sm:text-sm text-gray-500">Categories</p>
                 </div>
             </div>
@@ -63,25 +62,45 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <a href="#" class="group bg-white p-6 rounded-2xl border-2 border-red-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+                @forelse($activeDeals as $deal)
+                <a href="/deals/{{ $deal->slug }}" class="group bg-white p-6 rounded-2xl {{ $deal->is_trending ? 'border-2 border-red-100' : 'border border-gray-100' }} shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
                     <div class="relative flex items-center justify-between mb-5">
                         <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/hostinger.png" alt="Hostinger" class="max-h-10 w-auto object-contain">
+                            <img src="{{ $deal->brand->small_logo ?? '/images/brand-logos/zara.png' }}" alt="{{ $deal->brand->name }}" class="max-h-10 w-auto object-contain">
                         </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">70% OFF</span>
+                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">
+                            @if($deal->discount_type->value === 'percentage')
+                                {{ $deal->discount_value }}% OFF
+                            @else
+                                Rs. {{ $deal->discount_value }} OFF
+                            @endif
+                        </span>
                     </div>
                     <div class="grow">
+                        @if($deal->is_trending)
                         <span class="inline-flex items-center gap-1 font-Inter text-[11px] font-bold uppercase tracking-wide text-red-600">
                             <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2c1 3 3 4.5 4.5 6.5 1.6 2.2 2 4.7 1.2 7A6.7 6.7 0 0112 20a6.7 6.7 0 01-7.2-4.5c-.7-2 0-4 1.4-5.6.2 1.4 1 2.3 2 2.6-.6-2.4.2-5 2.3-6.7.4 1.3 1.1 2 2 2.3-.3-2 .1-4 1-6.1z"/></svg>
                             Trending
                         </span>
-                        <h3 class="mt-1.5 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Hostinger Anniversary Sale</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">70% off all hosting plans plus a free domain, price locks in at checkout.</p>
+                        @endif
+                        @if($deal->category)
+                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">{{ $deal->category->name }}</span>
+                        @endif
+                        <h3 class="mt-1.5 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">{{ $deal->title }}</h3>
+                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">{{ $deal->description }}</p>
                     </div>
                     <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
                         <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends today
+                            @if($deal->expires_at)
+                                @if(now()->toDateString() === $deal->expires_at->toDateString())
+                                    Ends today
+                                @else
+                                    Ends in {{ now()->diffInDays($deal->expires_at) }} day{{ now()->diffInDays($deal->expires_at) !== 1 ? 's' : '' }}
+                                @endif
+                            @else
+                                No expiry
+                            @endif
                         </span>
                         <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
                             Get Deal
@@ -89,309 +108,79 @@
                         </span>
                     </div>
                 </a>
-
-                <a href="#" class="group bg-white p-6 rounded-2xl border-2 border-red-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/zara.png" alt="Zara" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">50% OFF</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-flex items-center gap-1 font-Inter text-[11px] font-bold uppercase tracking-wide text-red-600">
-                            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2c1 3 3 4.5 4.5 6.5 1.6 2.2 2 4.7 1.2 7A6.7 6.7 0 0112 20a6.7 6.7 0 01-7.2-4.5c-.7-2 0-4 1.4-5.6.2 1.4 1 2.3 2 2.6-.6-2.4.2-5 2.3-6.7.4 1.3 1.1 2 2 2.3-.3-2 .1-4 1-6.1z"/></svg>
-                            Trending
-                        </span>
-                        <h3 class="mt-1.5 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Zara Summer Clearance</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">Up to 50% off on new-season fashion, sitewide, no minimum spend.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 2 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="#" class="group bg-white p-6 rounded-2xl border-2 border-red-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/ikea.png" alt="Ikea" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">30% OFF</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-flex items-center gap-1 font-Inter text-[11px] font-bold uppercase tracking-wide text-red-600">
-                            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2c1 3 3 4.5 4.5 6.5 1.6 2.2 2 4.7 1.2 7A6.7 6.7 0 0112 20a6.7 6.7 0 01-7.2-4.5c-.7-2 0-4 1.4-5.6.2 1.4 1 2.3 2 2.6-.6-2.4.2-5 2.3-6.7.4 1.3 1.1 2 2 2.3-.3-2 .1-4 1-6.1z"/></svg>
-                            Trending
-                        </span>
-                        <h3 class="mt-1.5 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Ikea Home Refresh Sale</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">30% off furniture and home decor, automatically applied at checkout.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 5 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
+                @empty
+                <div class="col-span-full text-center py-12">
+                    <p class="text-gray-500">No active deals available</p>
+                </div>
+                @endforelse
             </div>
-        </div>
-    </section>
 
-     <section class="border-b border-gray-200 bg-white sticky top-0 z-20 pt-10">
-        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <div class="flex items-center gap-2.5 overflow-x-auto py-3 no-scrollbar">
-                <button type="button" data-category="all" class="category-filter-btn cursor-pointer active shrink-0 rounded-full bg-gray-900 px-4 py-2 font-Manrope text-sm font-semibold text-white transition">All Deals</button>
-                <button type="button" data-category="fashion" class="category-filter-btn cursor-pointer shrink-0 rounded-full bg-gray-50 hover:bg-gray-900 hover:text-white px-4 py-2 font-Manrope text-sm font-semibold text-gray-800 transition">Fashion</button>
-                <button type="button" data-category="home" class="category-filter-btn cursor-pointer shrink-0 rounded-full bg-gray-50 hover:bg-gray-900 hover:text-white px-4 py-2 font-Manrope text-sm font-semibold text-gray-800 transition">Home &amp; Living</button>
-                <button type="button" data-category="hosting" class="category-filter-btn cursor-pointer shrink-0 rounded-full bg-gray-50 hover:bg-gray-900 hover:text-white px-4 py-2 font-Manrope text-sm font-semibold text-gray-800 transition">Web Hosting</button>
-                <button type="button" data-category="electronics" class="category-filter-btn cursor-pointer shrink-0 rounded-full bg-gray-50 hover:bg-gray-900 hover:text-white px-4 py-2 font-Manrope text-sm font-semibold text-gray-800 transition">Electronics</button>
-                <button type="button" data-category="travel" class="category-filter-btn cursor-pointer shrink-0 rounded-full bg-gray-50 hover:bg-gray-900 hover:text-white px-4 py-2 font-Manrope text-sm font-semibold text-gray-800 transition">Travel</button>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-6 sm:py-10">
-        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <div class="flex items-center justify-between border-b border-gray-200">
-                <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900 pb-5">All Deals</h2>
-                <div class="flex items-center gap-1 mb-5">
-                    <button type="button" data-status="active" class="status-tab-btn cursor-pointer active rounded-full bg-gray-900 px-4 py-1.5 font-Inter text-xs sm:text-sm font-semibold text-white transition">Active</button>
-                    <button type="button" data-status="expired" class="status-tab-btn cursor-pointer rounded-full px-4 py-1.5 font-Inter text-xs sm:text-sm font-semibold text-gray-500 transition">Expired</button>
+            @if($expiredDeals->count() > 0)
+            <div class="mt-14 pt-10 border-t border-gray-200">
+                <h3 class="font-Manrope text-xl font-bold text-gray-900 mb-6">Expired Deals</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    @forelse($expiredDeals as $expiredDeal)
+                    <a href="#" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm opacity-70 flex flex-col">
+                        <div class="relative flex items-center justify-between mb-5">
+                            <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
+                                <img src="{{ $expiredDeal->brand->small_logo ?? '/images/brand-logos/zara.png' }}" alt="{{ $expiredDeal->brand->name }}" class="max-h-10 w-auto object-contain grayscale">
+                            </div>
+                            <span class="rounded-full bg-gray-200 px-3 py-1 font-Manrope text-xs font-bold text-gray-600">Expired</span>
+                        </div>
+                        <div class="grow">
+                            @if($expiredDeal->category)
+                            <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">{{ $expiredDeal->category->name }}</span>
+                            @endif
+                            <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-500">{{ $expiredDeal->title }}</h3>
+                            <p class="mt-2 text-xs sm:text-sm text-gray-500 leading-relaxed">{{ $expiredDeal->description }}</p>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
+                            <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-gray-400">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                @if($expiredDeal->expires_at)
+                                    Ended {{ now()->diffInDays($expiredDeal->expires_at) }} day{{ now()->diffInDays($expiredDeal->expires_at) !== 1 ? 's' : '' }} ago
+                                @else
+                                    Expired
+                                @endif
+                            </span>
+                            <span class="font-Manrope text-xs font-bold text-gray-400">Expired</span>
+                        </div>
+                    </a>
+                    @endforelse
                 </div>
             </div>
-        </div>
-    </section>
+            @endif
 
-    <section class="pb-14 sm:pb-20">
-        <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
-            <p id="noDealsFound" class="hidden text-center font-Inter text-sm text-gray-500 py-14">No deals match this filter.</p>
-
-            <div id="dealsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <a href="#" data-category="fashion" data-status="active" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/zara.png" alt="Zara" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">20% OFF</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Fashion</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Zara New Arrivals Discount</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">20% off the latest collection, automatically applied at checkout.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 6 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="home" data-status="active" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/ikea.png" alt="Ikea" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">15% OFF</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Home &amp; Living</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Ikea Kitchen Essentials Sale</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">15% off kitchenware and storage, no code needed at checkout.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 3 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="hosting" data-status="active" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/hostinger.png" alt="Hostinger" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">40% OFF</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Web Hosting</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Hostinger Cloud Startup Deal</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">40% off cloud hosting plans, price applies automatically at checkout.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 4 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="fashion" data-status="active" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/zara.png" alt="Zara" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">Free Shipping</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Fashion</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Zara Free Shipping Weekend</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">Free shipping on all orders above Rs. 1,500, this weekend only.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 2 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="home" data-status="active" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/ikea.png" alt="Ikea" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">25% OFF</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Home &amp; Living</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Ikea Bedroom Makeover Sale</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">25% off beds, wardrobes and mattresses, applied automatically.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 7 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="hosting" data-status="active" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/hostinger.png" alt="Hostinger" class="max-h-10 w-auto object-contain">
-                        </div>
-                        <span class="rounded-full bg-red-600 px-3 py-1 font-Manrope text-xs font-bold text-white">Free Domain</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Web Hosting</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-900 group-hover:text-red-600 transition-colors">Hostinger Free Domain Offer</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-600 leading-relaxed">Get a free domain with any yearly hosting plan, applied at checkout.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-red-600">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ends in 9 days
-                        </span>
-                        <span class="inline-flex items-center gap-1 font-Manrope text-xs font-bold text-gray-900 group-hover:text-red-600 transition-colors">
-                            Get Deal
-                            <svg class="h-4 w-4 transform transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="fashion" data-status="expired" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm opacity-70 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/zara.png" alt="Zara" class="max-h-10 w-auto object-contain grayscale">
-                        </div>
-                        <span class="rounded-full bg-gray-200 px-3 py-1 font-Manrope text-xs font-bold text-gray-600">Expired</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Fashion</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-500">Zara Spring Collection Sale</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-500 leading-relaxed">35% off the spring collection, offer has now ended.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-gray-400">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ended 3 days ago
-                        </span>
-                        <span class="font-Manrope text-xs font-bold text-gray-400">Expired</span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="home" data-status="expired" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm opacity-70 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/ikea.png" alt="Ikea" class="max-h-10 w-auto object-contain grayscale">
-                        </div>
-                        <span class="rounded-full bg-gray-200 px-3 py-1 font-Manrope text-xs font-bold text-gray-600">Expired</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Home &amp; Living</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-500">Ikea Winter Clearance</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-500 leading-relaxed">Up to 40% off winter items, offer has now ended.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-gray-400">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ended 6 days ago
-                        </span>
-                        <span class="font-Manrope text-xs font-bold text-gray-400">Expired</span>
-                    </div>
-                </a>
-
-                <a href="#" data-category="hosting" data-status="expired" class="deal-card group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm opacity-70 flex flex-col">
-                    <div class="relative flex items-center justify-between mb-5">
-                        <div class="flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
-                            <img src="/images/brand-logos/hostinger.png" alt="Hostinger" class="max-h-10 w-auto object-contain grayscale">
-                        </div>
-                        <span class="rounded-full bg-gray-200 px-3 py-1 font-Manrope text-xs font-bold text-gray-600">Expired</span>
-                    </div>
-                    <div class="grow">
-                        <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">Web Hosting</span>
-                        <h3 class="mt-2 font-Manrope text-lg font-bold text-gray-500">Hostinger New Year Flash Sale</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-gray-500 leading-relaxed">80% off all plans, offer has now ended.</p>
-                    </div>
-                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="inline-flex items-center gap-1 font-Inter text-xs font-medium text-gray-400">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Ended 12 days ago
-                        </span>
-                        <span class="font-Manrope text-xs font-bold text-gray-400">Expired</span>
-                    </div>
-                </a>
-            </div>
-
+            @if($activeDeals->hasPages())
             <div class="mt-10 sm:mt-12 flex flex-col items-center gap-3">
-                <p class="font-Inter text-sm text-gray-500">Showing 9 of 180 deals</p>
-                <button type="button" class="cursor-pointer inline-flex items-center gap-2 rounded-full bg-white border border-gray-200 hover:border-red-200 hover:bg-red-50 px-6 py-3 font-Manrope text-sm font-semibold text-gray-900 hover:text-red-600 shadow-sm transition">
-                    Load More Deals
-                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                </button>
+                <p class="font-Inter text-sm text-gray-500">Showing {{ $activeDeals->count() }} of {{ $totalActiveDeals }} deals</p>
+                <div class="flex gap-2">
+                    @if($activeDeals->onFirstPage())
+                        <button type="button" disabled class="cursor-not-allowed inline-flex items-center gap-2 rounded-full bg-gray-100 border border-gray-200 px-6 py-3 font-Manrope text-sm font-semibold text-gray-400 shadow-sm">
+                            <svg class="h-4 w-4 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            Previous
+                        </button>
+                    @else
+                        <a href="{{ $activeDeals->previousPageUrl() }}" class="cursor-pointer inline-flex items-center gap-2 rounded-full bg-white border border-gray-200 hover:border-red-200 hover:bg-red-50 px-6 py-3 font-Manrope text-sm font-semibold text-gray-900 hover:text-red-600 shadow-sm transition">
+                            <svg class="h-4 w-4 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            Previous
+                        </a>
+                    @endif
+
+                    @if($activeDeals->hasMorePages())
+                        <a href="{{ $activeDeals->nextPageUrl() }}" class="cursor-pointer inline-flex items-center gap-2 rounded-full bg-white border border-gray-200 hover:border-red-200 hover:bg-red-50 px-6 py-3 font-Manrope text-sm font-semibold text-gray-900 hover:text-red-600 shadow-sm transition">
+                            Load More Deals
+                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        </a>
+                    @else
+                        <button type="button" disabled class="cursor-not-allowed inline-flex items-center gap-2 rounded-full bg-gray-100 border border-gray-200 px-6 py-3 font-Manrope text-sm font-semibold text-gray-400 shadow-sm">
+                            Load More Deals
+                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        </button>
+                    @endif
+                </div>
             </div>
+            @endif
         </div>
     </section>
 

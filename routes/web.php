@@ -21,13 +21,15 @@ use App\Http\Controllers\Admin\BlogManagementController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\StorePageController;
 use App\Http\Controllers\StoreListingController;
+use App\Http\Controllers\DealPageController;
+
 
 // Public Routes
 Route::get('/', function () { return view('home'); });
 Route::get('/stores', [StoreListingController::class, 'index'])->name('stores.index');
 Route::get('/categories', [CategoryPageController::class, 'index'])->name('categories.index');
 Route::get('/coupons/{category:slug}', [CategoryPageController::class, 'byCategory'])->name('coupons.category');
-Route::get('/deals', function () { return view('deals'); });
+Route::get('/deals', [DealPageController::class, 'index'])->name('deals');
 Route::get('/stores/{brand:slug}', [StorePageController::class, 'show'])->name('stores.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/offers/{offer}', [OfferController::class, 'redirect'])->name('offers.redirect');
