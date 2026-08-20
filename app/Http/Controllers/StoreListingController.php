@@ -18,7 +18,10 @@ class StoreListingController extends Controller
         $tab = $request->query('tab', 'all');
 
         $query = Brand::where('status', BrandStatus::Verified)
-            ->withCount('offers');
+            // FIX: Only count active approved offers (not expired)
+            ->withCount(['offers' => function ($q) {
+                $q->approved()->active();
+            }]);
 
 
         if ($search) {

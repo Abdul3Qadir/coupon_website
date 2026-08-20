@@ -1,37 +1,36 @@
+/**
+ * Deals Page Scripts — coupon_website
+ * File: resources/js/deals.js
+ */
+
 document.addEventListener('DOMContentLoaded', function () {
-    // ── Category Modal ──
-    const modal = document.getElementById('dealsCategoriesModal');
-    const overlay = document.getElementById('dealsModalOverlay');
-    const showBtn = document.getElementById('dealsShowAllCategories');
-    const closeBtn = document.getElementById('dealsCloseCategoriesModal');
+    // ── Category Show All / Show Less ──
+    const showAllBtn = document.getElementById('dealsShowAllCategories');
+    const remainingCategories = document.getElementById('dealsRemainingCategories');
 
-    function openModal() {
-        if (!modal) return;
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        // Focus trap for accessibility
-        closeBtn?.focus();
+    if (showAllBtn && remainingCategories) {
+        showAllBtn.addEventListener('click', function () {
+            const expanded = this.dataset.expanded === 'true';
+
+            if (!expanded) {
+                // Expand: set max-width to scrollWidth for smooth animation
+                remainingCategories.style.maxWidth = remainingCategories.scrollWidth + 'px';
+                remainingCategories.style.opacity = '1';
+                // Move button to end
+                remainingCategories.parentNode.appendChild(this);
+                this.textContent = 'Show Less −';
+                this.dataset.expanded = 'true';
+            } else {
+                // Collapse
+                remainingCategories.style.maxWidth = '0px';
+                remainingCategories.style.opacity = '0';
+                this.textContent = 'Show All (' + this.dataset.count + ')+';
+                this.dataset.expanded = 'false';
+            }
+        });
     }
 
-    function closeModal() {
-        if (!modal) return;
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
-        showBtn?.focus();
-    }
-
-    showBtn?.addEventListener('click', openModal);
-    closeBtn?.addEventListener('click', closeModal);
-    overlay?.addEventListener('click', closeModal);
-
-    // Close on Escape key
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
-
-    // ── Search Input: Clear button auto-focus ──
+    // ── Search Clear Button ──
     const searchInput = document.querySelector('input[name="search"]');
     const clearBtn = document.getElementById('dealsSearchClear');
 
@@ -42,26 +41,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ── Sticky shadow on scroll ──
+    // ── Sticky Shadow on Scroll ──
     const filterBar = document.querySelector('.deals-filter-bar');
     if (filterBar) {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (!entry.isIntersecting) {
-                    filterBar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.06)';
-                } else {
-                    filterBar.style.boxShadow = '';
-                }
-            },
-            { threshold: 1.0, rootMargin: '-1px 0px 0px 0px' }
-        );
-        // Create a sentinel element right before the filter bar
         const sentinel = document.createElement('div');
         sentinel.style.position = 'absolute';
         sentinel.style.top = '0';
         sentinel.style.height = '1px';
         filterBar.parentElement.style.position = 'relative';
         filterBar.parentElement.insertBefore(sentinel, filterBar);
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                filterBar.style.boxShadow = entry.isIntersecting ? '' : '0 4px 20px rgba(0,0,0,0.06)';
+            },
+            { threshold: 1.0, rootMargin: '-1px 0px 0px 0px' }
+        );
         observer.observe(sentinel);
     }
 });

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deals — Best Offers & Discounts</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/deals.css') }}">
 </head>
 <body class="font-Inter bg-gray-50">
     @include("pages-components.navbar")
@@ -110,14 +109,19 @@
                 </div>
             </div>
 
-            {{-- Category Pills --}}
-            <div class="deals-pills-row flex items-center gap-2 overflow-x-auto pb-3 deals-scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+            {{-- Category Pills with Smooth Show All --}}
+            @php
+                $visibleCategories = $categories->take(4);
+                $remainingCategories = $categories->skip(4);
+            @endphp
+
+            <div class="flex items-center gap-2 overflow-x-auto pb-3 deals-scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
                 <a href="{{ route('deals', request()->except(['category', 'page'])) }}"
                    class="deals-pill {{ !$selectedCategory ? 'deals-pill--active' : 'deals-pill--inactive' }}">
                     All Deals
                 </a>
 
-                @foreach($categories->take(6) as $category)
+                @foreach($visibleCategories as $category)
                     <a href="{{ route('deals', array_merge(request()->except(['category', 'page']), ['category' => $category->slug])) }}"
                        class="deals-pill {{ $selectedCategory === $category->slug ? 'deals-pill--active' : 'deals-pill--inactive' }}">
                         {{ $category->name }}
@@ -129,16 +133,34 @@
                     </a>
                 @endforeach
 
-                @if($categories->count() > 6)
-                    <button type="button" id="dealsShowAllCategories" class="deals-pill deals-pill--inactive flex items-center gap-1">
-                        +{{ $categories->count() - 6 }} More
-                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                {{-- Remaining Categories (hidden by default, smooth expand) --}}
+                @if($remainingCategories->count() > 0)
+                    <div id="dealsRemainingCategories"
+                         class="flex items-center gap-2 overflow-hidden transition-all duration-500 ease-in-out"
+                         style="max-width: 0; opacity: 0;">
+                        @foreach($remainingCategories as $category)
+                            <a href="{{ route('deals', array_merge(request()->except(['category', 'page']), ['category' => $category->slug])) }}"
+                               class="deals-pill {{ $selectedCategory === $category->slug ? 'deals-pill--active' : 'deals-pill--inactive' }}">
+                                {{ $category->name }}
+                                @if($category->offers_count > 0)
+                                    <span class="deals-pill-badge {{ $selectedCategory === $category->slug ? 'deals-pill-badge--active' : 'deals-pill-badge--inactive' }}">
+                                        {{ $category->offers_count }}
+                                    </span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+
+                    <button type="button" id="dealsShowAllCategories" data-count="{{ $remainingCategories->count() }}"
+                            class="deals-pill deals-pill--inactive shrink-0 cursor-pointer border border-gray-300">
+                        Show All ({{ $remainingCategories->count() }})+
                     </button>
                 @endif
             </div>
         </div>
     </section>
 
+    {{-- ===== TRENDING DEALS ===== --}}
     @if($tab === 'active' && $trendingDeals->count() > 0 && !$searchQuery && !$selectedCategory)
     <section class="py-8 sm:py-10 lg:py-14 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10">
@@ -162,7 +184,6 @@
     <section class="py-8 sm:py-10 lg:py-14 {{ $tab === 'active' && $trendingDeals->count() > 0 && !$searchQuery && !$selectedCategory ? 'bg-gray-50' : 'bg-white' }}">
         <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10">
 
-            {{-- Section Title --}}
             <div class="flex items-center justify-between mb-6 sm:mb-8">
                 <h2 class="font-Manrope text-lg sm:text-xl lg:text-2xl font-extrabold text-gray-900">
                     @if($tab === 'expired')
@@ -185,7 +206,6 @@
                     @endforeach
                 </div>
 
-                {{-- Pagination --}}
                 @if($deals->hasPages())
                 <div class="mt-10 sm:mt-12 flex flex-col items-center gap-4">
                     <div class="flex items-center gap-2">
@@ -218,7 +238,6 @@
                         @endif
                     </div>
 
-                    {{-- Page numbers for desktop --}}
                     <div class="deals-pagination-numbers hidden sm:flex items-center gap-1.5">
                         @foreach($deals->getUrlRange(1, $deals->lastPage()) as $page => $url)
                             @if($page == $deals->currentPage())
@@ -232,7 +251,6 @@
                 @endif
 
             @else
-                {{-- Empty State --}}
                 <div class="text-center py-16 sm:py-20 lg:py-28">
                     <div class="deals-empty-icon">
                         <svg class="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -268,36 +286,7 @@
         </div>
     </section>
 
-    {{-- ===== CATEGORIES MODAL ===== --}}
-    <div id="dealsCategoriesModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="deals-modal-overlay" id="dealsModalOverlay"></div>
-        <div class="fixed inset-0 z-10 overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-                <div class="deals-modal-panel">
-                    <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                        <div class="flex items-center justify-between mb-5">
-                            <h3 class="font-Manrope text-lg font-bold text-gray-900" id="modal-title">All Categories</h3>
-                            <button type="button" id="dealsCloseCategoriesModal" class="rounded-full p-1.5 hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition">
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            @foreach($categories as $category)
-                                <a href="{{ route('deals', array_merge(request()->except(['category', 'page']), ['category' => $category->slug])) }}"
-                                   class="flex items-center justify-between rounded-xl px-4 py-3 font-Inter text-sm font-medium transition {{ $selectedCategory === $category->slug ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-transparent' }}">
-                                    <span>{{ $category->name }}</span>
-                                    <span class="text-xs font-semibold {{ $selectedCategory === $category->slug ? 'text-red-500' : 'text-gray-400' }}">{{ $category->offers_count }}</span>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @include("pages-components.footer")
 
-    <script src="{{ asset('js/deals.js') }}" defer></script>
 </body>
 </html>

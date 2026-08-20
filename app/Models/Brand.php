@@ -27,6 +27,7 @@ class Brand extends Authenticatable
         'about_description',
         'category_id',
         'allow_admin_to_add_offers',
+        'auto_publish_offers',
     ];
 
     protected $hidden = [

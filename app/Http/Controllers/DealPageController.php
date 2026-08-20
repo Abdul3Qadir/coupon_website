@@ -11,10 +11,11 @@ class DealPageController extends Controller
     public function index(): View
     {
         $tab = request('tab', 'active'); // active | expired
-        $sort = request('sort', 'trending'); 
+        $sort = request('sort', 'trending'); // trending | newest | ending | discount
         $searchQuery = request('search');
         $selectedCategory = request('category');
 
+        // Base query
         $query = Offer::deals()
             ->approved()
             ->with(['brand', 'category']);
@@ -63,6 +64,7 @@ class DealPageController extends Controller
 
         $deals = $query->paginate(9)->withQueryString();
 
+        // Trending deals (only on active tab, no filters, first page)
         $trendingDeals = collect();
         if ($tab === 'active' && !$searchQuery && !$selectedCategory && $deals->currentPage() === 1) {
             $trendingDeals = Offer::deals()
@@ -74,6 +76,7 @@ class DealPageController extends Controller
                 ->get();
         }
 
+        // Stats
         $totalActiveDeals = Offer::deals()->approved()->active()->count();
         $totalExpiredDeals = Offer::deals()->approved()->expired()->count();
         $endingToday = Offer::deals()
@@ -82,7 +85,8 @@ class DealPageController extends Controller
             ->whereDate('expires_at', now()->toDateString())
             ->count();
 
-        $categories = Category::whereNull('parent_id')
+        // ALL Categories with active deal counts (including sub-categories)
+        $categories = Category::query()
             ->withCount(['offers' => function ($q) {
                 $q->deals()->approved()->active();
             }])

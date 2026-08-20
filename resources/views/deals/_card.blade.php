@@ -57,9 +57,13 @@
         }
     }
     $brandName = $deal->brand?->name ?? 'Brand';
+
+    // ── Tag name for wrapper element ──
+    $wrapperTag = $isExpired ? 'div' : 'a';
+    $wrapperHref = $isExpired ? '' : 'href="' . route('offers.redirect', $deal) . '" target="_blank" rel="noopener"';
 @endphp
 
-<a href="{{ route('offers.redirect', $deal) }}" target="_blank" rel="noopener"
+<{!! $wrapperTag !!} {!! $wrapperHref !!}
    class="deals-card {{ $isExpired ? 'deals-card--expired' : '' }}">
 
     {{-- Ending Soon Ribbon --}}
@@ -67,6 +71,14 @@
     <div class="deals-ribbon deals-ribbon--ending">
         <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
         Ending Soon
+    </div>
+    @endif
+
+    {{-- Trending Badge --}}
+    @if(isset($isTrending) && $isTrending)
+    <div class="deals-ribbon deals-ribbon--trending">
+        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22C16.1421 22 19.5 18.6421 19.5 14.5C19.5 13.5 19.5 11.5 17.5 9C17.5 9 17.4004 11.8536 15.4262 11.4408C12.2331 10.7732 16.3551 4.50296 10.5 2C10.5 7 4.5 8.5 4.5 14.5C4.5 18.6421 7.85786 22 12 22Z"/></svg>
+        Trending
     </div>
     @endif
 
@@ -94,6 +106,11 @@
         {{-- Content --}}
         <div class="grow">
             <div class="flex items-center gap-2 mb-2 flex-wrap">
+                @if($deal->category)
+                <span class="inline-block rounded-full bg-gray-100 px-2 py-0.5 font-Inter text-[10px] font-semibold text-gray-500">
+                    {{ $deal->category->name }}
+                </span>
+                @endif
                 @if($deal->clicks_count > 50)
                 <span class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 font-Inter text-[10px] font-semibold text-emerald-600">
                     <svg class="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
@@ -131,4 +148,4 @@
             </span>
         </div>
     </div>
-</a>
+</{!! $wrapperTag !!}>
