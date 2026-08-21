@@ -20,7 +20,7 @@ use Illuminate\View\View;
 
 class OfferManagementController extends Controller
 {
-        public function index(Request $request): View
+    public function index(Request $request): View
     {
         $admin = $request->user('admin');
         $isSuperAdmin = $admin->isSuperAdmin();
@@ -61,7 +61,7 @@ class OfferManagementController extends Controller
         $offer->load(['brand', 'category', 'createdByAdmin', 'verifier']);
         return view('admin.offers.show', compact('offer'));
     }
-    
+
     public function create(): View
     {
         return view('admin.offers.create', [
@@ -101,7 +101,8 @@ class OfferManagementController extends Controller
             }
         }
 
-        $message = $offer->status->value === 'approved'
+        $isApproved = $offer->status && $offer->status->value === 'approved';
+        $message = $isApproved
             ? 'Offer published automatically.'
             : 'Offer submitted for review.';
 
@@ -134,7 +135,9 @@ class OfferManagementController extends Controller
 
         $offer->update($data);
 
-        $message = $offer->fresh()->status->value === 'approved'
+        $freshOffer = $offer->fresh();
+        $isApproved = $freshOffer->status && $freshOffer->status->value === 'approved';
+        $message = $isApproved
             ? 'Offer updated and published.'
             : 'Offer updated and submitted for review.';
 

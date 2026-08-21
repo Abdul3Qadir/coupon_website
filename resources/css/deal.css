@@ -6,6 +6,12 @@
     display: none;
 }
 
+/* ---------- Hidden Category Pill ---------- */
+.deals-cat-hidden {
+    display: none !important;
+}
+
+/* ---------- Hero Decorative Blobs ---------- */
 .deals-hero-blob {
     position: absolute;
     border-radius: 50%;
@@ -28,6 +34,7 @@
     background: #ffedd5;
 }
 
+/* ---------- Sticky Filter Bar ---------- */
 .deals-filter-bar {
     position: sticky;
     top: 0;
@@ -38,6 +45,7 @@
     border-bottom: 1px solid #e5e7eb;
 }
 
+/* ---------- Tab Buttons ---------- */
 .deals-tab {
     display: inline-flex;
     align-items: center;
@@ -78,6 +86,12 @@
     color: #6b7280;
 }
 
+/* ---------- Category Pills Row ---------- */
+.deals-pills-row {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ---------- Category Pills ---------- */
 .deals-pill {
     display: inline-flex;
     align-items: center;
@@ -120,6 +134,7 @@
     color: #6b7280;
 }
 
+/* ---------- Sort Dropdown ---------- */
 .deals-sort-select {
     appearance: none;
     -webkit-appearance: none;
@@ -139,6 +154,7 @@
     background: #e5e7eb;
 }
 
+/* ---------- Deal Cards ---------- */
 .deals-card {
     position: relative;
     display: flex;
@@ -165,9 +181,10 @@
     transform: none;
 }
 
+/* ---------- Ribbons / Badges ---------- */
 .deals-ribbon {
     position: absolute;
-    top: 0rem;
+    top: 0.75rem;
     z-index: 10;
     display: inline-flex;
     align-items: center;
@@ -181,16 +198,17 @@
 }
 .deals-ribbon--trending {
     left: 0.75rem;
-    background: #f5a003;
+    background: #dc2626;
     color: #fff;
 }
 .deals-ribbon--ending {
     right: 0.75rem;
     background: #fffbeb;
-    color: #ffee00;
+    color: #d97706;
     border: 1px solid #fef3c7;
 }
 
+/* ---------- Logo Box ---------- */
 .deals-logo-box {
     display: flex;
     align-items: center;
@@ -224,6 +242,7 @@
     font-weight: 700;
 }
 
+/* ---------- Discount Badge ---------- */
 .deals-discount-badge {
     flex-shrink: 0;
     border-radius: 9999px;
@@ -242,24 +261,7 @@
     color: #6b7280;
 }
 
-.deals-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(17, 24, 39, 0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 40;
-}
-.deals-modal-panel {
-    position: relative;
-    background: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
-    width: 100%;
-    max-width: 28rem;
-    margin: 1rem;
-}
-
+/* ---------- Pagination ---------- */
 .deals-page-btn {
     display: inline-flex;
     align-items: center;
@@ -286,6 +288,7 @@
     color: #dc2626;
 }
 
+/* ---------- Empty State ---------- */
 .deals-empty-icon {
     display: flex;
     align-items: center;
@@ -296,6 +299,10 @@
     background: #f3f4f6;
     margin: 0 auto 1.25rem;
 }
+
+/* ============================================================
+   MOBILE RESPONSIVENESS
+   ============================================================ */
 
 @media (max-width: 639px) {
     .deals-hero-title {
@@ -331,15 +338,9 @@
 
     .deals-pills-row {
         padding-bottom: 0.75rem;
-        -webkit-overflow-scrolling: touch;
     }
 
     .deals-card {
-        border-radius: 0.875rem;
-    }
-
-    .deals-modal-panel {
-        margin: 0.5rem;
         border-radius: 0.875rem;
     }
 

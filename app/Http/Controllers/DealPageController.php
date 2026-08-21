@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Enums\DiscountType;
 use App\Models\Offer;
 use App\Models\Category;
 use Illuminate\View\View;
@@ -38,14 +38,12 @@ class DealPageController extends Controller
             });
         }
 
-        // Category filter
         if ($selectedCategory) {
             $query->whereHas('category', function ($cq) use ($selectedCategory) {
                 $cq->where('slug', $selectedCategory);
             });
         }
 
-        // Sorting
         switch ($sort) {
             case 'newest':
                 $query->orderByDesc('created_at');
@@ -55,7 +53,8 @@ class DealPageController extends Controller
                       ->orderBy('expires_at', 'asc');
                 break;
             case 'discount':
-                $query->orderByDesc('discount_value');
+                $query->where('discount_type', DiscountType::Percentage)
+                      ->orderByDesc('discount_value');
                 break;
             default: // trending
                 $query->orderByDesc('clicks_count');
@@ -64,7 +63,6 @@ class DealPageController extends Controller
 
         $deals = $query->paginate(9)->withQueryString();
 
-        // Trending deals (only on active tab, no filters, first page)
         $trendingDeals = collect();
         if ($tab === 'active' && !$searchQuery && !$selectedCategory && $deals->currentPage() === 1) {
             $trendingDeals = Offer::deals()
@@ -85,7 +83,6 @@ class DealPageController extends Controller
             ->whereDate('expires_at', now()->toDateString())
             ->count();
 
-        // ALL Categories with active deal counts (including sub-categories)
         $categories = Category::query()
             ->withCount(['offers' => function ($q) {
                 $q->deals()->approved()->active();

@@ -1,29 +1,27 @@
-/**
- * Deals Page Scripts — coupon_website
- * File: resources/js/deals.js
- */
-
 document.addEventListener('DOMContentLoaded', function () {
     // ── Category Show All / Show Less ──
     const showAllBtn = document.getElementById('dealsShowAllCategories');
-    const remainingCategories = document.getElementById('dealsRemainingCategories');
 
-    if (showAllBtn && remainingCategories) {
+    if (showAllBtn) {
         showAllBtn.addEventListener('click', function () {
             const expanded = this.dataset.expanded === 'true';
+            const hiddenCats = document.querySelectorAll('.deals-cat-hidden');
 
             if (!expanded) {
-                // Expand: set max-width to scrollWidth for smooth animation
-                remainingCategories.style.maxWidth = remainingCategories.scrollWidth + 'px';
-                remainingCategories.style.opacity = '1';
-                // Move button to end
-                remainingCategories.parentNode.appendChild(this);
+                // Reveal all hidden categories
+                hiddenCats.forEach(function (cat) {
+                    cat.classList.remove('deals-cat-hidden');
+                });
                 this.textContent = 'Show Less −';
                 this.dataset.expanded = 'true';
             } else {
-                // Collapse
-                remainingCategories.style.maxWidth = '0px';
-                remainingCategories.style.opacity = '0';
+                // Hide categories again (index >= 4)
+                hiddenCats.forEach(function (cat) {
+                    const idx = parseInt(cat.dataset.catIndex, 10);
+                    if (idx >= 4) {
+                        cat.classList.add('deals-cat-hidden');
+                    }
+                });
                 this.textContent = 'Show All (' + this.dataset.count + ')+';
                 this.dataset.expanded = 'false';
             }
@@ -52,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         filterBar.parentElement.insertBefore(sentinel, filterBar);
 
         const observer = new IntersectionObserver(
-            ([entry]) => {
+            function ([entry]) {
                 filterBar.style.boxShadow = entry.isIntersecting ? '' : '0 4px 20px rgba(0,0,0,0.06)';
             },
             { threshold: 1.0, rootMargin: '-1px 0px 0px 0px' }

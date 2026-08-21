@@ -19,6 +19,7 @@ class Offer extends Model
         'brand_id',
         'category_id',
         'type',
+        'status',
         'title',
         'code',
         'redirect_url',
@@ -28,6 +29,15 @@ class Offer extends Model
         'terms_conditions',
         'starts_at',
         'expires_at',
+        'created_by_type',
+        'created_by_admin_id',
+        'verified_by',
+        'verified_at',
+        'rejection_reason',
+        'is_featured',
+        'is_trending',
+        'clicks_count',
+        'views_count',
     ];
 
     protected function casts(): array

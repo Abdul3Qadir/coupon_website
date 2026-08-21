@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BrandStatus;
+use App\Enums\DiscountType;
 use App\Models\Brand;
 use Illuminate\View\View;
 
@@ -47,12 +48,17 @@ class StorePageController extends Controller
             ->take(4)
             ->get();
 
+        $allActiveOffers = $coupons->merge($deals);
+        $bestDiscount = $allActiveOffers
+            ->where('discount_type', DiscountType::Percentage)
+            ->max('discount_value');
+
         return view('stores.show', [
             'brand' => $brand,
             'coupons' => $coupons,
             'deals' => $deals,
             'similarStores' => $similarStores,
-            'bestDiscount' => $coupons->merge($deals)->max('discount_value'),
+            'bestDiscount' => $bestDiscount,
             'expiredCoupons' => $expiredCoupons,
             'expiredDeals' => $expiredDeals,
             'relatedStores' => $relatedStores

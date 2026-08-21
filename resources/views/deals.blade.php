@@ -109,21 +109,17 @@
                 </div>
             </div>
 
-            {{-- Category Pills with Smooth Show All --}}
-            @php
-                $visibleCategories = $categories->take(4);
-                $remainingCategories = $categories->skip(4);
-            @endphp
-
-            <div class="flex items-center gap-2 overflow-x-auto pb-3 deals-scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+            {{-- Category Pills — ALL in one scrollable row, hidden after 4 --}}
+            <div class="deals-pills-row flex items-center gap-2 overflow-x-auto pb-3 deals-scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
                 <a href="{{ route('deals', request()->except(['category', 'page'])) }}"
                    class="deals-pill {{ !$selectedCategory ? 'deals-pill--active' : 'deals-pill--inactive' }}">
                     All Deals
                 </a>
 
-                @foreach($visibleCategories as $category)
+                @foreach($categories as $index => $category)
                     <a href="{{ route('deals', array_merge(request()->except(['category', 'page']), ['category' => $category->slug])) }}"
-                       class="deals-pill {{ $selectedCategory === $category->slug ? 'deals-pill--active' : 'deals-pill--inactive' }}">
+                       class="deals-pill {{ $selectedCategory === $category->slug ? 'deals-pill--active' : 'deals-pill--inactive' }} {{ $index >= 4 ? 'deals-cat-hidden' : '' }}"
+                       data-cat-index="{{ $index }}">
                         {{ $category->name }}
                         @if($category->offers_count > 0)
                             <span class="deals-pill-badge {{ $selectedCategory === $category->slug ? 'deals-pill-badge--active' : 'deals-pill-badge--inactive' }}">
@@ -133,27 +129,10 @@
                     </a>
                 @endforeach
 
-                {{-- Remaining Categories (hidden by default, smooth expand) --}}
-                @if($remainingCategories->count() > 0)
-                    <div id="dealsRemainingCategories"
-                         class="flex items-center gap-2 overflow-hidden transition-all duration-500 ease-in-out"
-                         style="max-width: 0; opacity: 0;">
-                        @foreach($remainingCategories as $category)
-                            <a href="{{ route('deals', array_merge(request()->except(['category', 'page']), ['category' => $category->slug])) }}"
-                               class="deals-pill {{ $selectedCategory === $category->slug ? 'deals-pill--active' : 'deals-pill--inactive' }}">
-                                {{ $category->name }}
-                                @if($category->offers_count > 0)
-                                    <span class="deals-pill-badge {{ $selectedCategory === $category->slug ? 'deals-pill-badge--active' : 'deals-pill-badge--inactive' }}">
-                                        {{ $category->offers_count }}
-                                    </span>
-                                @endif
-                            </a>
-                        @endforeach
-                    </div>
-
-                    <button type="button" id="dealsShowAllCategories" data-count="{{ $remainingCategories->count() }}"
+                @if($categories->count() > 4)
+                    <button type="button" id="dealsShowAllCategories" data-count="{{ $categories->count() - 4 }}"
                             class="deals-pill deals-pill--inactive shrink-0 cursor-pointer border border-gray-300">
-                        Show All ({{ $remainingCategories->count() }})+
+                        Show All ({{ $categories->count() - 4 }})+
                     </button>
                 @endif
             </div>

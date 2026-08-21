@@ -21,8 +21,10 @@ class OfferStatusResolver
 
     public function resolveForAdminSubmission(Admin $admin): array
     {
+        $shouldAutoPublish = $admin->isSuperAdmin() || $admin->auto_publish_offers;
+
         return [
-            'status' => $admin->auto_publish_offers ? OfferStatus::Approved : OfferStatus::Pending,
+            'status' => $shouldAutoPublish ? OfferStatus::Approved : OfferStatus::Pending,
             'created_by_type' => 'admin',
             'created_by_admin_id' => $admin->id,
         ];
