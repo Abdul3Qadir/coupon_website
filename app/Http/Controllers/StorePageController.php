@@ -18,10 +18,7 @@ class StorePageController extends Controller
         $coupons = $brand->offers()->approved()->active()->coupons()->latest()->get();
         $deals = $brand->offers()->approved()->active()->deals()->latest()->get();
 
-        $shownOfferIds = $coupons->merge($deals)->pluck('id');
-        if ($shownOfferIds->isNotEmpty()) {
-            \App\Models\Offer::whereIn('id', $shownOfferIds)->increment('views_count');
-        }
+        $brand->increment('views_count');
 
         $expiredCoupons = $brand->offers()
             ->where('type', 'coupon')
