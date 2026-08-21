@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Notifications\SubAdminApprovedNotification;
 use App\Notifications\SubAdminRejectedNotification;
+use App\Notifications\SubAdminAutoPublishToggledNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -83,9 +84,17 @@ class SubAdminManagementController extends Controller
     {
         abort_if($subAdmin->role === AdminRole::SuperAdmin, 404);
 
+        $enabling = !$subAdmin->auto_publish_offers;
+
         $subAdmin->forceFill(['auto_publish_offers' => !$subAdmin->auto_publish_offers])->save();
 
-        return back()->with('status', $subAdmin->auto_publish_offers ? 'Auto-publish enabled for this Sub-Admin.' : 'Auto-publish disabled for this Sub-Admin.');
+        $subAdmin->forceFill(['auto_publish_offers' => $enabling])->save();
+
+        if ($enabling) {
+            $subAdmin->notify(new \App\Notifications\SubAdminAutoPublishToggledNotification(true));
+        }
+
+        return back()->with('status', $enabling ? 'Auto-publish enabled for this Sub-Admin.' : 'Auto-publish disabled for this Sub-Admin.');
     }
 
     public function destroy(Admin $subAdmin): RedirectResponse
