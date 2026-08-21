@@ -45,21 +45,14 @@
                 </div>
 
                 <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3 font-Inter text-xs sm:text-sm">
-                    <span class="text-gray-500 w-full sm:w-auto mb-1 sm:mb-0">
-                        Trending:
-                    </span>
-                    <a href="#" class="rounded-full bg-white/90 px-3.5 py-1.5 sm:px-4 sm:py-2 text-gray-700 shadow-sm transition hover:bg-red-500 hover:text-white">
-                        Amazon
-                    </a>
-                    <a href="#" class="rounded-full bg-white/90 px-3.5 py-1.5 sm:px-4 sm:py-2 text-gray-700 shadow-sm transition hover:bg-red-500 hover:text-white">
-                        Walmart
-                    </a>
-                    <a href="#" class="rounded-full bg-white/90 px-3.5 py-1.5 sm:px-4 sm:py-2 text-gray-700 shadow-sm transition hover:bg-red-500 hover:text-white">
-                        Target
-                    </a>
-                    <a href="#" class="rounded-full bg-white/90 px-3.5 py-1.5 sm:px-4 sm:py-2 text-gray-700 shadow-sm transition hover:bg-red-500 hover:text-white">
-                        Best Buy
-                    </a>
+                    <span class="text-gray-500 w-full sm:w-auto mb-1 sm:mb-0">Trending:</span>
+                    @forelse ($trendingTags as $tag)
+                        <a href="{{ route('stores.show', $tag->slug) }}" class="rounded-full bg-white/90 px-3.5 py-1.5 sm:px-4 sm:py-2 text-gray-700 shadow-sm transition hover:bg-red-500 hover:text-white">
+                            {{ $tag->name }}
+                        </a>
+                    @empty
+                        <span class="text-gray-400">No trending stores yet</span>
+                    @endforelse
                 </div>
             </div>
         </div>

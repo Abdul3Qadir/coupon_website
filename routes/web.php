@@ -22,10 +22,11 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\StorePageController;
 use App\Http\Controllers\StoreListingController;
 use App\Http\Controllers\DealPageController;
+use App\Http\Controllers\HomePageController;
 
 
 // Public Routes
-Route::get('/', function () { return view('home'); });
+Route::get('/', [HomePageController::class, 'index'])->name('home');
 Route::get('/stores', [StoreListingController::class, 'index'])->name('stores.index');
 Route::get('/categories', [CategoryPageController::class, 'index'])->name('categories.index');
 Route::get('/coupons/{category:slug}', [CategoryPageController::class, 'byCategory'])->name('coupons.category');
