@@ -6,10 +6,6 @@
     display: none;
 }
 
-/* ---------- Hidden Category Pill ---------- */
-.deals-cat-hidden {
-    display: none !important;
-}
 
 /* ---------- Hero Decorative Blobs ---------- */
 .deals-hero-blob {
@@ -36,9 +32,6 @@
 
 /* ---------- Sticky Filter Bar ---------- */
 .deals-filter-bar {
-    position: sticky;
-    top: 0;
-    z-index: 30;
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -184,7 +177,7 @@
 /* ---------- Ribbons / Badges ---------- */
 .deals-ribbon {
     position: absolute;
-    top: 0.75rem;
+    top: 0.5rem;
     z-index: 10;
     display: inline-flex;
     align-items: center;
@@ -197,9 +190,10 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.06);
 }
 .deals-ribbon--trending {
-    left: 0.75rem;
-    background: #dc2626;
-    color: #fff;
+    right: 0.75rem;
+    background: #fff4eb;
+    color: #ff0202;
+    border: 1px solid #fef3c7;
 }
 .deals-ribbon--ending {
     right: 0.75rem;

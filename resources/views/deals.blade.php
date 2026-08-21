@@ -109,30 +109,45 @@
                 </div>
             </div>
 
-            {{-- Category Pills — ALL in one scrollable row, hidden after 4 --}}
-            <div class="deals-pills-row flex items-center gap-2 overflow-x-auto pb-3 deals-scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+            @php
+                $visibleCategories = $categories->take(4);
+                $remainingCategories = $categories->skip(4);
+            @endphp
+
+            <div class="flex items-center gap-2.5 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
                 <a href="{{ route('deals', request()->except(['category', 'page'])) }}"
-                   class="deals-pill {{ !$selectedCategory ? 'deals-pill--active' : 'deals-pill--inactive' }}">
+                class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold transition {{ !$selectedCategory ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-800 hover:bg-gray-900 hover:text-white' }}">
                     All Deals
                 </a>
 
-                @foreach($categories as $index => $category)
+                @foreach($visibleCategories as $category)
                     <a href="{{ route('deals', array_merge(request()->except(['category', 'page']), ['category' => $category->slug])) }}"
-                       class="deals-pill {{ $selectedCategory === $category->slug ? 'deals-pill--active' : 'deals-pill--inactive' }} {{ $index >= 4 ? 'deals-cat-hidden' : '' }}"
-                       data-cat-index="{{ $index }}">
+                    class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold transition {{ $selectedCategory === $category->slug ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-800 hover:bg-gray-900 hover:text-white' }}">
                         {{ $category->name }}
                         @if($category->offers_count > 0)
-                            <span class="deals-pill-badge {{ $selectedCategory === $category->slug ? 'deals-pill-badge--active' : 'deals-pill-badge--inactive' }}">
-                                {{ $category->offers_count }}
-                            </span>
+                            <span class="ml-1 text-[10px] font-bold {{ $selectedCategory === $category->slug ? 'text-white/70' : 'text-gray-400' }}">({{ $category->offers_count }})</span>
                         @endif
                     </a>
                 @endforeach
 
-                @if($categories->count() > 4)
-                    <button type="button" id="dealsShowAllCategories" data-count="{{ $categories->count() - 4 }}"
-                            class="deals-pill deals-pill--inactive shrink-0 cursor-pointer border border-gray-300">
-                        Show All ({{ $categories->count() - 4 }})+
+                @if($remainingCategories->count() > 0)
+                    <div id="dealsRemainingCategories"
+                        class="flex items-center gap-2.5 shrink-0 overflow-hidden transition-all duration-500 ease-in-out"
+                        style="max-width: 0; opacity: 0;">
+                        @foreach($remainingCategories as $category)
+                            <a href="{{ route('deals', array_merge(request()->except(['category', 'page']), ['category' => $category->slug])) }}"
+                            class="shrink-0 rounded-full px-4 py-2 font-Manrope text-sm font-semibold transition {{ $selectedCategory === $category->slug ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-800 hover:bg-gray-900 hover:text-white' }}">
+                                {{ $category->name }}
+                                @if($category->offers_count > 0)
+                                    <span class="ml-1 text-[10px] font-bold {{ $selectedCategory === $category->slug ? 'text-white/70' : 'text-gray-400' }}">({{ $category->offers_count }})</span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+
+                    <button type="button" id="dealsShowAllCategories" data-count="{{ $remainingCategories->count() }}"
+                            class="shrink-0 rounded-full px-4 py-2 bg-gray-50 cursor-pointer border border-gray-800 text-gray-800 hover:bg-gray-900 hover:text-white font-Manrope text-sm font-semibold transition-all duration-300">
+                        Show All ({{ $remainingCategories->count() }})+
                     </button>
                 @endif
             </div>

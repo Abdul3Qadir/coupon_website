@@ -105,6 +105,10 @@ class BrandManagementController extends Controller
 
         $brand->forceFill(['auto_publish_offers' => $enabling])->save();
 
+        if ($enabling) {
+            $brand->notify(new BrandAutoPublishEnabledNotification());
+        }
+
         return back()->with('status', $enabling ? 'Auto-publish enabled for this brand.' : 'Auto-publish disabled for this brand.');
     }
 

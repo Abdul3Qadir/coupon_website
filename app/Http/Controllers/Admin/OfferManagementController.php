@@ -94,8 +94,13 @@ class OfferManagementController extends Controller
 
         $brand->notify(new BrandOfferAddedNotification($offer));
 
-        if (!$admin->isSuperAdmin()) {
-            $superAdmins = Admin::where('is_super_admin', true)->get();
+        $superAdmins = Admin::where('is_super_admin', true)->get();
+
+        if ($offer->status === OfferStatus::Approved) {
+            foreach ($superAdmins as $superAdmin) {
+                $superAdmin->notify(new OfferApprovedNotification($offer));
+            }
+        } else {
             foreach ($superAdmins as $superAdmin) {
                 $superAdmin->notify(new OfferPendingReviewNotification($offer, $admin));
             }
@@ -126,6 +131,18 @@ class OfferManagementController extends Controller
     public function update(OfferRequest $request, Offer $offer, OfferStatusResolver $resolver): RedirectResponse
     {
         $admin = $request->user('admin');
+
+        $superAdmins = Admin::where('is_super_admin', true)->get();
+
+        if ($offer->status === OfferStatus::Approved) {
+            foreach ($superAdmins as $superAdmin) {
+                $superAdmin->notify(new OfferApprovedNotification($offer));
+            }
+        } else {
+            foreach ($superAdmins as $superAdmin) {
+                $superAdmin->notify(new OfferPendingReviewNotification($offer, $admin));
+            }
+        }
 
         if (!$admin->isSuperAdmin()) {
             abort_unless($offer->created_by_admin_id === $admin->id, 403);

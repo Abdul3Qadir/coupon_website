@@ -13,19 +13,24 @@ class CategoryPageController extends Controller
     public function index(): View
     {
         return view('categories', [
-            'categories' => Category::withCount(['brands', 'offers'])->orderByDesc('offers_count')->get(),
+            'categories' => Category::withCount(['brands','offers' => function ($q) {
+                    $q->approved()->active();
+                },
+            ])->orderByDesc('offers_count')->get(),
             'totalStores' => Brand::where('status', BrandStatus::Verified)->count(),
-            'totalCoupons' => Offer::approved()->count(),
+            'totalCoupons' => Offer::approved()->active()->count(),
         ]);
     }
 
     public function byCategory(Category $category): View
     {
         $stores = Brand::where('category_id', $category->id)
-            ->where('status', BrandStatus::Verified)
-            ->withCount('offers')
-            ->orderByDesc('offers_count')
-            ->paginate(12);
+        ->where('status', BrandStatus::Verified)
+        ->withCount(['offers' => function ($q) {
+            $q->approved()->active();
+        }])
+        ->orderByDesc('offers_count')
+        ->paginate(12);
 
         return view('coupons-category', [
             'category' => $category,

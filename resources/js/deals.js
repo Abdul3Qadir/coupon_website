@@ -1,27 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // ── Category Show All / Show Less ──
-    const showAllBtn = document.getElementById('dealsShowAllCategories');
+    
+    var showAllBtn = document.getElementById('dealsShowAllCategories');
+    var remainingCategories = document.getElementById('dealsRemainingCategories');
 
-    if (showAllBtn) {
+    if (showAllBtn && remainingCategories) {
         showAllBtn.addEventListener('click', function () {
-            const expanded = this.dataset.expanded === 'true';
-            const hiddenCats = document.querySelectorAll('.deals-cat-hidden');
+            var expanded = this.dataset.expanded === 'true';
 
             if (!expanded) {
-                // Reveal all hidden categories
-                hiddenCats.forEach(function (cat) {
-                    cat.classList.remove('deals-cat-hidden');
-                });
+                remainingCategories.style.maxWidth = remainingCategories.scrollWidth + 'px';
+                remainingCategories.style.opacity = '1';
+                remainingCategories.parentNode.appendChild(this);
                 this.textContent = 'Show Less −';
                 this.dataset.expanded = 'true';
             } else {
-                // Hide categories again (index >= 4)
-                hiddenCats.forEach(function (cat) {
-                    const idx = parseInt(cat.dataset.catIndex, 10);
-                    if (idx >= 4) {
-                        cat.classList.add('deals-cat-hidden');
-                    }
-                });
+                remainingCategories.style.maxWidth = '0px';
+                remainingCategories.style.opacity = '0';
                 this.textContent = 'Show All (' + this.dataset.count + ')+';
                 this.dataset.expanded = 'false';
             }

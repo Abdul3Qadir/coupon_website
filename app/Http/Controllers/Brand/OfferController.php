@@ -10,6 +10,10 @@ use App\Services\OfferStatusResolver;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Enums\OfferStatus;
+use App\Models\Admin;
+use App\Notifications\OfferApprovedNotification;
+use App\Notifications\OfferPendingReviewNotification;
 
 class OfferController extends Controller
 {
@@ -49,6 +53,20 @@ class OfferController extends Controller
         $data = array_merge($request->validated(), $resolver->resolveForBrandSubmission($brand));
 
         $offer = $brand->offers()->create($data);
+
+        if ($offer->status === OfferStatus::Approved) {
+            $brand->notify(new OfferApprovedNotification($offer));
+
+            $superAdmins = Admin::where('is_super_admin', true)->get();
+            foreach ($superAdmins as $superAdmin) {
+                $superAdmin->notify(new OfferApprovedNotification($offer));
+            }
+        } else {
+            $superAdmins = Admin::where('is_super_admin', true)->get();
+            foreach ($superAdmins as $superAdmin) {
+                $superAdmin->notify(new OfferPendingReviewNotification($offer, $brand));
+            }
+        }
 
         $message = $offer->status?->value === 'approved'
             ? 'Your offer has been published.'
