@@ -11,29 +11,47 @@
             </div>
             
             <div class="space-y-4">
-                <h3 class="text-md font-semibold text-white tracking-wider uppercase">Top Stores</h3>
+                <h3 class="text-md font-semibold text-white tracking-wider uppercase">Quick Links</h3>
                 <ul class="space-y-2.5 text-sm">
-                    <li><a href="/stores" class="hover:text-gray-500 transition-colors">All Stores</a></li>
-                    <li><a href="/stores" class="hover:text-gray-500 transition-colors">Trending Brands</a></li>
-                    <li><a href="/stores" class="hover:text-gray-500 transition-colors">New Additions</a></li>
+                    <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
+                    <li><a href="{{ route('stores.index') }}" class="hover:text-white transition-colors">All Stores</a></li>
+                    <li><a href="{{ route('categories.index') }}" class="hover:text-white transition-colors">Categories</a></li>
+                    <li><a href="{{ route('deals') }}" class="hover:text-white transition-colors">Deals</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">Blog</a></li>
+                    <li><a href="/about" class="hover:text-white transition-colors">About Us</a></li>
+                    <li><a href="/contact" class="hover:text-white transition-colors">Contact</a></li>
                 </ul>
             </div>
 
             <div class="space-y-4">
                 <h3 class="text-md font-semibold text-white tracking-wider uppercase">Categories</h3>
                 <ul class="space-y-2.5 text-sm">
-                    <li><a href="/categories" class="hover:text-gray-500 transition-colors">Electronics</a></li>
-                    <li><a href="/categories" class="hover:text-gray-500 transition-colors">Fashion & Apparel</a></li>
-                    <li><a href="/categories" class="hover:text-gray-500 transition-colors">Home & Living</a></li>
+                    @forelse ($footerCategories as $category)
+                        <li>
+                            <a href="{{ route('coupons.category', $category->slug) }}" class="hover:text-white transition-colors">
+                                {{ $category->name }}
+                            </a>
+                        </li>
+                    @empty
+                        <li><span class="text-gray-500">No categories yet</span></li>
+                    @endforelse
+                    <li class="pt-1">
+                        <a href="{{ route('categories.index') }}" class="inline-flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors font-medium">
+                            See All Categories
+                            <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <div class="space-y-4">
                 <h3 class="text-md font-semibold text-white tracking-wider uppercase">Explore</h3>
                 <ul class="space-y-2.5 text-sm">
-                    <li><a href="/blog" class="hover:text-gray-500 transition-colors">About</a></li>
-                    <li><a href="/blog" class="hover:text-gray-500 transition-colors">Blog & Guides</a></li>
-                    <li><a href="/deals" class="hover:text-gray-500 transition-colors">Latest Deals</a></li>
+                    <li><a href="{{ route('stores.index', ['tab' => 'trending']) }}" class="hover:text-white transition-colors">Trending Stores</a></li>
+                    <li><a href="{{ route('stores.index', ['tab' => 'new']) }}" class="hover:text-white transition-colors">New Additions</a></li>
+                    <li><a href="{{ route('stores.index', ['tab' => 'popular']) }}" class="hover:text-white transition-colors">Popular Stores</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">Blog & Guides</a></li>
+                    <li><a href="{{ route('deals') }}" class="hover:text-white transition-colors">Latest Deals</a></li>
                 </ul>
             </div>
         </div>

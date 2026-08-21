@@ -47,7 +47,11 @@
                         <tr class="hover:bg-gray-50/50 transition">
                             <td class="px-5 py-3.5">
                                 <div class="flex items-center gap-3">
-                                    <x-avatar :name="$subAdmin->name" size="sm" />
+                                    @if ($subAdmin->avatar)
+                                        <img src="{{ asset('storage/' . $subAdmin->avatar) }}" alt="{{ $subAdmin->name }}" class="h-8 w-8 shrink-0 rounded-full object-cover">
+                                    @else
+                                        <x-avatar :name="$subAdmin->name" size="sm" />
+                                    @endif
                                     <div class="min-w-0">
                                         <p class="font-Manrope text-sm font-bold text-gray-900 truncate">{{ $subAdmin->name }}</p>
                                         <p class="font-Inter text-xs text-gray-500 truncate">{{ $subAdmin->email }}</p>

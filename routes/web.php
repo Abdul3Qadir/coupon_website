@@ -116,6 +116,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::delete('{category}', [CategoryManagementController::class, 'destroy'])->name('destroy');
             });
 
+            Route::get('settings', [\App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('settings.edit');
+            Route::put('settings/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('settings.profile.update');
+            Route::put('settings/password', [\App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('settings.password.update');
+
             Route::prefix('blog-categories')->name('blog-categories.')->group(function () {
                 Route::get('/', [BlogCategoryManagementController::class, 'index'])->name('index');
                 Route::get('create', [BlogCategoryManagementController::class, 'create'])->name('create');

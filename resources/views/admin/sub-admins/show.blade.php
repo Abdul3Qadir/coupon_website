@@ -14,7 +14,13 @@
     <div class="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
             <div class="flex items-center gap-4">
-                <x-avatar :name="$subAdmin->name" size="lg" />
+                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-white overflow-hidden">
+                    @if ($subAdmin->avatar)
+                        <img src="{{ asset('storage/' . $subAdmin->avatar) }}" alt="{{ $subAdmin->name }}" class="h-full w-full object-cover">
+                    @else
+                        <x-avatar :name="$subAdmin->name" size="lg" />
+                    @endif
+                </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <h1 class="font-Manrope text-lg sm:text-xl font-extrabold text-gray-900">{{ $subAdmin->name }}</h1>
@@ -65,30 +71,80 @@
         @endif
     </div>
 
+    {{-- Info + Stats Grid --}}
     <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 grid grid-cols-2 gap-4">
-            <div class="rounded-2xl border border-gray-200 bg-white p-5">
-                <p class="font-Inter text-sm text-gray-500">Offers Added</p>
-                <p class="mt-2 font-Manrope text-2xl font-extrabold text-gray-900">{{ $subAdmin->offers()->count() }}</p>
+        {{-- Contact & Bio Info --}}
+        <div class="lg:col-span-2 space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+                <p class="font-Manrope text-base font-bold text-gray-900">Contact Information</p>
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="rounded-xl bg-gray-50 p-4">
+                        <p class="font-Inter text-xs font-medium text-gray-500 uppercase tracking-wide">Email</p>
+                        <p class="mt-1 font-Inter text-sm font-semibold text-gray-900 break-all">{{ $subAdmin->email }}</p>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 p-4">
+                        <p class="font-Inter text-xs font-medium text-gray-500 uppercase tracking-wide">Phone</p>
+                        <p class="mt-1 font-Inter text-sm font-semibold text-gray-900">{{ $subAdmin->phone ?? '—' }}</p>
+                    </div>
+                    <div class="rounded-xl bg-gray-50 p-4 sm:col-span-2">
+                        <p class="font-Inter text-xs font-medium text-gray-500 uppercase tracking-wide">Bio</p>
+                        <p class="mt-1 font-Inter text-sm text-gray-700 leading-relaxed">{{ $subAdmin->bio ?? 'No bio provided.' }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="rounded-2xl border border-gray-200 bg-white p-5">
-                <p class="font-Inter text-sm text-gray-500">Blogs Written</p>
-                <p class="mt-2 font-Manrope text-2xl font-extrabold text-gray-900">{{ $subAdmin->blogs()->count() }}</p>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5">
+                    <p class="font-Inter text-sm text-gray-500">Offers Added</p>
+                    <p class="mt-2 font-Manrope text-2xl font-extrabold text-gray-900">{{ $subAdmin->offers()->count() }}</p>
+                </div>
+                <div class="rounded-2xl border border-gray-200 bg-white p-5">
+                    <p class="font-Inter text-sm text-gray-500">Blogs Written</p>
+                    <p class="mt-2 font-Manrope text-2xl font-extrabold text-gray-900">{{ $subAdmin->blogs()->count() }}</p>
+                </div>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-gray-200 bg-white p-5">
-            <p class="font-Manrope text-base font-bold text-gray-900">Settings</p>
-            <div class="mt-4 flex items-center justify-between">
-                <div>
-                    <p class="font-Inter text-sm font-semibold text-gray-900">Auto-Publish</p>
-                    <p class="font-Inter text-xs text-gray-500">Skip manual review for this Sub-Admin</p>
+        {{-- Settings Sidebar --}}
+        <div class="space-y-6">
+            <div class="rounded-2xl border border-gray-200 bg-white p-5">
+                <p class="font-Manrope text-base font-bold text-gray-900">Settings</p>
+                <div class="mt-4 flex items-center justify-between">
+                    <div>
+                        <p class="font-Inter text-sm font-semibold text-gray-900">Auto-Publish</p>
+                        <p class="font-Inter text-xs text-gray-500">Skip manual review for this Sub-Admin</p>
+                    </div>
+                    <x-toggle-switch :checked="$subAdmin->auto_publish_offers" :action="route('admin.sub-admins.toggle-auto-publish', $subAdmin)" />
                 </div>
-                <x-toggle-switch :checked="$subAdmin->auto_publish_offers" :action="route('admin.sub-admins.toggle-auto-publish', $subAdmin)" />
+            </div>
+
+            <div class="rounded-2xl border border-gray-200 bg-white p-5">
+                <p class="font-Manrope text-base font-bold text-gray-900">Account Details</p>
+                <div class="mt-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-Inter text-sm text-gray-500">Role</span>
+                        <span class="font-Inter text-sm font-semibold text-gray-900">{{ $subAdmin->role->label() }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-Inter text-sm text-gray-500">Status</span>
+                        <x-status-badge :status="$subAdmin->status" />
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-Inter text-sm text-gray-500">Joined</span>
+                        <span class="font-Inter text-sm font-semibold text-gray-900">{{ $subAdmin->created_at->format('M d, Y') }}</span>
+                    </div>
+                    @if ($subAdmin->last_login_at)
+                        <div class="flex items-center justify-between">
+                            <span class="font-Inter text-sm text-gray-500">Last Login</span>
+                            <span class="font-Inter text-sm font-semibold text-gray-900">{{ $subAdmin->last_login_at->diffForHumans() }}</span>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
 
+    {{-- Offers List --}}
     <div class="mt-6 rounded-2xl border border-gray-200 bg-white p-5">
         <p class="font-Manrope text-base font-bold text-gray-900">Offers Added by {{ $subAdmin->name }}</p>
 
