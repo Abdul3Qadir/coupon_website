@@ -42,12 +42,9 @@ class HomePageController extends Controller
             ->distinct()
             ->pluck('brand_id');
 
-        $trendingStores = Brand::whereIn('id', $trendingStoreIds)
-            ->where('status', BrandStatus::Verified)
-            ->withCount(['offers' => function ($query) {
-                $query->approved()->active();
-            }])
-            ->orderBy('name')
+        $trendingStores = Brand::where('status', BrandStatus::Verified)
+            ->withCount('offers')
+            ->orderByDesc('total_views')
             ->limit(10)
             ->get();
 

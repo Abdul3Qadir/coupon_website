@@ -35,7 +35,7 @@
                 </button>
             </div>
 
-            <div class="mx-auto mt-9 flex max-w-md items-center justify-center divide-x divide-gray-200">
+            <div class="mx-auto mt-9 flex max-w-md flex-wrap items-center justify-center divide-x divide-gray-200">
                 <div class="flex-1 px-4">
                     <p class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">{{ $categories->count() }}</p>
                     <p class="mt-0.5 font-Inter text-xs sm:text-sm text-gray-500">Categories</p>

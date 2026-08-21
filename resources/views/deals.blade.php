@@ -24,7 +24,6 @@
                 Deals That
                 <span class="relative inline-block text-red-600">
                     Save You Money
-                    <svg class="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.00025 6.99997C25.7501 3.49999 83.2344 -3.10684 198 6.99997" stroke="#FECACA" stroke-width="3" stroke-linecap="round"/></svg>
                 </span>
             </h1>
 
@@ -47,13 +46,13 @@
             </form>
 
             {{-- Stats --}}
-            <div class="deals-hero-stats mx-auto mt-8 sm:mt-10 flex max-w-lg items-center justify-center divide-x divide-gray-200">
+            <div class="deals-hero-stats mx-auto mt-8 flex sm:mt-10 flex-wrap max-w-lg items-center justify-center divide-x divide-gray-200">
                 <div class="flex-1 px-3 sm:px-4">
                     <p class="deals-hero-stat-number font-Manrope text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900">{{ $totalActiveDeals }}</p>
                     <p class="mt-0.5 font-Inter text-xs sm:text-sm text-gray-500">Live Deals</p>
                 </div>
                 <div class="flex-1 px-3 sm:px-4">
-                    <p class="deals-hero-stat-number font-Manrope text-xl sm:text-2xl lg:text-3xl font-extrabold text-red-600">{{ $endingToday }}</p>
+                    <p class="deals-hero-stat-number font-Manrope text-xl sm:text-2xl lg:text-3xl font-extrabold text-black-900">{{ $endingToday }}</p>
                     <p class="mt-0.5 font-Inter text-xs sm:text-sm text-gray-500">Ending Today</p>
                 </div>
                 <div class="flex-1 px-3 sm:px-4">
