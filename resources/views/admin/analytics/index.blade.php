@@ -1,6 +1,4 @@
-@extends('components.layouts.admin')
-
-@section('content')
+<x-layouts.admin :title="'Platform Analytics'">
 <div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 class="font-Manrope text-4xl font-extrabold text-gray-900 mb-8">Platform Analytics</h1>
@@ -173,11 +171,11 @@
                 @endif
             </div>
 
-            <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100">
-                <p class="font-Inter text-sm text-blue-700">Pending Blog Reviews</p>
-                <p class="font-Manrope text-3xl font-extrabold text-blue-900 mt-2">{{ $pendingActions['pendingBlogs'] }}</p>
-                @if($pendingActions['pendingBlogsUrgent'] > 0)
-                <p class="font-Inter text-xs text-blue-600 mt-2">⚠️ {{ $pendingActions['pendingBlogsUrgent'] }} urgent (>7d)</p>
+            <div class="bg-purple-50 rounded-2xl p-6 border border-purple-100">
+                <p class="font-Inter text-sm text-purple-700">Pending Sub-Admin Approvals</p>
+                <p class="font-Manrope text-3xl font-extrabold text-purple-900 mt-2">{{ $pendingActions['pendingAdmins'] }}</p>
+                @if($pendingActions['pendingAdminsUrgent'] > 0)
+                <p class="font-Inter text-xs text-purple-600 mt-2">⚠️ {{ $pendingActions['pendingAdminsUrgent'] }} urgent (>2d)</p>
                 @endif
             </div>
         </div>
@@ -243,4 +241,4 @@ new Chart(blogsCtx, {
     }
 });
 </script>
-@endsection
+</x-layouts.admin>

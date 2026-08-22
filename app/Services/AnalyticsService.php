@@ -14,20 +14,19 @@ class AnalyticsService
     public function getBrandOffersStats(Brand $brand): array
     {
         $allOffers = $brand->offers();
-        $activeOffers = $allOffers->approved()->active();
         
-        $totalViews = $allOffers->sum('views_count');
-        $totalClicks = $allOffers->sum('clicks_count');
+        $totalViews = $allOffers->sum('views_count') ?? 0;
+        $totalClicks = $allOffers->sum('clicks_count') ?? 0;
         $ctr = $totalViews > 0 ? ($totalClicks / $totalViews) * 100 : 0;
         
         $monthlyViews = $allOffers->where('created_at', '>=', now()->subDays(30))
-            ->sum('views_count');
+            ->sum('views_count') ?? 0;
         $monthlyClicks = $allOffers->where('created_at', '>=', now()->subDays(30))
-            ->sum('clicks_count');
+            ->sum('clicks_count') ?? 0;
         
         return [
             'totalOffers' => $allOffers->count(),
-            'activeOffers' => $activeOffers->count(),
+            'activeOffers' => $allOffers->where('status', 'approved')->count(),
             'pendingOffers' => $allOffers->where('status', 'pending')->count(),
             'rejectedOffers' => $allOffers->where('status', 'rejected')->count(),
             'totalViews' => $totalViews,
@@ -35,24 +34,35 @@ class AnalyticsService
             'ctr' => round($ctr, 2),
             'monthlyViews' => $monthlyViews,
             'monthlyClicks' => $monthlyClicks,
-            'coupons' => $allOffers->where('type', 'coupon')->count(),
-            'deals' => $allOffers->where('type', 'deal')->count(),
+            'coupons' => $allOffers->coupons()->count(),
+            'deals' => $allOffers->deals()->count(),
         ];
     }
 
     public function getBrandOffersTrend(Brand $brand, int $days = 30): Collection
     {
-        return $brand->offers()
+        $data = $brand->offers()
             ->where('created_at', '>=', now()->subDays($days))
             ->selectRaw('DATE(created_at) as date, SUM(views_count) as views, SUM(clicks_count) as clicks')
-            ->groupBy(DB::raw('DATE(created_at)'))
+            ->groupBy('date')
             ->orderBy('date', 'asc')
-            ->get()
-            ->map(fn($item) => [
-                'date' => $item->date,
-                'views' => $item->views ?? 0,
-                'clicks' => $item->clicks ?? 0,
-            ]);
+            ->get();
+
+        if ($data->isEmpty()) {
+            for ($i = $days; $i >= 0; $i--) {
+                $data->push((object)[
+                    'date' => now()->subDays($i)->format('Y-m-d'),
+                    'views' => 0,
+                    'clicks' => 0,
+                ]);
+            }
+        }
+
+        return $data->map(fn($item) => [
+            'date' => $item->date,
+            'views' => $item->views ?? 0,
+            'clicks' => $item->clicks ?? 0,
+        ]);
     }
 
     public function getBrandTopOffers(Brand $brand, int $limit = 10): Collection
@@ -130,17 +140,17 @@ class AnalyticsService
     }
 
     public function getSuperAdminTopBrands(int $limit = 15): Collection
-    {
-        return Brand::withCount(['offers' => function($q) {
-            $q->approved()->active();
+{
+    return Brand::select('id', 'name', 'small_logo', 'category_id', 'status', 'verified_at')
+        ->withCount(['offers' => function($q) {
+            $q->where('status', 'approved');
         }])
-        ->select('id', 'name', 'small_logo', 'category_id', 'status', 'verified_at')
-        ->with(['offers' => function($q) {
-            $q->select('brand_id', DB::raw('SUM(views_count) as total_views, SUM(clicks_count) as total_clicks'))
-              ->groupBy('brand_id');
-        }])
-        ->withSum('offers', 'views_count')
-        ->withSum('offers', 'clicks_count')
+        ->withSum(['offers' => function($q) {
+            $q->where('status', 'approved');
+        }], 'views_count')
+        ->withSum(['offers' => function($q) {
+            $q->where('status', 'approved');
+        }], 'clicks_count')
         ->orderByDesc('offers_count')
         ->limit($limit)
         ->get()
@@ -148,15 +158,15 @@ class AnalyticsService
             'id' => $brand->id,
             'name' => $brand->name,
             'logo' => $brand->small_logo,
-            'offers' => $brand->offers_count,
+            'offers' => $brand->offers_count ?? 0,
             'views' => $brand->offers_sum_views_count ?? 0,
             'clicks' => $brand->offers_sum_clicks_count ?? 0,
-            'ctr' => $brand->offers_sum_views_count > 0 
-                ? round(($brand->offers_sum_clicks_count / $brand->offers_sum_views_count) * 100, 2)
+            'ctr' => ($brand->offers_sum_views_count ?? 0) > 0 
+                ? round(($brand->offers_sum_clicks_count ?? 0) / ($brand->offers_sum_views_count ?? 0) * 100, 2)
                 : 0,
             'status' => $brand->status,
         ]);
-    }
+}
 
     public function getSuperAdminTopOffers(int $limit = 10): Collection
     {
@@ -250,9 +260,12 @@ class AnalyticsService
             'pendingOffersUrgent' => Offer::where('status', 'pending')
                 ->where('created_at', '<', now()->subDays(3))
                 ->count(),
-            'pendingBlogs' => Blog::where('status', 'draft')->count(),
-            'pendingBlogsUrgent' => Blog::where('status', 'draft')
-                ->where('created_at', '<', now()->subDays(7))
+            'pendingAdmins' => Admin::where('status', 'pending')
+                ->where('role', 'sub_admin')
+                ->count(),
+            'pendingAdminsUrgent' => Admin::where('status', 'pending')
+                ->where('role', 'sub_admin')
+                ->where('created_at', '<', now()->subDays(2))
                 ->count(),
         ];
     }
