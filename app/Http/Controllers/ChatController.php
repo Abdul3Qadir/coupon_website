@@ -6,6 +6,8 @@ use App\Models\Admin;
 use App\Models\AdminMessage;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Enums\AdminRole;
+use App\Enums\AdminStatus;
 
 class ChatController extends Controller
 {
@@ -25,9 +27,9 @@ class ChatController extends Controller
         $admin = auth('admin')->user();
         $selectedSubAdminId = $request->query('subadmin');
 
-        // Get all sub-admins created by this super admin
-        $subAdmins = $admin->subAdmins()
-            ->where('status', 'approved')
+        // Get ALL approved sub-admins (not just ones created by this super admin)
+        $subAdmins = Admin::where('role', AdminRole::SubAdmin)
+            ->where('status', AdminStatus::Approved)
             ->orderBy('name')
             ->get();
 
@@ -38,7 +40,6 @@ class ChatController extends Controller
             $selectedSubAdmin = $subAdmins->find($selectedSubAdminId);
 
             if ($selectedSubAdmin) {
-                // Get all messages between super admin and this sub-admin
                 $messages = AdminMessage::where(function ($query) use ($admin, $selectedSubAdmin) {
                     $query->where('sender_admin_id', $admin->id)
                         ->where('receiver_admin_id', $selectedSubAdmin->id);
@@ -49,7 +50,6 @@ class ChatController extends Controller
                 ->orderBy('created_at', 'asc')
                 ->get();
 
-                // Mark as read
                 AdminMessage::where('receiver_admin_id', $admin->id)
                     ->where('sender_admin_id', $selectedSubAdmin->id)
                     ->whereNull('read_at')
@@ -67,7 +67,16 @@ class ChatController extends Controller
     private function subAdminChat(Request $request): View
     {
         $admin = auth('admin')->user();
-        $superAdmin = $admin->creator;
+
+        // Find the super admin (sub-admins self-register, so creator is null)
+        $superAdmin = Admin::where('role', AdminRole::SuperAdmin)->first();
+
+        if (!$superAdmin) {
+            return view('admin.chat.subadmin', [
+                'superAdmin' => null,
+                'messages' => collect(),
+            ]);
+        }
 
         // Get all messages with super admin
         $messages = AdminMessage::where(function ($query) use ($admin, $superAdmin) {

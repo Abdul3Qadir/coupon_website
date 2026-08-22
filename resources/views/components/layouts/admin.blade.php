@@ -110,12 +110,7 @@
                 
                 <x-notification-dropdown guard="admin"/>
 
-                <a href="#" class="relative flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-50 hover:text-gray-900 transition">
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-                    @if (($unreadMessagesCount ?? 0) > 0)
-                        <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-600 ring-2 ring-white"></span>
-                    @endif
-                </a>
+                <x-chat-dropdown />
 
                 <div class="flex items-center gap-2 pl-2 sm:pl-3 border-l border-gray-200">
                     <x-avatar :name="$admin->name" size="sm" class="ring-2 ring-red-100" />
@@ -133,5 +128,26 @@
     </div>
     @stack('scripts')
     <x-confirm-modal />
+    <script>
+        // Chat dropdown toggle
+        const chatBtn = document.getElementById('chatBellBtn');
+        const chatDropdown = document.getElementById('chatDropdown');
+        if (chatBtn && chatDropdown) {
+            chatBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                chatDropdown.classList.toggle('hidden');
+                // Close notification dropdown if open
+                const notifDropdown = document.getElementById('notificationDropdown');
+                if (notifDropdown) notifDropdown.classList.add('hidden');
+            });
+        }
+
+        // Close chat dropdown on outside click
+        document.addEventListener('click', (e) => {
+            if (chatDropdown && !chatDropdown.contains(e.target) && chatBtn && !chatBtn.contains(e.target)) {
+                chatDropdown.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
