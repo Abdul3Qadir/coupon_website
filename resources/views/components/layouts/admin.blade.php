@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Dashboard' }} — Coupono Admin</title>
+    <title>{{ $title ?? 'Dashboard' }} — FavCoupons Admin</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 </head>
@@ -18,8 +18,7 @@
     <aside id="dashboardSidebar" class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col -translate-x-full border-r border-gray-200 bg-white transition-transform duration-200 lg:translate-x-0">
         <div class="flex h-16 shrink-0 items-center justify-between px-5 border-b border-gray-100">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
-                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-red-500 to-rose-600 font-Manrope text-sm font-extrabold text-white">C</span>
-                <span class="font-Manrope text-base font-extrabold text-gray-900">Coupono<span class="text-red-600"> Admin</span></span>
+                <img src="/images/favCoupons-Logo.png" alt="FavCoupons" class="h-10 w-auto">
             </a>
             <button type="button" id="closeSidebarBtn" class="cursor-pointer lg:hidden text-gray-400 hover:text-gray-600">
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -70,12 +69,6 @@
                 </x-admin.sidebar-link>
             @endif
 
-            <x-admin.sidebar-group label="Communication" />
-            <x-admin.sidebar-link href="{{ route('admin.chat.index') }}" :badge="$unreadMessagesCount ?? null">
-                <x-slot:icon><svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></x-slot:icon>
-                Chat
-            </x-admin.sidebar-link>
-
             <x-admin.sidebar-group label="Account" />
             <x-admin.sidebar-link :href="route('admin.settings.edit')" :active="request()->routeIs('admin.settings.*')">
                 <x-slot:icon><svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></x-slot:icon>
@@ -110,8 +103,6 @@
                 
                 <x-notification-dropdown guard="admin"/>
 
-                <x-chat-dropdown />
-
                 <div class="flex items-center gap-2 pl-2 sm:pl-3 border-l border-gray-200">
                     <x-avatar :name="$admin->name" size="sm" class="ring-2 ring-red-100" />
                     <div class="hidden sm:block">
@@ -128,26 +119,5 @@
     </div>
     @stack('scripts')
     <x-confirm-modal />
-    <script>
-        // Chat dropdown toggle
-        const chatBtn = document.getElementById('chatBellBtn');
-        const chatDropdown = document.getElementById('chatDropdown');
-        if (chatBtn && chatDropdown) {
-            chatBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                chatDropdown.classList.toggle('hidden');
-                // Close notification dropdown if open
-                const notifDropdown = document.getElementById('notificationDropdown');
-                if (notifDropdown) notifDropdown.classList.add('hidden');
-            });
-        }
-
-        // Close chat dropdown on outside click
-        document.addEventListener('click', (e) => {
-            if (chatDropdown && !chatDropdown.contains(e.target) && chatBtn && !chatBtn.contains(e.target)) {
-                chatDropdown.classList.add('hidden');
-            }
-        });
-    </script>
 </body>
 </html>

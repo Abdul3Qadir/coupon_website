@@ -4,7 +4,7 @@
         <!-- Logo Section -->
         <div class="flex items-center gap-3 shrink-0">
             <a href="/" class="flex items-center">
-                <img src="/images/coupon-logo.png" alt="Dumdaar Coupons" class="max-[300px]:h-8 block h-10 w-auto">
+                <img src="/images/favCoupons-Logo.png" alt="FavCoupons" class="max-[300px]:h-8 block h-10 w-auto">
             </a>
         </div>
 

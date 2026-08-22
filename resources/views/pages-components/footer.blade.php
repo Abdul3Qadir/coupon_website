@@ -3,7 +3,7 @@
         <div class="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 lg:gap-12">
             <div class="md:col-span-1 space-y-4">
                 <a href="/" class="inline-block p-2 bg-white rounded-2xl">
-                    <img src="/images/coupon-logo.png" alt="Dumdaar Coupons" class="h-10 w-auto">
+                    <img src="/images/favCoupons-Logo.png" alt="FavCoupons" class="h-10 w-auto">
                 </a>
                 <p class="text-sm text-gray-400 leading-relaxed">
                     Your ultimate destination for verified coupon codes, discounts, and exclusive deals from top brands.
@@ -57,7 +57,7 @@
         </div>
 
         <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>&copy; 2026 Dumdaar Coupons. All rights reserved.</p>
+            <p>&copy; 2026 FavCoupons Coupons. All rights reserved.</p>
             <div class="flex items-center gap-6">
                 <a href="/privacy" class="hover:text-gray-400 transition-colors">Privacy Policy</a>
                 <a href="/terms" class="hover:text-gray-400 transition-colors">Terms of Service</a>

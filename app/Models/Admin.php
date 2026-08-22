@@ -70,16 +70,6 @@ class Admin extends Authenticatable
         return $this->hasMany(Blog::class);
     }
 
-    public function sentMessages(): HasMany
-    {
-        return $this->hasMany(AdminMessage::class, 'sender_admin_id');
-    }
-
-    public function receivedMessages(): HasMany
-    {
-        return $this->hasMany(AdminMessage::class, 'receiver_admin_id');
-    }
-
     public function isSuperAdmin(): bool
     {
         return $this->role === AdminRole::SuperAdmin;

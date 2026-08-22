@@ -317,7 +317,7 @@
             <h2 class="font-Manrope text-xl sm:text-2xl font-extrabold text-gray-900">About Hostinger</h2>
             <div class="mt-4 space-y-4 font-Inter text-sm sm:text-base text-gray-600 leading-relaxed">
                 <p>Hostinger is one of the most popular web hosting providers worldwide, known for affordable shared hosting, cloud hosting, and VPS plans backed by a simple control panel and 24/7 support. It's a common starting point for freelancers, small businesses, and developers building their first websites.</p>
-                <p>Coupono checks Hostinger's active promotions daily, so the codes and deals listed here are tested before publishing. Discounts typically apply to new subscriptions and renewal terms, and most plans include a free domain and SSL certificate for the first year.</p>
+                <p>FavCoupons checks Hostinger's active promotions daily, so the codes and deals listed here are tested before publishing. Discounts typically apply to new subscriptions and renewal terms, and most plans include a free domain and SSL certificate for the first year.</p>
             </div>
         </div>
     </section>

@@ -23,7 +23,6 @@ use App\Http\Controllers\StorePageController;
 use App\Http\Controllers\StoreListingController;
 use App\Http\Controllers\DealPageController;
 use App\Http\Controllers\HomePageController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Brand\AnalyticsController as BrandAnalyticsController;
 use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
 
@@ -100,11 +99,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('verify-email', [AdminEmailVerificationController::class, 'verify'])->name('verify-email.verify');
         Route::post('verify-email/resend', [AdminEmailVerificationController::class, 'resend'])->name('verify-email.resend');
         Route::post('logout', [AuthenticatedAdminSessionController::class, 'destroy'])->name('logout');
-
-        Route::prefix('chat')->name('chat.')->group(function () {
-            Route::get('/', [ChatController::class, 'index'])->name('index');
-            Route::post('send', [ChatController::class, 'send'])->name('send');
-        });
 
         Route::prefix('notifications')->name('notifications.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('index');

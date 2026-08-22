@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-3 xs:px-4 sm:px-8 lg:px-10">
         <div class="text-center">
             <h2 class="font-Manrope text-2xl sm:text-3xl font-extrabold text-gray-900">New Stores</h2>
-            <p class="mt-2 font-Inter text-sm sm:text-base text-gray-600">Fresh arrivals we've just added to Dumdaar Coupons</p>
+            <p class="mt-2 font-Inter text-sm sm:text-base text-gray-600">Fresh arrivals we've just added to FavCoupons Coupons</p>
         </div>
 
         <div class="mt-10 sm:mt-12 grid min-[320px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">

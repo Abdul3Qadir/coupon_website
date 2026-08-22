@@ -15,7 +15,7 @@
                     </svg>
                     Trending
                 </span>
-                <div class="flex h-16 w-full items-center justify-center rounded-xl bg-gray-100">
+                <div class="flex h-16 w-full items-center justify-center">
                     @if($store->small_logo)
                         <img src="{{ asset('storage/' . $store->small_logo) }}" alt="{{ $store->name }}" class="max-h-18 min-[400px]:max-h-20 object-contain">
                     @else

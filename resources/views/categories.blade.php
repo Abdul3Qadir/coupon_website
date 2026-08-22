@@ -24,7 +24,7 @@
             </h1>
 
             <p class="mx-auto mt-3 max-w-xl font-Inter text-sm sm:text-base text-gray-600">
-                Search, filter, and save across every category on Coupono
+                Search, filter, and save across every category on FavCoupons
             </p>
 
             <div class="mx-auto mt-7 flex max-w-xl items-center overflow-hidden rounded-full border border-gray-200 bg-white pl-6 pr-2 py-2 shadow-lg shadow-gray-100 focus-within:border-red-300 focus-within:ring-2 focus-within:ring-red-100 transition">

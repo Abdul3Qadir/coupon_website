@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Dashboard' }} — Coupono</title>
+    <title>{{ $title ?? 'Dashboard' }} — FavCoupons</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-Inter bg-[#f8f9fb]">
@@ -15,8 +15,7 @@
     <aside id="dashboardSidebar" class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col -translate-x-full border-r border-gray-200 bg-white transition-transform duration-200 lg:translate-x-0">
         <div class="flex h-16 shrink-0 items-center justify-between px-5 border-b border-gray-100">
             <a href="{{ route('brand.dashboard') }}" class="flex items-center gap-2">
-                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-red-500 to-rose-600 font-Manrope text-sm font-extrabold text-white">C</span>
-                <span class="font-Manrope text-base font-extrabold text-gray-900">Coupono</span>
+                <img src="/images/favCoupons-Logo.png" alt="FavCoupons" class="h-10 w-auto">
             </a>
             <button type="button" id="closeSidebarBtn" class="cursor-pointer lg:hidden text-gray-400 hover:text-gray-600">
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>

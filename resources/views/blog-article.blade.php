@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $blog->seo_title ?? $blog->title }} — Coupono</title>
+    <title>{{ $blog->seo_title ?? $blog->title }} — FavCoupons</title>
     <meta name="description" content="{{ $blog->seo_description ?? $blog->excerpt }}">
     @if ($blog->focus_keyword)
         <meta name="keywords" content="{{ $blog->focus_keyword }}">

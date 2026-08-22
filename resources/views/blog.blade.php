@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog — Coupono</title>
+    <title>Blog — FavCoupons</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-Inter">
@@ -17,8 +17,8 @@
                 <span class="text-gray-900 font-semibold">Blog</span>
             </div>
 
-            <h1 class="font-Manrope text-2xl sm:text-4xl font-extrabold text-gray-900">Coupono Blog</h1>
-            <p class="mt-2 font-Inter text-sm sm:text-base text-gray-600">Shopping tips, saving hacks, and deal roundups from the Coupono team</p>
+            <h1 class="font-Manrope text-2xl sm:text-4xl font-extrabold text-gray-900">FavCoupons Blog</h1>
+            <p class="mt-2 font-Inter text-sm sm:text-base text-gray-600">Shopping tips, saving hacks, and deal roundups from the FavCoupons team</p>
         </div>
     </section>
 
