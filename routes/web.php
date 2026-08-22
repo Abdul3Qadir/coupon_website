@@ -23,7 +23,8 @@ use App\Http\Controllers\StorePageController;
 use App\Http\Controllers\StoreListingController;
 use App\Http\Controllers\DealPageController;
 use App\Http\Controllers\HomePageController;
-
+use App\Http\Controllers\Brand\AnalyticsController as BrandAnalyticsController;
+use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
 
 // Public Routes
 Route::get('/', [HomePageController::class, 'index'])->name('home');
@@ -76,6 +77,7 @@ Route::prefix('brand')->name('brand.')->group(function () {
                 Route::delete('{offer}', [OfferController::class, 'destroy'])->name('destroy');
             });
 
+            Route::get('/analytics', [BrandAnalyticsController::class, 'index'])->name('analytics.index');
             Route::get('settings', [\App\Http\Controllers\Brand\ProfileController::class, 'edit'])->name('settings.edit');
             Route::put('settings/profile', [\App\Http\Controllers\Brand\ProfileController::class, 'update'])->name('settings.profile.update');
             Route::put('settings/password', [\App\Http\Controllers\Brand\ProfileController::class, 'updatePassword'])->name('settings.password.update');
@@ -177,6 +179,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                     Route::post('{subAdmin}/toggle-auto-publish', [SubAdminManagementController::class, 'toggleAutoPublish'])->name('toggle-auto-publish');
                     Route::delete('{subAdmin}', [SubAdminManagementController::class, 'destroy'])->name('destroy');
                 });
+                Route::get('/analytics', [AdminAnalyticsController::class, 'index'])->name('analytics.index');
             });
         });
     });
