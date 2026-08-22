@@ -18,6 +18,15 @@ class StorePageController extends Controller
         $coupons = $brand->offers()->approved()->active()->coupons()->latest()->get();
         $deals = $brand->offers()->approved()->active()->deals()->latest()->get();
 
+        if ($coupons->isNotEmpty()) {
+            Offer::whereIn('id', $coupons->pluck('id'))->increment('views_count');
+        }
+
+        $deals = $brand->offers()->approved()->active()->deals()->latest()->get();
+        if ($deals->isNotEmpty()) {
+            Offer::whereIn('id', $deals->pluck('id'))->increment('views_count');
+        }
+
         $brand->increment('views_count');
 
         $expiredCoupons = $brand->offers()

@@ -17,7 +17,7 @@ class DashboardController extends Controller
             'totalOffers' => $brand->offers()->count(),
             'liveOffers' => $brand->offers()->where('status', OfferStatus::Approved)->count(),
             'pendingOffers' => $brand->offers()->where('status', OfferStatus::Pending)->count(),
-            'totalViews' => $brand->views_count,
+            'totalViews' => $brand->offers()->sum('views_count') ?? 0,
             'recentOffers' => $brand->offers()->latest()->take(5)->get(),
         ]);
     }

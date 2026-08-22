@@ -125,7 +125,13 @@
                             <td class="px-3 sm:px-4 py-4 font-Inter text-xs sm:text-sm text-red-600 text-right font-semibold">{{ $offer['ctr'] }}%</td>
                             <td class="px-3 sm:px-4 py-4">
                                 <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap @if($offer['status'] === 'approved') bg-green-100 text-green-700 @elseif($offer['status'] === 'pending') bg-yellow-100 text-yellow-700 @else bg-red-100 text-red-700 @endif">
-                                    {{ $offer['type'] instanceof \App\Enums\OfferType ? $offer['type']->label() : ucfirst($offer['type']) }}
+                                    @if($offer['status'] === 'approved')
+                                        Approved
+                                    @elseif($offer['status'] === 'pending')
+                                        Pending
+                                    @else
+                                        Rejected
+                                    @endif
                                 </span>
                             </td>
                         </tr>

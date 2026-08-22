@@ -27,6 +27,10 @@ class HomePageController extends Controller
             ->limit(6)
             ->get();
 
+        if ($topCoupons->isNotEmpty()) {
+            Offer::whereIn('id', $topCoupons->pluck('id'))->increment('views_count');
+        }
+
         $featuredStores = Brand::where('status', BrandStatus::Verified)
             ->where('is_featured', true)
             ->withCount(['offers' => function ($query) {
@@ -69,6 +73,10 @@ class HomePageController extends Controller
             ->latest()
             ->limit(6)
             ->get();
+
+        if ($topDeals->isNotEmpty()) {
+            Offer::whereIn('id', $topDeals->pluck('id'))->increment('views_count');
+        }
 
         $categories = Category::withCount(['offers' => function ($query) {
             $query->approved()->active();

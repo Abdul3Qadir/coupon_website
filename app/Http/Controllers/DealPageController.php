@@ -74,6 +74,10 @@ class DealPageController extends Controller
                 ->get();
         }
 
+        if ($trendingDeals->isNotEmpty()) {
+            Offer::whereIn('id', $trendingDeals->pluck('id'))->increment('views_count');
+        }
+
         // Stats
         $totalActiveDeals = Offer::deals()->approved()->active()->count();
         $totalExpiredDeals = Offer::deals()->approved()->expired()->count();
@@ -89,6 +93,10 @@ class DealPageController extends Controller
             }])
             ->orderBy('name')
             ->get();
+
+        if ($deals->isNotEmpty()) {
+            Offer::whereIn('id', $deals->pluck('id'))->increment('views_count');
+        }
 
         return view('deals', compact(
             'deals',

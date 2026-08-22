@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\Admin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Enums\OfferType;
 
 class AnalyticsService
 {
@@ -19,23 +20,23 @@ class AnalyticsService
         $totalClicks = $allOffers->sum('clicks_count') ?? 0;
         $ctr = $totalViews > 0 ? ($totalClicks / $totalViews) * 100 : 0;
         
-        $monthlyViews = $allOffers->where('created_at', '>=', now()->subDays(30))
+        $monthlyViews = $allOffers->clone()->where('created_at', '>=', now()->subDays(30))
             ->sum('views_count') ?? 0;
-        $monthlyClicks = $allOffers->where('created_at', '>=', now()->subDays(30))
+        $monthlyClicks = $allOffers->clone()->where('created_at', '>=', now()->subDays(30))
             ->sum('clicks_count') ?? 0;
         
         return [
             'totalOffers' => $allOffers->count(),
-            'activeOffers' => $allOffers->where('status', 'approved')->count(),
-            'pendingOffers' => $allOffers->where('status', 'pending')->count(),
-            'rejectedOffers' => $allOffers->where('status', 'rejected')->count(),
+            'activeOffers' => $allOffers->clone()->where('status', 'approved')->count(),
+            'pendingOffers' => $allOffers->clone()->where('status', 'pending')->count(),
+            'rejectedOffers' => $allOffers->clone()->where('status', 'rejected')->count(),
             'totalViews' => $totalViews,
             'totalClicks' => $totalClicks,
             'ctr' => round($ctr, 2),
             'monthlyViews' => $monthlyViews,
             'monthlyClicks' => $monthlyClicks,
-            'coupons' => $allOffers->coupons()->count(),
-            'deals' => $allOffers->deals()->count(),
+            'coupons' => $allOffers->clone()->coupons()->count(),
+            'deals' => $allOffers->clone()->deals()->count(),
         ];
     }
 
@@ -80,7 +81,7 @@ class AnalyticsService
                 'views' => $offer->views_count,
                 'clicks' => $offer->clicks_count,
                 'ctr' => $offer->views_count > 0 ? round(($offer->clicks_count / $offer->views_count) * 100, 2) : 0,
-                'status' => $offer->status,
+                'status' => $offer->status->value ?? 'pending',
                 'category' => $offer->category?->name,
                 'createdAt' => $offer->created_at->format('M d'),
             ]);
